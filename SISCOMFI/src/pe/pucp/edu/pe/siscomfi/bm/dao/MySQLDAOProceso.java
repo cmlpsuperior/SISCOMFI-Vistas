@@ -32,7 +32,7 @@ public class MySQLDAOProceso implements DAOProceso{
 					+ "(descripcion, fechaProceso1Inicio, fechaProceso1Fin, fechaProceso2Inicio, fechaProceso2Fin, cantidadMinAdherentes, idTipoProceso)"
 					+ "VALUES (?,?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
-			
+			/*
 			//pstmt.setInt(1, p.getId());
 			pstmt.setString(1, p.getDescripción());
 			pstmt.setDate(2, p.getFechaProceso1Inicio());
@@ -40,7 +40,7 @@ public class MySQLDAOProceso implements DAOProceso{
 			pstmt.setDate(4, p.getFechaProceso2Inicio());
 			pstmt.setDate(5, p.getFechaProceso2Fin());
 			pstmt.setInt(6, p.getCantidadMinAdherentes());
-			pstmt.setInt(6, p.getIdTipoProceso());
+			pstmt.setInt(6, p.getIdTipoProceso()); */
 			
 			
 			//Paso 4: Ejecutar la sentencia

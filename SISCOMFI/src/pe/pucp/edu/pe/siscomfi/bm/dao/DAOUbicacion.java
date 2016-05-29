@@ -8,8 +8,8 @@ import pe.pucp.edu.pe.siscomfi.model.Provincia;
 
 
 public interface DAOUbicacion {	
-	ArrayList<Provincia> queryAllProvincia();
+	ArrayList<Distrito> queryDistritosByIdProvincia(int idProvincia);
 	ArrayList<Departamento> queryAllDepartamento();
-	ArrayList<Distrito> queryAllDistrito();
+	ArrayList<Provincia> queryProvinciasByIdDepartamento(int idDepartamento);
 	
 }

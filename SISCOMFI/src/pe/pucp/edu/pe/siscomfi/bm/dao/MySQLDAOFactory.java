@@ -30,5 +30,11 @@ public class MySQLDAOFactory extends DAOFactory{
 		// TODO Auto-generated method stub
 		return new MySQLDAOProceso();
 	}
+
+	@Override
+	public DAOTipoProceso getDAOTipoProceso() { //NO VAMOS A HACE MANTENIMIENTO AL TIPO DE PROCESO
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

@@ -36,9 +36,6 @@ public class VistaIniciarProceso extends JInternalFrame {
 		setBounds(100, 100, 326, 255);
 		getContentPane().setLayout(null);
 		
-		
-		
-		
 		JLabel lblNewLabel = new JLabel("Partido Pol\u00EDtico:");
 		lblNewLabel.setBounds(12, 63, 126, 16);
 		getContentPane().add(lblNewLabel);

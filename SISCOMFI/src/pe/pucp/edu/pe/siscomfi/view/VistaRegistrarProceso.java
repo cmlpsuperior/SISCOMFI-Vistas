@@ -11,18 +11,26 @@ import javax.swing.JTextField;
 import org.jdatepicker.DefaultComponentFactory;
 import org.jdatepicker.JDatePicker;
 
+import java.util.Date;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+import pe.pucp.edu.pe.siscomfi.model.TipoProceso;
+import pe.pucp.edu.pe.siscomfi.model.Proceso;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.awt.event.ActionEvent;
 
 public class VistaRegistrarProceso extends JInternalFrame {
-	private JTextField textField_5;
+	private JTextField txtDescripcion;
 	private JTextField txtMinAdherentes;
 	private JDatePicker picker1, picker2, picker3, picker4;
-
+	
 	public VistaRegistrarProceso() {
 		setClosable(true);
 		setTitle("Registrar nuevo proceso");
-		setBounds(100, 100, 614, 341);
+		setBounds(100, 100, 819, 354);
 		getContentPane().setLayout(null);
 		
 		picker1 = new DefaultComponentFactory().createJDatePicker();
@@ -60,62 +68,137 @@ public class VistaRegistrarProceso extends JInternalFrame {
 		lblFechaTopeFase.setBounds(33, 113, 118, 16);
 		getContentPane().add(lblFechaTopeFase);
 		
-		JButton btnRegistrar = new JButton("Registrar");
-		btnRegistrar.setBounds(138, 271, 97, 25);
-		getContentPane().add(btnRegistrar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(373, 271, 97, 25);
+		btnCancelar.setBounds(461, 273, 97, 25);
 		getContentPane().add(btnCancelar);
 		
 		JLabel lblFechaInicioFase = new JLabel("Fecha fin fase 1:");
-		lblFechaInicioFase.setBounds(321, 80, 116, 16);
+		lblFechaInicioFase.setBounds(407, 80, 116, 16);
 		getContentPane().add(lblFechaInicioFase);
 		
 		JLabel lblFechaInicioFase_1 = new JLabel("Fecha fin fase 2:");
-		lblFechaInicioFase_1.setBounds(321, 113, 116, 16);
+		lblFechaInicioFase_1.setBounds(407, 113, 116, 16);
 		getContentPane().add(lblFechaInicioFase_1);
 		
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n:");
 		lblDescripcin.setBounds(33, 153, 118, 16);
 		getContentPane().add(lblDescripcin);
 		
-		textField_5 = new JTextField();
-		textField_5.setBounds(35, 182, 534, 78);
-		getContentPane().add(textField_5);
-		textField_5.setColumns(10);
+		txtDescripcion = new JTextField();
+		txtDescripcion.setBounds(33, 182, 734, 78);
+		getContentPane().add(txtDescripcion);
+		txtDescripcion.setColumns(10);
 		
-		JLabel lblMinimoDeAdherentes = new JLabel("Minimo de adherentes: ");
-		lblMinimoDeAdherentes.setBounds(321, 45, 136, 16);
+		JLabel lblMinimoDeAdherentes = new JLabel("Mínimo de adherentes: ");
+		lblMinimoDeAdherentes.setBounds(407, 45, 136, 16);
 		getContentPane().add(lblMinimoDeAdherentes);
 		
 		txtMinAdherentes = new JTextField();
-		txtMinAdherentes.setBounds(456, 42, 116, 22);
+		txtMinAdherentes.setBounds(569, 42, 198, 22);
 		getContentPane().add(txtMinAdherentes);
 		txtMinAdherentes.setColumns(10);
 		
 		JComboBox cbTipoProceso = new JComboBox();
-		cbTipoProceso.setBounds(163, 43, 116, 20);
+		cbTipoProceso.setBounds(185, 43, 198, 20);
 		getContentPane().add(cbTipoProceso);
 		
 		JPanel ppicker1_2 = new JPanel();
-		ppicker1_2.setBounds(163, 106, 178, 63);
+		ppicker1_2.setBounds(163, 106, 244, 35);
 		getContentPane().add(ppicker1_2);
 		ppicker1_2.add((JComponent)picker2);
 		
 		JPanel ppicker1_1 = new JPanel();
-		ppicker1_1.setBounds(163, 73, 116, 23);
+		ppicker1_1.setBounds(163, 73, 244, 35);
 		getContentPane().add(ppicker1_1);
 		ppicker1_1.add((JComponent)picker1);
 		
 		JPanel ppicker2_1 = new JPanel();
-		ppicker2_1.setBounds(432, 74, 116, 23);
+		ppicker2_1.setBounds(555, 71, 226, 37);
 		getContentPane().add(ppicker2_1);
 		ppicker2_1.add((JComponent)picker3);
 		
 		JPanel ppicker2_2 = new JPanel();
-		ppicker2_2.setBounds(432, 109, 116, 23);
+		ppicker2_2.setBounds(555, 106, 226, 35);
 		getContentPane().add(ppicker2_2);
 		ppicker2_2.add((JComponent)picker4);
+		
+		JButton btnRegistrar = new JButton("Registrar");
+		btnRegistrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Proceso p = new Proceso();
+				p.setDescripción(txtDescripcion.getText());
+				try {
+					//formato de extracción de fecha inicio fase 1
+					int day1 = picker1.getModel().getDay();
+					int month1 = picker1.getModel().getMonth();
+					int year1 = picker1.getModel().getYear();
+					
+					String day1S = String.format("%02d", day1); //convierto a String de 2 digitos y 4 digitos para el año
+					String month1S = String.format("%02d", month1+1);
+					String year1S = String.format("%04d", year1);
+					
+					String fecha1_1 = year1S + "-" + month1S + "-" + day1S; //los uno en un solo String con formato yyyy-MM-dd				
+					
+					SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
+					Date fechaIniFase1 = formatter1.parse(fecha1_1);
+					p.setFechaProceso1Inicio(fechaIniFase1); //aca recien asignamos
+					
+					//formato de extracción de fecha Inicio fase 2
+					int day2 = picker2.getModel().getDay();
+					int month2 = picker2.getModel().getMonth();
+					int year2 = picker2.getModel().getYear();
+					
+					String day2S = String.format("%02d", day2); //convierto a String de 2 digitos y 4 digitos para el año
+					String month2S = String.format("%02d", month2+1);
+					String year2S = String.format("%04d", year2);
+					
+					String fecha1_2 = year2S + "-" + month2S + "-" + day2S; //los uno en un solo String con formato yyyy-MM-dd
+					
+					SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
+					Date fechaIniFase2 = formatter2.parse(fecha1_2);
+					p.setFechaProceso2Inicio(fechaIniFase2); //aca recien asignamos
+					
+					//formato de extracción de fecha fin fase 1 
+					int day3 = picker3.getModel().getDay();
+					int month3 = picker3.getModel().getMonth();
+					int year3 = picker3.getModel().getYear();
+					
+					String day3S = String.format("%02d", day3); //convierto a String de 2 digitos y 4 digitos para el año
+					String month3S = String.format("%02d", month3+1);
+					String year3S = String.format("%04d", year3);
+					
+					String fecha2_1 = year3S + "-" + month3S + "-" + day3S; //los uno en un solo String con formato yyyy-MM-dd
+					
+					SimpleDateFormat formatter3 = new SimpleDateFormat("yyyy-MM-dd");
+					Date fechaFinFase1 = formatter3.parse(fecha2_1);
+					p.setFechaProceso1Fin(fechaFinFase1); //aca recien asignamos				
+					
+					//formato de extracción de fecha fin fase 2
+					int day4 = picker4.getModel().getDay();
+					int month4 = picker4.getModel().getMonth();
+					int year4 = picker4.getModel().getYear();
+					
+					String day4S = String.format("%02d", day4); //convierto a String de 2 digitos y 4 digitos para el año
+					String month4S = String.format("%02d", month4+1);
+					String year4S = String.format("%04d", year4);
+					
+					String fecha2_2 = year4S + "-" + month4S + "-" + day4S; //los uno en un solo String con formato yyyy-MM-dd
+					
+					SimpleDateFormat formatter4 = new SimpleDateFormat("yyyy-MM-dd");
+					Date fechaFinFase2 = formatter4.parse(fecha2_2);
+					p.setFechaProceso2Fin(fechaFinFase2); //aca recien asignamos	
+					
+					p.setIdTipoProceso( Integer.parseInt(cbTipoProceso.getSelectedItem().toString().substring(0, 1)));
+					siscomfiManager.addProceso(p);
+				}
+				catch (Exception a) {
+					a.printStackTrace();
+				}
+				
+			}
+		});
+		btnRegistrar.setBounds(226, 273, 97, 25);
+		getContentPane().add(btnRegistrar);
 	}
 }

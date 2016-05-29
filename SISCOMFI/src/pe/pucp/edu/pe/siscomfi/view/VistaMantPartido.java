@@ -10,7 +10,6 @@ import javax.swing.table.AbstractTableModel;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.Distrito;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
-import pe.pucp.edu.pe.siscomfi.model.Rol;
 
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -87,6 +86,7 @@ public class VistaMantPartido extends JInternalFrame {
 		panel.add(label_2);
 		
 		txtCodigo = new JTextField();
+		txtCodigo.setEditable(false);
 		txtCodigo.setColumns(10);
 		txtCodigo.setBounds(145, 24, 102, 20);
 		panel.add(txtCodigo);
@@ -196,6 +196,7 @@ public class VistaMantPartido extends JInternalFrame {
 					
 					JOptionPane.showMessageDialog(null, "Se registro el partido satisfactoriamente");
 					LimpiarTextos ();
+					refreshTblPartidos();
 					
 				} catch (Exception a) {
 					// TODO Auto-generated catch block
@@ -286,6 +287,16 @@ public class VistaMantPartido extends JInternalFrame {
 			e.printStackTrace();
 		}
 		
+		
+	}
+	public void refreshTblPartidos(){
+		try {
+			tableModelPartido.listaPartido = siscomfiManager.queryAllPartidos();
+			tableModelPartido.fireTableChanged(null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	

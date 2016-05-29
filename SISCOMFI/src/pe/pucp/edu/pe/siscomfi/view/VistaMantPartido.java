@@ -59,6 +59,7 @@ public class VistaMantPartido extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public VistaMantPartido() {
+		setClosable(true);
 		setBounds(100, 100, 740, 541);
 		getContentPane().setLayout(null);
 		

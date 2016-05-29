@@ -13,6 +13,10 @@ import pe.pucp.edu.pe.siscomfi.model.Rol; //aca tiene que ir tipoProceso
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
 
 import javax.swing.UIManager;
+
+import org.jdatepicker.DefaultComponentFactory;
+import org.jdatepicker.JDatePicker;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -25,11 +29,15 @@ import java.awt.event.ActionEvent;
 public class VistaIniciarProceso extends JInternalFrame {
 	private JTextField txtRuta;
 	private JTextField txtFase;
+	
 
 	public VistaIniciarProceso() {
 		setTitle("Iniciar Proceso");
 		setBounds(100, 100, 326, 255);
 		getContentPane().setLayout(null);
+		
+		
+		
 		
 		JLabel lblNewLabel = new JLabel("Partido Pol\u00EDtico:");
 		lblNewLabel.setBounds(12, 63, 126, 16);

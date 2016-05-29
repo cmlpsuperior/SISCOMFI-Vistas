@@ -56,6 +56,11 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 		getContentPane().add(btnRegistrar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		btnCancelar.setBounds(255, 247, 113, 23);
 		getContentPane().add(btnCancelar);
 		

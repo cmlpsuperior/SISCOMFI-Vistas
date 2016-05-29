@@ -78,7 +78,8 @@ CREATE TABLE PartidoPolitico (
        CorreoRepresentante  varchar(100) NOT NULL,
        Direccion            varchar(100) NOT NULL,
        Telefono             varchar(12) NOT NULL,
-       idDistrito          int NOT NULL
+       idDistrito          int NOT NULL,
+       EstadoActivo 		char(1) not null
 );
 alter table PartidoPolitico add foreign key (idDistrito) references Distrito (idDistrito);
  

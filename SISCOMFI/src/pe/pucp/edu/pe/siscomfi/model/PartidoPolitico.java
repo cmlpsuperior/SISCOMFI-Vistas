@@ -13,8 +13,15 @@ public class PartidoPolitico {
 	private int idDistrito;
 	
 	private Date fechaRegistro;
+	private String estadoActivo;
 	
 	
+	public String getEstadoActivo() {
+		return estadoActivo;
+	}
+	public void setEstadoActivo(String estadoActivo) {
+		this.estadoActivo = estadoActivo;
+	}
 	public int getIdPartidoPolitco() {
 		return idPartidoPolitco;
 	}

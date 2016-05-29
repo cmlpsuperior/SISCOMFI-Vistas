@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.mysql.jdbc.Driver;
+
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 
 public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
@@ -28,8 +29,8 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 			
 			//Paso 3: Preparar la sentencia
 			String sql =  "INSERT INTO PartidoPolitico "
-					+ "(Nombre, Representante, CorreoRepresentante,    Direccion, Telefono, IdDistrito,  FechaRegistro) "
-					+ "VALUES (?,?,?,  ?,?,?, ?)";
+					+ "(Nombre, Representante, CorreoRepresentante,    Direccion, Telefono, IdDistrito,    FechaRegistro, EstadoActivo) "
+					+ "VALUES (?,?,?,  ?,?,?, ?, 'A')";
 			pstmt = conn.prepareStatement(sql);
 			
 			//pstmt.setInt(1, p.getId());
@@ -60,9 +61,41 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 	}
 
 	@Override
-	public void update(PartidoPolitico u) {
-		// TODO Auto-generated method stub
+	public void update(PartidoPolitico p) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
 		
+		try {
+			//Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			//Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+								DBConnection.user,
+								DBConnection.password);
+			//Paso 3: Preparar la sentencia
+			String sql = "UPDATE PartidoPolitico "
+					+ " SET Representante=?, CorreoRepresentante=?, Direccion=?, Telefono = ? , EstadoActivo = 'M'"
+					+ "WHERE id=?";
+			pstmt = conn.prepareStatement(sql);
+			//
+			pstmt.setString(1, p.getRepresentante());
+			pstmt.setString(2, p.getCorreo());
+			pstmt.setString(3, p.getDireccion());
+			pstmt.setString(4, p.getTelefono());
+			pstmt.setInt(5, p.getIdPartidoPolitco());
+			//Paso 4: Ejecutar la sentencia
+			pstmt.executeUpdate();
+			//Paso 5(opc.): Procesar los resultados			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			//Paso 6(OJO): Cerrar la conexión
+			try { if (pstmt!= null) pstmt.close();} 
+				catch (Exception e){e.printStackTrace();};
+			try { if (conn!= null) conn.close();} 
+				catch (Exception e){e.printStackTrace();};						
+		}		
 	}
 
 	@Override

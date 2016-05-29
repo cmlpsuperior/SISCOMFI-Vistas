@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import org.jdatepicker.DefaultComponentFactory;
 import org.jdatepicker.JDatePicker;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -18,6 +19,8 @@ import javax.swing.JPanel;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.TipoProceso;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
+import pe.pucp.edu.pe.siscomfi.model.Rol;
+
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
@@ -26,6 +29,7 @@ public class VistaRegistrarProceso extends JInternalFrame {
 	private JTextField txtDescripcion;
 	private JTextField txtMinAdherentes;
 	private JDatePicker picker1, picker2, picker3, picker4;
+	private JComboBox cbTipoProceso;
 	
 	public VistaRegistrarProceso() {
 		setClosable(true);
@@ -99,9 +103,10 @@ public class VistaRegistrarProceso extends JInternalFrame {
 		getContentPane().add(txtMinAdherentes);
 		txtMinAdherentes.setColumns(10);
 		
-		JComboBox cbTipoProceso = new JComboBox();
+		cbTipoProceso = new JComboBox();
 		cbTipoProceso.setBounds(185, 43, 198, 20);
 		getContentPane().add(cbTipoProceso);
+		fillCustomerCmb();
 		
 		JPanel ppicker1_2 = new JPanel();
 		ppicker1_2.setBounds(163, 106, 244, 35);
@@ -190,6 +195,7 @@ public class VistaRegistrarProceso extends JInternalFrame {
 					p.setFechaProceso2Fin(fechaFinFase2); //aca recien asignamos	
 					
 					p.setIdTipoProceso( Integer.parseInt(cbTipoProceso.getSelectedItem().toString().substring(0, 1)));
+					
 					siscomfiManager.addProceso(p);
 				}
 				catch (Exception a) {
@@ -200,5 +206,23 @@ public class VistaRegistrarProceso extends JInternalFrame {
 		});
 		btnRegistrar.setBounds(226, 273, 97, 25);
 		getContentPane().add(btnRegistrar);
+	}
+	
+	public void fillCustomerCmb(){ //mostrare solo los clientes que estan activos
+		cbTipoProceso.removeAllItems();
+		ArrayList<TipoProceso> TipoProcesoList;
+		try {
+			TipoProcesoList = siscomfiManager.queryAllTipoProcesos();
+			for (int i=0; i<TipoProcesoList.size();i++){				
+				TipoProceso tp = (TipoProceso)TipoProcesoList.get(i);
+				cbTipoProceso.addItem(tp.getIdTipoProceso()+" - " + tp.getNombre());
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 }

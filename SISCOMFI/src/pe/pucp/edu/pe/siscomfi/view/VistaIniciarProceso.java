@@ -8,8 +8,22 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+import pe.pucp.edu.pe.siscomfi.model.Rol; //aca tiene que ir tipoProceso
+import pe.pucp.edu.pe.siscomfi.model.Proceso;
+
+import javax.swing.UIManager;
+import java.awt.Color;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+
 public class VistaIniciarProceso extends JInternalFrame {
-	private JTextField textField;
+	private JTextField txtRuta;
 	private JTextField txtFase;
 
 	public VistaIniciarProceso() {
@@ -29,16 +43,27 @@ public class VistaIniciarProceso extends JInternalFrame {
 		lblRuta.setBounds(12, 99, 85, 16);
 		getContentPane().add(lblRuta);
 		
-		textField = new JTextField();
-		textField.setBounds(124, 96, 116, 22);
-		getContentPane().add(textField);
-		textField.setColumns(10);
+		txtRuta = new JTextField();
+		txtRuta.setBounds(124, 96, 116, 22);
+		getContentPane().add(txtRuta);
+		txtRuta.setColumns(10);
 		
 		JButton button = new JButton("...");
 		button.setBounds(252, 95, 45, 25);
 		getContentPane().add(button);
 		
 		JButton btnProcesar = new JButton("Procesar");
+		btnProcesar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Proceso p = new Proceso();
+				p.setDescripción("Proceso iniciado por " + (String)cbPartido.getSelectedItem());
+				/*p.setFechaProceso1Inicio(fechaProceso1Inicio);
+				p.setFechaProceso1Fin(fechaProceso1Fin);
+				p.setFechaProceso2Inicio(fechaProceso2Inicio);
+				p.setFechaProceso2Fin(fechaProceso2Fin);*/
+			
+			}
+		});
 		btnProcesar.setBounds(107, 163, 97, 25);
 		getContentPane().add(btnProcesar);
 		

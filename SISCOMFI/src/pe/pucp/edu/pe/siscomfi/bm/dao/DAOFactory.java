@@ -14,5 +14,5 @@ public abstract class DAOFactory {
 	public abstract DAORol getDAORol();
 	public abstract DAOPartidoPolitico getDAOPartidoPolitico();
 	public abstract DAOUbicacion getDAOUbicacion();
-	
+	public abstract DAOProceso getDAOProceso(); //nuevo
 }

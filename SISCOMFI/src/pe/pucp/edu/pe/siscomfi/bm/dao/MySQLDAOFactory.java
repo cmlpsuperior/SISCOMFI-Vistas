@@ -25,4 +25,10 @@ public class MySQLDAOFactory extends DAOFactory{
 		return null;
 	}
 	
+	@Override
+	public DAOProceso getDAOProceso() {
+		// TODO Auto-generated method stub
+		return new MySQLDAOProceso();
+	}
+	
 }

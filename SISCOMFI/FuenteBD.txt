@@ -1,0 +1,202 @@
+use inf226eh;
+
+CREATE TABLE Usuario (
+       idUsuario            int NOT NULL primary key AUTO_INCREMENT,
+       Nombre               varchar(50) NOT NULL,
+       ApellidoPaterno      varchar(100) NOT NULL,
+       ApellidoMaterno      varchar(100) NOT NULL,
+       CorreoElectronico    varchar(100) NOT NULL,
+       Contrasenia          varchar(20) NOT NULL,
+       fechaRegistro        datetime NOT NULL,
+       DNI                  char(8) NOT NULL,
+       idRol                int NOT NULL
+);
+
+CREATE TABLE RolUsuario (
+       idRol                int NOT NULL primary key AUTO_INCREMENT,
+       Nombre               varchar(50) NOT NULL
+);
+
+ALTER TABLE Usuario
+       ADD FOREIGN KEY (idRol)
+                             REFERENCES RolUsuario (idRol); 
+
+
+
+CREATE TABLE Vista (
+	idVista 	int not null primary key auto_increment,
+	Nombre		varchar(100) not null
+);
+ 
+CREATE TABLE VistaXRol (
+	idVista		int not null,
+	idRol		int not null
+);
+
+alter table VistaXRol add primary key (IdVista, IdRol);
+alter table VistaXRol add foreign key (IdVista) references Vista (idVista);
+alter table VistaXRol add foreign key (IdRol) references RolUsuario (idRol);
+
+
+create table Distrito (
+	idDistrito int NOT NULL primary key AUTO_INCREMENT,
+	Descripcion varchar(50) not null,
+	idProvincia int not null	
+);
+
+CREATE TABLE Provincia (
+       idProvincia          int NOT NULL primary key AUTO_INCREMENT,
+       Descripcion          varchar(100) NOT NULL,
+       idDepartamento       int NOT NULL
+) 
+
+CREATE TABLE Departamento (
+       idDepartamento       int NOT NULL primary key AUTO_INCREMENT,
+       Descripcion          varchar(100) NOT NULL
+);
+
+alter table Distrito add foreign key (idProvincia) references Provincia (idProvincia);
+alter table Provincia add foreign key (idDepartamento) references Departamento (idDepartamento);
+ 
+
+CREATE TABLE Adherente (
+       idAdherente          int NOT NULL primary key AUTO_INCREMENT,
+       Nombre               varchar(50) NOT NULL,
+       ApellidoPaterno      varchar(100) NOT NULL,
+       ApellidoMaterno      varchar(100) NOT NULL,
+       DNI                  char(8) NOT NULL,
+       FechaNacimiento      datetime NOT NULL,
+       idDistrito          int NOT NULL
+);
+ 
+alter table Adherente add foreign key (idDistrito) references Distrito (idDistrito);
+
+CREATE TABLE PartidoPolitico (
+       idPartidoPolitico    int NOT NULL primary key AUTO_INCREMENT,
+       Nombre               varchar(50) NOT NULL,
+       Representante        varchar(100) NOT NULL,
+       CorreoRepresentante  varchar(100) NOT NULL,
+       Direccion            varchar(100) NOT NULL,
+       Telefono             varchar(12) NOT NULL,
+       idDistrito          int NOT NULL
+);
+alter table PartidoPolitico add foreign key (idDistrito) references Distrito (idDistrito);
+ 
+
+CREATE TABLE Proceso (
+       idProceso            int NOT NULL primary key AUTO_INCREMENT,
+       Descripcion          varchar(200) NOT NULL,
+       FechaProceso1Inicio  datetime NOT NULL,
+       FechaProceso1Fin     datetime NOT NULL,
+       FechaProceso2Inicio  datetime NOT NULL,
+       FechaProceso2Fin     datetime NOT NULL,
+       CantidadMinAdherentes int NOT NULL,
+       idTipoProceso        int NOT NULL
+);
+ 
+CREATE TABLE TipoProceso (
+       idTipoProceso        int NOT NULL primary key AUTO_INCREMENT,
+       Nombre               varchar(50) NOT NULL
+);
+
+
+ALTER TABLE Proceso
+       ADD FOREIGN KEY (idTipoProceso)
+                             REFERENCES TipoProceso (idTipoProceso);
+
+
+CREATE TABLE RegistroElector (
+       idElector            int NOT NULL primary key AUTO_INCREMENT,
+       Nombre               varchar(50) NOT NULL,
+       ApellidoPaterno      varchar(100) NOT NULL,
+       ApellidoMaterno      varchar(100) NOT NULL,
+       DNI                  char(8) NOT NULL,
+       FechaNacimiento      datetime NOT NULL,
+       Huella               varchar(100) NOT NULL,
+       Firma                varchar(100) NOT NULL
+);
+
+
+
+CREATE TABLE AdherentexPlanillon (
+       idPlanillon          int NOT NULL,
+       idAdherente          int NOT NULL,
+       EstadoValidez        char(1) NOT NULL,
+       TiempoProcesado      float NOT NULL,
+       PorcentajeHuella     float NOT NULL,
+       PorcentajeFirma      float NOT NULL,
+       Huella               varchar(100) NOT NULL,
+       Firma                varchar(100) NOT NULL       
+);
+
+CREATE TABLE Planillon (
+       idPlanillon          int NOT NULL primary key AUTO_INCREMENT,
+       TiempoProcesado      float NOT NULL,
+       idPartidoPolitico    int NOT NULL,
+       idProceso            int NOT NULL
+); 
+
+alter table AdherentexPlanillon add primary key  (idPlanillon, idAdherente);
+ALTER TABLE AdherentexPlanillon
+       ADD FOREIGN KEY (idPlanillon)
+                             REFERENCES Planillon (idPlanillon);
+ALTER TABLE AdherentexPlanillon
+       ADD FOREIGN KEY (idAdherente)
+                             REFERENCES Adherente (idAdherente);
+CREATE TABLE PartidoPoliticoxProceso (
+       idPartidoPolitico    int NOT NULL,
+       idProceso            int NOT NULL,
+       idUsuario            int NOT NULL,
+       TiempoProcesado      float NOT NULL,
+       EstadoPartido        char(1) NOT NULL       
+);
+
+alter table PartidoPoliticoxProceso  add primary key  (idPartidoPolitico,idProceso);
+ALTER TABLE PartidoPoliticoxProceso
+       ADD FOREIGN KEY (idProceso)
+                             REFERENCES Proceso (idProceso);
+ALTER TABLE PartidoPoliticoxProceso
+       ADD FOREIGN KEY (idPartidoPolitico)
+                             REFERENCES PartidoPolitico (idPartidoPolitico); 
+ALTER TABLE PartidoPoliticoxProceso
+       ADD FOREIGN KEY (idUsuario)
+                             REFERENCES Usuario (idUsuario);
+                             
+ALTER TABLE Planillon
+       ADD FOREIGN KEY (idPartidoPolitico)
+              REFERENCES PartidoPoliticoxProceso (idPartidoPolitico);
+ALTER TABLE Planillon
+       ADD FOREIGN KEY (idProceso)
+              REFERENCES PartidoPoliticoxProceso (idProceso);
+
+
+/*LOS INSERT DE LAS TABLAS MAESTRAS*/
+
+
+insert into Departamento (Descripcion) values ('Lima'); 
+insert into Departamento (Descripcion) values ('Ayacucho'); 
+insert into Departamento (Descripcion) values ('Ica'); 
+insert into Departamento (Descripcion) values ('Tumbes'); 
+
+
+insert into Provincia (Descripcion, idDepartamento) values ('Lima Metropolitana', 1);
+insert into Provincia (Descripcion, idDepartamento) values ('Huacho', 1);
+insert into Provincia (Descripcion, idDepartamento) values ('Ayacucho', 2);
+
+
+insert into Distrito (Descripcion, idProvincia) values ('San Juan de Lurigancho', 1); 
+insert into Distrito (Descripcion, idProvincia) values ('San Miguel', 1); 
+insert into Distrito (Descripcion, idProvincia) values ('San Isidro', 1); 
+insert into Distrito (Descripcion, idProvincia) values ('Pueblo Libre', 1);
+
+
+insert into Distrito (Descripcion, idProvincia) values ('Distrito 2_1', 2); 
+insert into Distrito (Descripcion, idProvincia) values ('Distrito 2_2', 2);
+
+
+insert into Distrito (Descripcion, idProvincia) values ('Distrito 3_1', 3); 
+insert into Distrito (Descripcion, idProvincia) values ('Distrito 3_2', 3);
+
+
+insert into RolUsuario (Nombre) values ('Administrador');
+insert into RolUsuario (Nombre) values ('Usuario');

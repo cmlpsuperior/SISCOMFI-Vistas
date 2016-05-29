@@ -30,7 +30,7 @@ public class VistaLogin implements ActionListener{
 	private VistaMenu vMenu;
 
 	/**
-	 * Launch the application.
+	 * Laundfdsfsdfsfdsdsdfsch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {

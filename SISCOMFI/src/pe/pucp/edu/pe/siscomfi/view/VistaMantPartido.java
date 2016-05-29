@@ -36,7 +36,7 @@ public class VistaMantPartido extends JInternalFrame {
 	private JComboBox cmbProvincia;
 	private JComboBox cmbDepartamento;
 	
-	
+	/*Comentario para probar los cambios del github*/
 	private MyTableModel tableModelPartido;
 
 	/**

@@ -8,16 +8,20 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+import pe.pucp.edu.pe.siscomfi.model.Distrito;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
+import pe.pucp.edu.pe.siscomfi.model.Rol;
 
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.GridLayout;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -33,6 +37,7 @@ public class VistaMantPartido extends JInternalFrame {
 	private JTextField txtCorreo;
 	private JTextField txtTelefono;
 	private JTable tblPartidos;
+	private JComboBox cmbDistrito;
 	private JComboBox cmbProvincia;
 	private JComboBox cmbDepartamento;
 	
@@ -66,7 +71,7 @@ public class VistaMantPartido extends JInternalFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "PARTIDO POLITICO", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel.setBounds(10, 11, 346, 164);
+		panel.setBounds(10, 11, 346, 188);
 		getContentPane().add(panel);
 		
 		JLabel label = new JLabel("Nombre (*)");
@@ -112,6 +117,14 @@ public class VistaMantPartido extends JInternalFrame {
 		cmbProvincia.setBounds(145, 124, 190, 20);
 		panel.add(cmbProvincia);
 		
+		JLabel lblDistrito = new JLabel("Distrito (*)");
+		lblDistrito.setBounds(10, 155, 125, 14);
+		panel.add(lblDistrito);
+		
+		cmbDistrito = new JComboBox();
+		cmbDistrito.setBounds(145, 152, 190, 20);
+		panel.add(cmbDistrito);
+		
 		JPanel panel_1 = new JPanel();
 		panel_1.setLayout(null);
 		panel_1.setBorder(new TitledBorder(null, "REPRESENTANTE", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -146,7 +159,7 @@ public class VistaMantPartido extends JInternalFrame {
 		panel_1.add(txtTelefono);
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(10, 220, 702, 220);
+		panel_2.setBounds(10, 244, 702, 196);
 		getContentPane().add(panel_2);
 		panel_2.setLayout(new GridLayout(1, 0, 0, 0));
 		
@@ -164,21 +177,24 @@ public class VistaMantPartido extends JInternalFrame {
 				try {
 					String nombre = txtNombre.getText();
 					String direccion = txtDireccion.getText();
-					int idprovincia = Integer.parseInt(cmbProvincia.getSelectedItem().toString().substring(0,1));
+					int idDistrito = Integer.parseInt(cmbDistrito.getSelectedItem().toString().substring(0,1));
 					String representante = txtRepresentante.getText();
 					String correo = txtCorreo.getText();
 					String telefono = txtTelefono.getText();
+					Date fechaRegistro = new Date(); //fecha actual
 					
 					PartidoPolitico p = new PartidoPolitico ();
 					p.setNombrePartido(nombre);
 					p.setDireccion(direccion);
-					p.setIdProvincia(idprovincia);
+					p.setIdDistrito(idDistrito);
 					p.setRepresentante(representante);
 					p.setCorreo(correo);
 					p.setTelefono(telefono);
+					p.setFechaRegistro(fechaRegistro);
 					
 					siscomfiManager.addPartido(p);
 					
+					JOptionPane.showMessageDialog(null, "Se registro el partido satisfactoriamente");
 					LimpiarTextos ();
 					
 				} catch (Exception a) {
@@ -187,15 +203,15 @@ public class VistaMantPartido extends JInternalFrame {
 				}
 			}
 		});
-		btnRegistrar.setBounds(150, 186, 89, 23);
+		btnRegistrar.setBounds(114, 210, 89, 23);
 		getContentPane().add(btnRegistrar);
 		
 		JButton btnModificar = new JButton("Modificar");
-		btnModificar.setBounds(323, 186, 89, 23);
+		btnModificar.setBounds(317, 210, 89, 23);
 		getContentPane().add(btnModificar);
 		
 		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setBounds(498, 186, 89, 23);
+		btnEliminar.setBounds(520, 210, 89, 23);
 		getContentPane().add(btnEliminar);
 		
 		JButton btnAceptar = new JButton("Aceptar");
@@ -205,7 +221,10 @@ public class VistaMantPartido extends JInternalFrame {
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(366, 451, 89, 23);
 		getContentPane().add(btnCancelar);
-
+		
+		
+		//Llenamos el combobox
+		LlenarCmbDistrito();
 	}
 	
 	class MyTableModel extends AbstractTableModel{		
@@ -245,9 +264,28 @@ public class VistaMantPartido extends JInternalFrame {
 			return value;
 		}
 		
+		
 		public String getColumnName(int col){
 			return titles[col];
 		}
+		
+	}
+	
+	public void LlenarCmbDistrito(){ //mostrare solo los clientes que estan activos
+		cmbDistrito.removeAllItems();
+		ArrayList<Distrito> listaDistrito;
+		try {
+			listaDistrito = siscomfiManager.queryDistritosByIdProvincia(1);
+			for (int i=0; i<listaDistrito.size();i++){				
+				Distrito d = (Distrito)listaDistrito.get(i);
+				cmbDistrito.addItem(d.getIdDistrito()+" - " + d.getNombre());
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	}
 	
@@ -258,5 +296,4 @@ public class VistaMantPartido extends JInternalFrame {
 		txtCorreo.setText("");
 		txtTelefono.setText("");
 	}
-	
 }

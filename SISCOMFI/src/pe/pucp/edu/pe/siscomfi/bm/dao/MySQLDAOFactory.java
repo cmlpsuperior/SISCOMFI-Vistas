@@ -22,7 +22,7 @@ public class MySQLDAOFactory extends DAOFactory{
 	@Override
 	public DAOUbicacion getDAOUbicacion() {
 		// TODO Auto-generated method stub
-		return null;
+		return new MySQLDAOUbicacion();
 	}
 	
 	@Override

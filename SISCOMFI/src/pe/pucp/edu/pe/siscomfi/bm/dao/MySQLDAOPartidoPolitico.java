@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.mysql.jdbc.Driver;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
@@ -27,8 +28,8 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 			
 			//Paso 3: Preparar la sentencia
 			String sql =  "INSERT INTO PartidoPolitico "
-					+ "(Nombre, Representante, CorreoRepresentante,    Direccion, Telefono, IdProvincia)"
-					+ "VALUES (?,?,?,  ?,?,?)";
+					+ "(Nombre, Representante, CorreoRepresentante,    Direccion, Telefono, IdDistrito,  FechaRegistro) "
+					+ "VALUES (?,?,?,  ?,?,?, ?)";
 			pstmt = conn.prepareStatement(sql);
 			
 			//pstmt.setInt(1, p.getId());
@@ -36,10 +37,11 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 			pstmt.setString(2, p.getRepresentante());
 			pstmt.setString(3, p.getCorreo());
 			
-			pstmt.setString(4, p.getDireccion());
-						
+			pstmt.setString(4, p.getDireccion());						
 			pstmt.setString(5, p.getTelefono());
-			pstmt.setInt(6, p.getIdPartidoPolitco());
+			pstmt.setInt(6, p.getIdDistrito());
+			
+			pstmt.setDate(7, new java.sql.Date(p.getFechaRegistro().getTime()));
 			
 			//Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
@@ -95,7 +97,8 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 				String correo = rs.getString("CorreoRepresentante");
 				String direccion = rs.getString("Direccion");
 				String telefono = rs.getString("Telefono");
-				int idProvincia = rs.getInt("idProvincia");
+				int idDistrito = rs.getInt("idDistrito");
+				Date fechaRegistro = rs.getTimestamp("FechaRegistro");
 				
 				PartidoPolitico p = new PartidoPolitico();
 				p.setIdPartidoPolitco(id);
@@ -104,8 +107,8 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 				p.setCorreo(correo);
 				p.setDireccion(direccion);
 				p.setTelefono(telefono);
-				p.setIdProvincia(idProvincia);
-				
+				p.setIdDistrito(idDistrito);
+				p.setFechaRegistro(fechaRegistro);
 				
 				arr.add(p);
 			}
@@ -129,3 +132,4 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 	}
 	
 }
+

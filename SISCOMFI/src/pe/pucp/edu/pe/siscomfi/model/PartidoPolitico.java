@@ -1,5 +1,7 @@
 package pe.pucp.edu.pe.siscomfi.model;
 
+import java.util.Date;
+
 public class PartidoPolitico {
 	private int idPartidoPolitco;
 	private String nombrePartido;
@@ -8,8 +10,9 @@ public class PartidoPolitico {
 	private String direccion;
 	private String telefono;
 	
-	private int idProvincia;
-	private String Departamento;
+	private int idDistrito;
+	
+	private Date fechaRegistro;
 	
 	
 	public int getIdPartidoPolitco() {
@@ -48,17 +51,17 @@ public class PartidoPolitico {
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
-	public int getIdProvincia() {
-		return idProvincia;
+	public int getIdDistrito() {
+		return idDistrito;
 	}
-	public void setIdProvincia(int provincia) {
-		idProvincia = provincia;
+	public void setIdDistrito(int idDistrito) {
+		this.idDistrito = idDistrito;
 	}
-	public String getDepartamento() {
-		return Departamento;
+	public Date getFechaRegistro() {
+		return fechaRegistro;
 	}
-	public void setDepartamento(String departamento) {
-		Departamento = departamento;
+	public void setFechaRegistro(Date fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
 	}
 	
 

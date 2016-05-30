@@ -86,7 +86,7 @@ alter table PartidoPolitico add foreign key (idDistrito) references Distrito (id
 
 CREATE TABLE Proceso (
        idProceso            int NOT NULL primary key AUTO_INCREMENT,
-       Descripcion          varchar(200) NOT NULL,
+       Descripcion          varchar(20) NOT NULL,
        FechaProceso1Inicio  datetime NOT NULL,
        FechaProceso1Fin     datetime NOT NULL,
        FechaProceso2Inicio  datetime NOT NULL,

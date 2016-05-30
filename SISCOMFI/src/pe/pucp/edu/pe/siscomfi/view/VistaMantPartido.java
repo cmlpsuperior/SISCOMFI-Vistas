@@ -18,15 +18,20 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class VistaMantPartido extends JInternalFrame {
 	private JTextField txtCodigo;
@@ -167,6 +172,35 @@ public class VistaMantPartido extends JInternalFrame {
 		panel_2.add(scrollPane);
 		
 		tblPartidos = new JTable();
+		tblPartidos.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				int selRow = tblPartidos.getSelectedRow();
+				if(selRow >= 0){
+					int idPartido = Integer.parseInt(tblPartidos.getValueAt(selRow, 0).toString());
+					//AHORA:
+					PartidoPolitico p=null;
+					try {
+						p = siscomfiManager.queryPartidoById(idPartido);
+						txtCodigo.setText(p.getIdPartidoPolitco() + "");
+						txtNombre.setText(p.getNombrePartido());
+						txtDireccion.setText(p.getDireccion());
+						
+						txtRepresentante.setText(p.getRepresentante());
+						txtCorreo.setText(p.getCorreo());
+						txtTelefono.setText(p.getTelefono());
+						
+						}
+					catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+				
+			}
+		});
+		
 		scrollPane.setViewportView(tblPartidos);
 		tableModelPartido = new MyTableModel();
 		tblPartidos.setModel(tableModelPartido);

@@ -23,5 +23,20 @@ public class PartidoPoliticoDB {
     	listaPartido = daoPartidoPolitico.queryAll();
     	return listaPartido;
     }
-
+    
+    public void update(PartidoPolitico p)
+    {
+    	daoPartidoPolitico.update(p);
+    }
+    
+    public void delete(int idPartido)
+    {
+    	daoPartidoPolitico.delete(idPartido);
+    }
+    
+    public PartidoPolitico queryById(int idPartido)
+    {
+    	return daoPartidoPolitico.queryById(idPartido);
+    	
+    }
 }

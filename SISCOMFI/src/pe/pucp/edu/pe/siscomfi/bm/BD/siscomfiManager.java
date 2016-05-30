@@ -37,6 +37,22 @@ public class siscomfiManager {
 		partidoPoliticoDB.add(p);
     }
 	
+	public static void updatePartido(PartidoPolitico p)
+    {
+		partidoPoliticoDB.update(p);
+    }
+	
+	public static void deletePartido(int idPartido)
+    {
+		partidoPoliticoDB.delete(idPartido);
+    }
+	
+	public static PartidoPolitico queryPartidoById(int idPartido)
+    {
+		return partidoPoliticoDB.queryById(idPartido);
+    }
+	
+	
 	public static void addProceso(Proceso p)
     {
 		procesoDB.add(p);

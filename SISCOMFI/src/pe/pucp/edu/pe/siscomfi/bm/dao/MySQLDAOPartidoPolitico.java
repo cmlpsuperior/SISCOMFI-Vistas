@@ -100,7 +100,35 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 
 	@Override
 	public void delete(int idPartido) {
-		// TODO Auto-generated method stub
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			//Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			//Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+								DBConnection.user,
+								DBConnection.password);
+			//Paso 3: Preparar la sentencia
+			String sql = "UPDATE PartidoPolitico SET EstadoActivo = 'E' "
+					+ "WHERE idPartidoPolitico=?";
+			pstmt = conn.prepareStatement(sql);
+			//
+			pstmt.setInt(1, idPartido);
+			//Paso 4: Ejecutar la sentencia
+			pstmt.executeUpdate();
+			//Paso 5(opc.): Procesar los resultados			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			//Paso 6(OJO): Cerrar la conexión
+			try { if (pstmt!= null) pstmt.close();} 
+				catch (Exception e){e.printStackTrace();};
+			try { if (conn!= null) conn.close();} 
+				catch (Exception e){e.printStackTrace();};						
+		}
 		
 	}
 
@@ -118,7 +146,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 								DBConnection.user,
 								DBConnection.password);
 			//Paso 3: Preparar la sentencia
-			String sql = "SELECT * FROM PartidoPolitico";
+			String sql = "SELECT * FROM PartidoPolitico WHERE EstadoActivo <> 'E'";
 			pstmt = conn.prepareStatement(sql);
 			//Paso 4: Ejecutar la sentencia
 			rs = pstmt.executeQuery();
@@ -132,6 +160,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 				String telefono = rs.getString("Telefono");
 				int idDistrito = rs.getInt("idDistrito");
 				Date fechaRegistro = rs.getTimestamp("FechaRegistro");
+				String estadoActivo = rs.getString("EstadoActivo");
 				
 				PartidoPolitico p = new PartidoPolitico();
 				p.setIdPartidoPolitco(id);
@@ -142,6 +171,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 				p.setTelefono(telefono);
 				p.setIdDistrito(idDistrito);
 				p.setFechaRegistro(fechaRegistro);
+				p.setEstadoActivo(estadoActivo);
 				
 				arr.add(p);
 			}
@@ -160,8 +190,57 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 
 	@Override
 	public PartidoPolitico queryById(int idPartido) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		PartidoPolitico p = null;
+		try {
+			//Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			//Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+								DBConnection.user,
+								DBConnection.password);
+			//Paso 3: Preparar la sentencia
+			String sql = "SELECT * FROM PartidoPolitico "
+					+ "WHERE idPartidoPolitico=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idPartido);
+			//Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			//Paso 5(opc.): Procesar los resultados
+			if (rs.next()){
+				int id = rs.getInt("idPartidoPolitico");
+				String nombre = rs.getString("Nombre");
+				String rep = rs.getString("Representante");
+				String correo = rs.getString("CorreoRepresentante");
+				String direccion = rs.getString("Direccion");
+				String telefono = rs.getString("Telefono");
+				int idDistrito = rs.getInt("idDistrito");
+				Date fechaRegistro = rs.getTimestamp("FechaRegistro");		
+				
+				p = new PartidoPolitico();
+				p.setIdPartidoPolitco(id);
+				p.setNombrePartido(nombre);
+				p.setRepresentante(rep);
+				p.setCorreo(correo);
+				p.setDireccion(direccion);
+				p.setTelefono(telefono);
+				p.setIdDistrito(idDistrito);
+				p.setFechaRegistro(fechaRegistro);
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			//Paso 6(OJO): Cerrar la conexión
+			try { if (pstmt!= null) pstmt.close();} 
+				catch (Exception e){e.printStackTrace();};
+			try { if (conn!= null) conn.close();} 
+				catch (Exception e){e.printStackTrace();};						
+		}
+		return p;
 	}
 	
 }

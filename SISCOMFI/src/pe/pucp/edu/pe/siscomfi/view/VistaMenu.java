@@ -79,16 +79,6 @@ public class VistaMenu extends JFrame {
 		JMenu mnPartidoPolitico = new JMenu("Partido Politico");
 		menuBar.add(mnPartidoPolitico);
 		
-		JMenuItem mntmRegistrar = new JMenuItem("Registrar");
-		mntmRegistrar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				vRegistrarPartido = new VistaRegistrarPartido();
-				desktop.add(vRegistrarPartido);
-				vRegistrarPartido.setVisible(true);
-				
-			}
-		});
-		
 		JMenuItem mntmPartido = new JMenuItem("Partido Politico");
 		mntmPartido.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -98,27 +88,6 @@ public class VistaMenu extends JFrame {
 			}
 		});
 		mnPartidoPolitico.add(mntmPartido);
-		mnPartidoPolitico.add(mntmRegistrar);
-		
-		JMenuItem mntmModificar = new JMenuItem("Modificar");
-		mntmModificar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				vModificarPartido = new VistaModificarPartido(me); //debo pasar el padre si o si
-				desktop.add(vModificarPartido);
-				vModificarPartido.setVisible(true);
-			}
-		});
-		mnPartidoPolitico.add(mntmModificar);
-		
-		JMenuItem mntmEliminar = new JMenuItem("Eliminar");
-		mntmEliminar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				vBorrarPartido = new VistaBorrarPartido(me); //seteo el padre, es obligatorio
-				desktop.add(vBorrarPartido);
-				vBorrarPartido.setVisible(true);
-			}
-		});
-		mnPartidoPolitico.add(mntmEliminar);
 		
 		JMenuItem mntmBuscar = new JMenuItem("Buscar");
 		mntmBuscar.addActionListener(new ActionListener() {

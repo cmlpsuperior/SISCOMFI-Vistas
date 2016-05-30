@@ -68,6 +68,7 @@ public class VistaMantPartido extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public VistaMantPartido() {
+		setTitle("Partidos politicos");
 		setClosable(true);
 		setBounds(100, 100, 740, 541);
 		getContentPane().setLayout(null);
@@ -275,6 +276,21 @@ public class VistaMantPartido extends JInternalFrame {
 		getContentPane().add(btnModificar);
 		
 		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int res = JOptionPane.showConfirmDialog(null, "¿Está seguro?");
+				if (res == JOptionPane.OK_OPTION) {
+					try {
+						siscomfiManager.deletePartido(Integer.parseInt(txtCodigo.getText()));
+						LimpiarTextos();
+						refreshTblPartidos();						
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}						
+				}
+			}
+		});
 		btnEliminar.setBounds(520, 210, 89, 23);
 		getContentPane().add(btnEliminar);
 		

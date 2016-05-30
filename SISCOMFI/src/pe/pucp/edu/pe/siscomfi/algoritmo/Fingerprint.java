@@ -88,6 +88,7 @@ public class Fingerprint {
 		return minutaes;
 	}
 
+	//gives the K nearest point given a point x
 	private static Point[] getNearestNeighbourType(Point x, List<Point> lista) {
 		Point[] retur = new Point[k];
 		double fjernest = Double.MIN_VALUE;
@@ -128,6 +129,7 @@ public class Fingerprint {
 		return retur;
 	}
 
+	//compares the edges of two neighbours
 	private static boolean compareEdges(double[] aS, double[] aT) {
 		int cont_umb = 0;
 		for (int i = 0; i < aS.length; i++) {
@@ -149,19 +151,20 @@ public class Fingerprint {
 		return matchNeigh;
 	}
 
+	//converts a list of minutaes in a graph, each minutae has its K nearest neigbours
 	private static double[][] matToGraph(List<Point> minutaes) {
 		double[][] grafoS = new double[minutaes.size()][k];
 		for (int i = 0; i < minutaes.size(); i++) {
 			Point[] vecinos = Fingerprint.getNearestNeighbourType(minutaes.get(i), minutaes);
 			for (int j = 1; j < vecinos.length; j++) {
 				Point p = vecinos[j];
-				// int index = tMinutaes.indexOf(p);
 				grafoS[i][j - 1] = p.euclideanDistance(minutaes.get(i));
 			}
 		}
 		return grafoS;
 	}
 
+	//Removes false minutaes
 	private static List<Point> removeFalseMinutae(int[][] ske, List<Point> minutaes) {
 		int[][][] matM = new int[ske.length][ske[0].length][4];
 		for (Point p : minutaes) {
@@ -235,7 +238,8 @@ public class Fingerprint {
 		}
 		return nueva;
 	}
-
+	
+	//Gives the result according to the comparition percent
 	public static String resultado(double res) {
 		if (res >= 0.9)
 			return "Iguales";
@@ -243,7 +247,8 @@ public class Fingerprint {
 			return "Observado";
 		return "Diferentes";
 	}
-
+	
+	//compares two graphs of fingerprints
 	public static double comparition(double[][] grafoS, double[][] grafoT) {
 		int match = 0;
 		for (int i = 0; i < grafoS.length; i++) {
@@ -267,6 +272,7 @@ public class Fingerprint {
 		return comparition * ratio;
 	}
 
+	//convertes an image to a graph given its directory
 	public static double[][] imageGraph(String filename1) {
 		ImagePlus fingerprint = IJ.openImage(filename1);
 		ImageProcessor imp_fing = fingerprint.getProcessor();

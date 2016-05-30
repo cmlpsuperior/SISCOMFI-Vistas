@@ -7,7 +7,7 @@ public interface DAOProceso {
 	void update (Proceso p);
 	void delete (int idProceso);
 	//ArrayList<Usuario> queryAll();
-	Proceso queryById(int idProceso);
+	Proceso queryById(int idProceso);	
 	//ArrayList<Usuario> queryByFilter(String name);
 
 }

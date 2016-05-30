@@ -10,7 +10,9 @@ import javax.swing.JButton;
 
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.Rol; //aca tiene que ir tipoProceso
+import pe.pucp.edu.pe.siscomfi.model.TipoProceso;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
+import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 
 import javax.swing.UIManager;
 
@@ -29,6 +31,7 @@ import java.awt.event.ActionEvent;
 public class VistaIniciarProceso extends JInternalFrame {
 	private JTextField txtRuta;
 	private JTextField txtFase;
+	private JComboBox cbPartido;
 	
 
 	public VistaIniciarProceso() {
@@ -40,7 +43,11 @@ public class VistaIniciarProceso extends JInternalFrame {
 		lblNewLabel.setBounds(12, 63, 126, 16);
 		getContentPane().add(lblNewLabel);
 		
-		JComboBox cbPartido = new JComboBox();
+        cbPartido = new JComboBox();
+		cbPartido.setBounds(185, 43, 198, 20);
+		getContentPane().add(cbPartido);
+		fillCustomerCmb();
+		
 		cbPartido.setBounds(124, 60, 170, 22);
 		getContentPane().add(cbPartido);
 		
@@ -60,8 +67,8 @@ public class VistaIniciarProceso extends JInternalFrame {
 		JButton btnProcesar = new JButton("Procesar");
 		btnProcesar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Proceso p = new Proceso();
-				p.setDescripción("Proceso iniciado por " + (String)cbPartido.getSelectedItem());
+				//Proceso p = new Proceso();
+				//p.setDescripción("Proceso iniciado por " + (String)cbPartido.getSelectedItem());
 				/*p.setFechaProceso1Inicio(fechaProceso1Inicio);
 				p.setFechaProceso1Fin(fechaProceso1Fin);
 				p.setFechaProceso2Inicio(fechaProceso2Inicio);
@@ -69,7 +76,7 @@ public class VistaIniciarProceso extends JInternalFrame {
 			
 			}
 		});
-		btnProcesar.setBounds(107, 163, 97, 25);
+		btnProcesar.setBounds(41, 162, 97, 25);
 		getContentPane().add(btnProcesar);
 		
 		txtFase = new JTextField();
@@ -78,10 +85,37 @@ public class VistaIniciarProceso extends JInternalFrame {
 		txtFase.setBounds(124, 25, 170, 22);
 		getContentPane().add(txtFase);
 		txtFase.setColumns(10);
-		
+				
 		JLabel lblFaseDelProceso = new JLabel("Fase del proceso:");
 		lblFaseDelProceso.setBounds(12, 28, 108, 16);
 		getContentPane().add(lblFaseDelProceso);
+		
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		btnCancelar.setBounds(172, 162, 97, 25);
+		getContentPane().add(btnCancelar);
 
+	}
+	
+	public void fillCustomerCmb(){ //mostrare solo los clientes que estan activos
+		cbPartido.removeAllItems();
+		ArrayList<PartidoPolitico> PartidoPoliticoList;
+		try {
+			PartidoPoliticoList = siscomfiManager.queryAllPartidos();
+			for (int i=0; i<PartidoPoliticoList.size();i++){				
+				PartidoPolitico pp = (PartidoPolitico)PartidoPoliticoList.get(i);
+				cbPartido.addItem(pp.getIdPartidoPolitco() + " - " + pp.getNombrePartido());
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 }

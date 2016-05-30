@@ -35,6 +35,7 @@ public class VistaIniciarProceso extends JInternalFrame {
 	
 
 	public VistaIniciarProceso() {
+		setClosable(true);
 		setTitle("Iniciar Proceso");
 		setBounds(100, 100, 326, 255);
 		getContentPane().setLayout(null);

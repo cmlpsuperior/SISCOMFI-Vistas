@@ -1,18 +1,11 @@
 package pe.pucp.edu.pe.siscomfi.algoritmo;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import ij.IJ;
 import ij.ImagePlus;
-import ij.plugin.Resizer;
 import ij.process.ImageProcessor;
 import pe.pucp.edu.pe.siscomfi.model.Point;
 
@@ -22,7 +15,7 @@ public class Fingerprint {
 	private static int k = 6;
 
 	// return the crossing number of the 3x3 matrix
-	public static int CrossingNumber(int[][] CNMatrix) {
+	private static int CrossingNumber(int[][] CNMatrix) {
 		int cn = 0, width = 3, heigth = 3;
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < heigth; j++) {
@@ -34,7 +27,7 @@ public class Fingerprint {
 	}
 
 	// returns the 3x3 matrix around the x,y point
-	public static int[][] getCNMatrix(int[][] skelMatrix, int x, int y) {
+	private static int[][] getCNMatrix(int[][] skelMatrix, int x, int y) {
 		int[][] cnm = new int[3][3];
 		if (x > 0 && y > 0 && x < width - 1 && y < height - 1) {
 			for (int i = 0; i < 3; i++) {
@@ -46,7 +39,7 @@ public class Fingerprint {
 		return cnm;
 	}
 
-	public static boolean isBifurcation(int[][] cnmatrix) {
+	private static boolean isBifurcation(int[][] cnmatrix) {
 		int P1, P2, P3, P4, P5, P6, P7, P8;
 		P8 = cnmatrix[0][0];
 		P1 = cnmatrix[0][1];
@@ -70,7 +63,7 @@ public class Fingerprint {
 	}
 
 	// get the list of possible minutaes from the skeletized matrix
-	public static List<Point> getMinutiaes(int[][] skelMatrix) {
+	private static List<Point> getMinutiaes(int[][] skelMatrix) {
 		height = skelMatrix[0].length;
 		width = skelMatrix.length;
 
@@ -95,7 +88,7 @@ public class Fingerprint {
 		return minutaes;
 	}
 
-	public static Point[] getNearestNeighbourType(Point x, List<Point> lista) {
+	private static Point[] getNearestNeighbourType(Point x, List<Point> lista) {
 		Point[] retur = new Point[k];
 		double fjernest = Double.MIN_VALUE;
 		int index = 0;
@@ -135,7 +128,7 @@ public class Fingerprint {
 		return retur;
 	}
 
-	public static boolean compareEdges(double[] aS, double[] aT) {
+	private static boolean compareEdges(double[] aS, double[] aT) {
 		int cont_umb = 0;
 		for (int i = 0; i < aS.length; i++) {
 			if (aS[i] != 0) {
@@ -152,17 +145,11 @@ public class Fingerprint {
 			}
 		}
 		// System.out.println(cont_umb);
-		boolean matchNeigh = (cont_umb*1.0 / k) > 0.75;
+		boolean matchNeigh = (cont_umb * 1.0 / k) > 0.75;
 		return matchNeigh;
 	}
-	
-	public static String resultado (double res){
-		if(res >= 0.9) return "Iguales";
-		if(res < 0.9 && res >= 0.6) return "Observado";
-		return "Diferentes";
-	}
-	
-	public static double[][] matToGraph(List<Point> minutaes) {
+
+	private static double[][] matToGraph(List<Point> minutaes) {
 		double[][] grafoS = new double[minutaes.size()][k];
 		for (int i = 0; i < minutaes.size(); i++) {
 			Point[] vecinos = Fingerprint.getNearestNeighbourType(minutaes.get(i), minutaes);
@@ -175,47 +162,7 @@ public class Fingerprint {
 		return grafoS;
 	}
 
-	public static double comparition(double[][] grafoS, double[][] grafoT) {
-		int match = 0;
-		for (int i = 0; i < grafoS.length; i++) {
-			double[] vecindadS = grafoS[i];
-			int[] vec_aceptada = new int[grafoT.length];
-			for (int j = 0; j < grafoT.length; j++) {
-				if (vec_aceptada[j] == 0) {
-					double[] vecindadT = grafoT[j];
-					boolean matchNeigh = Fingerprint.compareEdges(vecindadS, vecindadT);
-					if (matchNeigh) {
-						match++;
-						vec_aceptada[j] = 1;
-						break;
-					}
-				}
-			}
-		}
-		double comparition = (Math.pow(match, 2) / (grafoT.length * grafoS.length));
-		double ratio = (grafoT.length < grafoS.length) ? grafoT.length*1.0 / grafoS.length : grafoS.length*1.0 / grafoT.length;
-		return comparition * ratio;
-	}
-
-	public static double[][] imageGraph(String filename1) {
-		ImagePlus fingerprint = IJ.openImage(filename1);
-		ImageProcessor imp_fing = fingerprint.getProcessor();
-		imp_fing.setInterpolate(true);
-		imp_fing = imp_fing.resize(600, 600);
-
-		ImagePlus newFing = new ImagePlus("small", imp_fing);
-		IJ.run(newFing, "Make Binary", "");
-		IJ.run(newFing, "Skeletonize", "");
-		BufferedImage bin = newFing.getBufferedImage();
-
-		int[][] ske = HelperMethods.imgToMat(bin);
-		List<Point> fMinutaes = Fingerprint.getMinutiaes(ske);
-		List<Point> tMinutaes = Fingerprint.removeFalseMinutae(ske, fMinutaes);
-		double[][] grafoS = Fingerprint.matToGraph(tMinutaes);
-		return grafoS;
-	}	
-
-	public static List<Point> removeFalseMinutae(int[][] ske, List<Point> minutaes) {
+	private static List<Point> removeFalseMinutae(int[][] ske, List<Point> minutaes) {
 		int[][][] matM = new int[ske.length][ske[0].length][4];
 		for (Point p : minutaes) {
 			int x = p.getX();
@@ -288,4 +235,54 @@ public class Fingerprint {
 		}
 		return nueva;
 	}
+
+	public static String resultado(double res) {
+		if (res >= 0.9)
+			return "Iguales";
+		if (res < 0.9 && res >= 0.6)
+			return "Observado";
+		return "Diferentes";
+	}
+
+	public static double comparition(double[][] grafoS, double[][] grafoT) {
+		int match = 0;
+		for (int i = 0; i < grafoS.length; i++) {
+			double[] vecindadS = grafoS[i];
+			int[] vec_aceptada = new int[grafoT.length];
+			for (int j = 0; j < grafoT.length; j++) {
+				if (vec_aceptada[j] == 0) {
+					double[] vecindadT = grafoT[j];
+					boolean matchNeigh = Fingerprint.compareEdges(vecindadS, vecindadT);
+					if (matchNeigh) {
+						match++;
+						vec_aceptada[j] = 1;
+						break;
+					}
+				}
+			}
+		}
+		double comparition = (Math.pow(match, 2) / (grafoT.length * grafoS.length));
+		double ratio = (grafoT.length < grafoS.length) ? grafoT.length * 1.0 / grafoS.length
+				: grafoS.length * 1.0 / grafoT.length;
+		return comparition * ratio;
+	}
+
+	public static double[][] imageGraph(String filename1) {
+		ImagePlus fingerprint = IJ.openImage(filename1);
+		ImageProcessor imp_fing = fingerprint.getProcessor();
+		imp_fing.setInterpolate(true);
+		imp_fing = imp_fing.resize(600, 600);
+
+		ImagePlus newFing = new ImagePlus("small", imp_fing);
+		IJ.run(newFing, "Make Binary", "");
+		IJ.run(newFing, "Skeletonize", "");
+		BufferedImage bin = newFing.getBufferedImage();
+
+		int[][] ske = HelperMethods.imgToMat(bin);
+		List<Point> fMinutaes = Fingerprint.getMinutiaes(ske);
+		List<Point> tMinutaes = Fingerprint.removeFalseMinutae(ske, fMinutaes);
+		double[][] grafoS = Fingerprint.matToGraph(tMinutaes);
+		return grafoS;
+	}
+
 }

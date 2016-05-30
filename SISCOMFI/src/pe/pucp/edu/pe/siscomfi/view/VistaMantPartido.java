@@ -242,6 +242,35 @@ public class VistaMantPartido extends JInternalFrame {
 		getContentPane().add(btnRegistrar);
 		
 		JButton btnModificar = new JButton("Modificar");
+		btnModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int id = Integer.parseInt(txtCodigo.getText());
+				String nombre = txtNombre.getText();
+				String direccion = txtDireccion.getText();
+				int idDistrito = Integer.parseInt(cmbDistrito.getSelectedItem().toString().substring(0,1));
+				String representante = txtRepresentante.getText();
+				String correo = txtCorreo.getText();
+				String telefono = txtTelefono.getText();
+				
+				PartidoPolitico p = new PartidoPolitico();
+				p.setIdPartidoPolitco(id);
+				p.setNombrePartido(nombre);
+				p.setDireccion(direccion);
+				p.setIdDistrito(idDistrito);
+				p.setRepresentante(representante);
+				p.setCorreo(correo);
+				p.setTelefono(telefono);
+								
+				try {
+					siscomfiManager.updatePartido(p);
+					JOptionPane.showMessageDialog(null, "Se actualizo el partido satisfactoriamente");
+					refreshTblPartidos();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}	
+			}
+		});
 		btnModificar.setBounds(317, 210, 89, 23);
 		getContentPane().add(btnModificar);
 		
@@ -264,7 +293,7 @@ public class VistaMantPartido extends JInternalFrame {
 	
 	class MyTableModel extends AbstractTableModel{		
 		ArrayList<PartidoPolitico> listaPartido = null;
-		String [] titles = {"Codigo", "Nombre",  "Representante", "Telefono" };
+		String [] titles = {"Codigo", "Nombre",  "Representante", "Telefono", "EstadoActivo" };
 		
 		public MyTableModel (){
 			try {
@@ -278,7 +307,7 @@ public class VistaMantPartido extends JInternalFrame {
 		@Override
 		public int getColumnCount() {
 			// TODO Auto-generated method stub
-			return 4;
+			return 5;
 		}
 
 		@Override
@@ -295,6 +324,7 @@ public class VistaMantPartido extends JInternalFrame {
 				case 1:  value = listaPartido.get(row).getNombrePartido(); break;
 				case 2:  value = "" + listaPartido.get(row).getRepresentante(); break;	
 				case 3:  value = "" + listaPartido.get(row).getTelefono(); break;
+				case 4:  value = "" + listaPartido.get(row).getEstadoActivo(); break;
 			}
 			return value;
 		}
@@ -335,6 +365,7 @@ public class VistaMantPartido extends JInternalFrame {
 	}
 	
 	public void LimpiarTextos (){
+		txtCodigo.setText("");
 		txtNombre.setText("");
 		txtDireccion.setText("");
 		txtRepresentante.setText("");

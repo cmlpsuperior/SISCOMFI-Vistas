@@ -75,7 +75,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 			//Paso 3: Preparar la sentencia
 			String sql = "UPDATE PartidoPolitico "
 					+ " SET Representante=?, CorreoRepresentante=?, Direccion=?, Telefono = ? , EstadoActivo = 'M'"
-					+ "WHERE id=?";
+					+ "WHERE idPartidoPolitico=?";
 			pstmt = conn.prepareStatement(sql);
 			//
 			pstmt.setString(1, p.getRepresentante());

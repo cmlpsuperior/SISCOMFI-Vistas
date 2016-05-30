@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JPanel;
@@ -12,12 +13,14 @@ import java.awt.GridLayout;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VistaBuscarPartido extends JInternalFrame {
 	private JTextField txtCodigo;
 	private JTextField txtNombre;
 	private JTable tblPartido;
-	private JTextField textField;
+	private JTextField txtRepresentante;
 	
 	private MyTableModel tableModelPartidos;
 	
@@ -59,6 +62,30 @@ public class VistaBuscarPartido extends JInternalFrame {
 		tblPartido.setModel(tableModelPartidos);
 		
 		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (txtCodigo.getText() == null || txtCodigo.getText() == "" ){
+					
+					if (txtNombre.getText() == null || txtNombre.getText() == ""){
+						
+						
+						if (txtRepresentante.getText() == null || txtRepresentante.getText() == ""){
+							JOptionPane.showMessageDialog(null, "Llene almenos un campo de busqueda");
+						}
+						else{
+							//buscar por representante;
+						}
+					}
+					else {
+						//buscar por Nombre del partido;
+					}
+					
+				}
+				else {
+					//buscar por ID de partido politico;
+				}
+			}
+		});
 		btnBuscar.setBounds(10, 88, 89, 23);
 		getContentPane().add(btnBuscar);
 		
@@ -74,10 +101,10 @@ public class VistaBuscarPartido extends JInternalFrame {
 		lblRepresentante.setBounds(10, 63, 94, 14);
 		getContentPane().add(lblRepresentante);
 		
-		textField = new JTextField();
-		textField.setBounds(114, 60, 244, 20);
-		getContentPane().add(textField);
-		textField.setColumns(10);
+		txtRepresentante = new JTextField();
+		txtRepresentante.setBounds(114, 60, 244, 20);
+		getContentPane().add(txtRepresentante);
+		txtRepresentante.setColumns(10);
 
 	}
 	

@@ -43,7 +43,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	public VistaIniciarProceso() {
 		setClosable(true);
 		setTitle("Iniciar Proceso");
-		setBounds(100, 100, 386, 292);
+		setBounds(100, 100, 427, 275);
 		getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Partido Pol\u00EDtico:");
@@ -51,12 +51,12 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(lblNewLabel);
 		
         cbPartido = new JComboBox<String>();
-		cbPartido.setBounds(168, 106, 173, 20);
+		cbPartido.setBounds(168, 106, 235, 20);
 		getContentPane().add(cbPartido);
 		fillCustomerCmb();
 		
 		cbDescProceso = new JComboBox();
-		cbDescProceso.setBounds(168, 35, 173, 22);
+		cbDescProceso.setBounds(168, 35, 235, 22);
 		getContentPane().add(cbDescProceso);
 		fillDescProcesoCmb();
 		
@@ -65,12 +65,12 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(lblRuta);
 		
 		txtRuta = new JTextField();
-		txtRuta.setBounds(168, 141, 116, 22);
+		txtRuta.setBounds(168, 141, 180, 22);
 		getContentPane().add(txtRuta);
 		txtRuta.setColumns(10);
 		
 		btnRuta = new JButton("...");
-		btnRuta.setBounds(252, 95, 45, 25);
+		btnRuta.setBounds(358, 140, 45, 25);
 		getContentPane().add(btnRuta);
 		
 		JButton btnProcesar = new JButton("Procesar");
@@ -85,13 +85,13 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			
 			}
 		});
-		btnProcesar.setBounds(85, 207, 97, 25);
+		btnProcesar.setBounds(105, 207, 97, 25);
 		getContentPane().add(btnProcesar);
 		
 		txtFase = new JTextField();
 		txtFase.setEditable(false);
 		txtFase.setText("Fase 1");
-		txtFase.setBounds(168, 70, 170, 22);
+		txtFase.setBounds(168, 70, 235, 22);
 		getContentPane().add(txtFase);
 		txtFase.setColumns(10);
 				
@@ -100,10 +100,10 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(lblFaseDelProceso);
 		
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(216, 207, 97, 25);
+		btnCancelar.setBounds(278, 207, 97, 25);
 		getContentPane().add(btnCancelar);
 		
-		JLabel lblDescripcionDelProceso = new JLabel("descripcion del proceso");
+		JLabel lblDescripcionDelProceso = new JLabel("Descripcion del proceso:");
 		lblDescripcionDelProceso.setBounds(12, 38, 143, 16);
 		getContentPane().add(lblDescripcionDelProceso);
 		

@@ -244,27 +244,39 @@ public class VistaMantPartido extends JInternalFrame {
 				try {
 					String nombre = txtNombre.getText();
 					String direccion = txtDireccion.getText();
-					String[] tokens = cmbDistrito.getSelectedItem().toString().split(" ");
-					int idDistrito = Integer.parseInt(tokens[0]);
 					String representante = txtRepresentante.getText();
 					String correo = txtCorreo.getText();
 					String telefono = txtTelefono.getText();
-					Date fechaRegistro = new Date(); //fecha actual
 					
-					PartidoPolitico p = new PartidoPolitico ();
-					p.setNombrePartido(nombre);
-					p.setDireccion(direccion);
-					p.setIdDistrito(idDistrito);
-					p.setRepresentante(representante);
-					p.setCorreo(correo);
-					p.setTelefono(telefono);
-					p.setFechaRegistro(fechaRegistro);
+					if (nombre.equals("")){
+						JOptionPane.showMessageDialog(null, "El campo nombre no puede estar vacio");
+					}
 					
-					siscomfiManager.addPartido(p);
-					
-					JOptionPane.showMessageDialog(null, "Se registro el partido satisfactoriamente");
-					LimpiarTextos ();
-					refreshTblPartidos();
+					else if (direccion.equals("")) {
+						JOptionPane.showMessageDialog(null, "El campo direccion no puede estar vacio");
+					}
+					else if (cmbDistrito.getSelectedItem() ==null){
+						JOptionPane.showMessageDialog(null, "Debe seleccionar un distrito");
+					}
+					else{
+						String[] tokens = cmbDistrito.getSelectedItem().toString().split(" ");
+						int idDistrito = Integer.parseInt(tokens[0]);
+						Date fechaRegistro = new Date(); //fecha actual
+						PartidoPolitico p = new PartidoPolitico ();
+						p.setNombrePartido(nombre);
+						p.setDireccion(direccion);
+						p.setIdDistrito(idDistrito);
+						p.setRepresentante(representante);
+						p.setCorreo(correo);
+						p.setTelefono(telefono);
+						p.setFechaRegistro(fechaRegistro);
+						
+						siscomfiManager.addPartido(p);
+						
+						JOptionPane.showMessageDialog(null, "Se registro el partido satisfactoriamente");
+						LimpiarTextos ();
+						refreshTblPartidos();
+					}	
 					
 				} catch (Exception a) {
 					// TODO Auto-generated catch block

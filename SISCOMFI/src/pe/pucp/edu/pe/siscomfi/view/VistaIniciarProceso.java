@@ -7,8 +7,10 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import pe.pucp.edu.pe.siscomfi.algoritmo.HelperMethods;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.Rol; //aca tiene que ir tipoProceso
 import pe.pucp.edu.pe.siscomfi.model.TipoProceso;
@@ -20,14 +22,22 @@ import javax.swing.UIManager;
 import org.jdatepicker.DefaultComponentFactory;
 import org.jdatepicker.JDatePicker;
 
+import ij.IJ;
+import ij.ImagePlus;
+import ij.process.ImageProcessor;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextArea;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
 
 @SuppressWarnings("serial")
 public class VistaIniciarProceso extends JInternalFrame implements ActionListener{
@@ -38,12 +48,16 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JButton btnCancelar;
 	private JButton btnProcesar;
 	private JFileChooser jfcRuta;
-	private JComboBox cbDescProceso;	
-
+	private JComboBox<String> cbDescProceso;	
+	private JLabel lblExtra;
+	private JLabel lblCompara;
+	private JTextArea txtLog;
+	private JButton btnCambiar;
+	
 	public VistaIniciarProceso() {
 		setClosable(true);
 		setTitle("Iniciar Proceso");
-		setBounds(100, 100, 427, 275);
+		setBounds(100, 100, 843, 535);
 		getContentPane().setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Partido Pol\u00EDtico:");
@@ -55,7 +69,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(cbPartido);
 		fillCustomerCmb();
 		
-		cbDescProceso = new JComboBox();
+		cbDescProceso = new JComboBox<String>();
 		cbDescProceso.setBounds(168, 35, 235, 22);
 		getContentPane().add(cbDescProceso);
 		fillDescProcesoCmb();
@@ -66,6 +80,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		
 		txtRuta = new JTextField();
 		txtRuta.setBounds(168, 141, 180, 22);
+		txtRuta.setEditable(false);
 		getContentPane().add(txtRuta);
 		txtRuta.setColumns(10);
 		
@@ -73,19 +88,8 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		btnRuta.setBounds(358, 140, 45, 25);
 		getContentPane().add(btnRuta);
 		
-		JButton btnProcesar = new JButton("Procesar");
-		btnProcesar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//Proceso p = new Proceso();
-				//p.setDescripción("Proceso iniciado por " + (String)cbPartido.getSelectedItem());
-				/*p.setFechaProceso1Inicio(fechaProceso1Inicio);
-				p.setFechaProceso1Fin(fechaProceso1Fin);
-				p.setFechaProceso2Inicio(fechaProceso2Inicio);
-				p.setFechaProceso2Fin(fechaProceso2Fin);*/
-			
-			}
-		});
-		btnProcesar.setBounds(105, 207, 97, 25);
+		btnProcesar = new JButton("Procesar");
+		btnProcesar.setBounds(155, 190, 97, 25);
 		getContentPane().add(btnProcesar);
 		
 		txtFase = new JTextField();
@@ -100,19 +104,53 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(lblFaseDelProceso);
 		
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(278, 207, 97, 25);
+		btnCancelar.setBounds(277, 190, 97, 25);
 		getContentPane().add(btnCancelar);
 		
 		JLabel lblDescripcionDelProceso = new JLabel("Descripcion del proceso:");
 		lblDescripcionDelProceso.setBounds(12, 38, 143, 16);
 		getContentPane().add(lblDescripcionDelProceso);
 		
+		JPanel pnOriginal = new JPanel();
+		pnOriginal.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Imagen Original", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnOriginal.setBounds(12, 250, 170, 245);
+		getContentPane().add(pnOriginal);
+		pnOriginal.setLayout(null);
 		
-
+		lblExtra = new JLabel("");
+		lblExtra.setBounds(6, 16, 158, 222);
+		pnOriginal.add(lblExtra);
+		
+		JPanel pnComparacion = new JPanel();
+		pnComparacion.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Imagen a Comparar", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnComparacion.setBounds(224, 250, 170, 245);
+		getContentPane().add(pnComparacion);
+		pnComparacion.setLayout(null);
+		
+		lblCompara = new JLabel("");
+		lblCompara.setBounds(6, 16, 158, 222);
+		pnComparacion.add(lblCompara);
+		
+		JPanel pnLog = new JPanel();
+		pnLog.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Log", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnLog.setBounds(427, 250, 353, 173);
+		getContentPane().add(pnLog);
+		pnLog.setLayout(null);
+		
+		txtLog = new JTextArea();
+		txtLog.setBounds(6, 16, 341, 150);
+		txtLog.setEditable(false);
+		pnLog.add(txtLog);
+		
+		btnCambiar = new JButton("Cambiar");
+		btnCambiar.setBounds(31, 191, 89, 23);
+		getContentPane().add(btnCambiar);
+		
 		//listener
 		btnCancelar.addActionListener(this);
 		btnRuta.addActionListener(this);
 		btnProcesar.addActionListener(this);
+		btnCambiar.addActionListener(this);
 	}
 	
 	public void fillCustomerCmb(){ //mostrare solo los clientes que estan activos
@@ -142,7 +180,6 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 				Proceso pro = (Proceso)ProcesoList.get(i);
 				cbDescProceso.addItem(pro.getIdProceso() + " - " + pro.getDescripción());
 			}
-			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -157,12 +194,26 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			this.dispose();
 		}
 		
+		if (e.getSource() == btnCambiar){
+			JFileChooser extra = new JFileChooser();
+			//extra.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			extra.showOpenDialog(this);
+			File fEscogido = extra.getSelectedFile();
+			ImagePlus imgEscogida = IJ.openImage(fEscogido.getAbsolutePath());
+			int w = lblExtra.getWidth(), h = lblExtra.getHeight();
+			BufferedImage bfEscogida = HelperMethods.resizeImage(imgEscogida.getBufferedImage(), w, h, imgEscogida.getBufferedImage().getType());
+			lblExtra.setIcon(new ImageIcon(bfEscogida));
+		}
 		if (e.getSource() == btnRuta){
 			jfcRuta =  new JFileChooser();
 			jfcRuta.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			jfcRuta.showOpenDialog(this);
 			File fEscogido = jfcRuta.getSelectedFile();
 			txtRuta.setText(fEscogido.getPath());
+			File[] imagenes = fEscogido.listFiles();
+			for(File file : imagenes){				
+				System.out.println(file.getAbsolutePath());
+			}
 		}
 	}
 }

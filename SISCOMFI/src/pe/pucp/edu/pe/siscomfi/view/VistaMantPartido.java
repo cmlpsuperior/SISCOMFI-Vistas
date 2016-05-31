@@ -244,7 +244,8 @@ public class VistaMantPartido extends JInternalFrame {
 				try {
 					String nombre = txtNombre.getText();
 					String direccion = txtDireccion.getText();
-					int idDistrito = Integer.parseInt(cmbDistrito.getSelectedItem().toString().substring(0,1));
+					String[] tokens = cmbDistrito.getSelectedItem().toString().split(" ");
+					int idDistrito = Integer.parseInt(tokens[0]);
 					String representante = txtRepresentante.getText();
 					String correo = txtCorreo.getText();
 					String telefono = txtTelefono.getText();

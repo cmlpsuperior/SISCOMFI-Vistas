@@ -4,7 +4,10 @@ import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -69,11 +72,67 @@ public class MySQLDAOProceso implements DAOProceso{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public ArrayList<Proceso> queryAll() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<Proceso> arr = new ArrayList<Proceso>();
+		try {
+			//Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			//Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+								DBConnection.user,
+								DBConnection.password);
+			//Paso 3: Preparar la sentencia
+			String sql = "SELECT * FROM Proceso";
+			pstmt = conn.prepareStatement(sql);
+			//Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			//Paso 5(opc.): Procesar los resultados
+			while (rs.next()){
+				int id = rs.getInt("idProceso");
+				String descripcion = rs.getString("Descripcion");
+				Date fp1Inicio = rs.getTimestamp("FechaProceso1Inicio");
+				Date fp1Fin = rs.getTimestamp("FechaProceso1Fin");
+				Date fp2Inicio = rs.getTimestamp("FechaProceso2Inicio");
+				Date fp2Fin = rs.getTimestamp("FechaProceso2Fin");
+				int cantMinAdh = rs.getInt("CantidadMinAdherentes");
+				int idTipoProceso = rs.getInt("idTipoProceso");
+				
+				Proceso p = new Proceso();
+				p.setCantidadMinAdherentes(cantMinAdh);
+				p.setDescripción(descripcion);
+				p.setFechaProceso1Inicio(fp1Inicio);
+				p.setFechaProceso1Fin(fp1Fin);
+				p.setFechaProceso2Inicio(fp2Inicio);
+				p.setFechaProceso2Fin(fp2Fin);
+				p.setIdProceso(id);
+				p.setIdTipoProceso(idTipoProceso);				
+				
+				arr.add(p);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			//Paso 6(OJO): Cerrar la conexión
+			try { if (pstmt!= null) pstmt.close();} 
+				catch (Exception e){e.printStackTrace();};
+			try { if (conn!= null) conn.close();} 
+				catch (Exception e){e.printStackTrace();};						
+		}
+		return arr;
+	}
 
 	@Override
 	public Proceso queryById(int idProceso) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
 
 }

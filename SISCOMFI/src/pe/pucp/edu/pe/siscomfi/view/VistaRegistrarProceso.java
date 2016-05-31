@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
@@ -34,7 +35,7 @@ public class VistaRegistrarProceso extends JInternalFrame {
 	public VistaRegistrarProceso() {
 		setClosable(true);
 		setTitle("Registrar nuevo proceso");
-		setBounds(100, 100, 819, 354);
+		setBounds(100, 100, 819, 296);
 		getContentPane().setLayout(null);
 		
 		picker1 = new DefaultComponentFactory().createJDatePicker();
@@ -79,7 +80,7 @@ public class VistaRegistrarProceso extends JInternalFrame {
 				dispose();
 			}
 		});
-		btnCancelar.setBounds(461, 273, 97, 25);
+		btnCancelar.setBounds(465, 220, 97, 25);
 		getContentPane().add(btnCancelar);
 		
 		JLabel lblFechaInicioFase = new JLabel("Fecha fin fase 1:");
@@ -90,12 +91,12 @@ public class VistaRegistrarProceso extends JInternalFrame {
 		lblFechaInicioFase_1.setBounds(407, 113, 116, 16);
 		getContentPane().add(lblFechaInicioFase_1);
 		
-		JLabel lblDescripcin = new JLabel("Descripci\u00F3n:");
-		lblDescripcin.setBounds(33, 153, 118, 16);
+		JLabel lblDescripcin = new JLabel("Descripci\u00F3n (max. 20 caracteres):");
+		lblDescripcin.setBounds(33, 153, 203, 16);
 		getContentPane().add(lblDescripcin);
 		
 		txtDescripcion = new JTextField();
-		txtDescripcion.setBounds(33, 182, 734, 78);
+		txtDescripcion.setBounds(33, 182, 734, 25);
 		getContentPane().add(txtDescripcion);
 		txtDescripcion.setColumns(10);
 		
@@ -202,6 +203,10 @@ public class VistaRegistrarProceso extends JInternalFrame {
 					p.setIdTipoProceso( Integer.parseInt(cbTipoProceso.getSelectedItem().toString().substring(0, 1)));
 					
 					siscomfiManager.addProceso(p);
+					
+					JOptionPane.showMessageDialog(null, "Se registro el proceso satisfactoriamente");
+					LimpiarTextos ();
+					//refreshTblPartidos();
 				}
 				catch (Exception a) {
 					a.printStackTrace();
@@ -209,8 +214,17 @@ public class VistaRegistrarProceso extends JInternalFrame {
 				
 			}
 		});
-		btnRegistrar.setBounds(226, 273, 97, 25);
+		btnRegistrar.setBounds(230, 220, 97, 25);
 		getContentPane().add(btnRegistrar);
+	}
+	
+	public void LimpiarTextos (){
+		txtMinAdherentes.setText("");
+		txtDescripcion.setText("");	
+		picker1.removeAllDateSelectionConstraints();;
+		picker2.removeAllDateSelectionConstraints();
+		picker3.removeAllDateSelectionConstraints();
+		picker4.removeAllDateSelectionConstraints();		
 	}
 	
 	public void fillCustomerCmb(){ //mostrare solo los clientes que estan activos

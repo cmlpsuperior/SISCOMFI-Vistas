@@ -34,6 +34,11 @@ public class siscomfiManager {
 		return partidoPoliticoDB.queryAll();
     }
 	
+	public static ArrayList<Proceso> queryAllProcesos()
+    {
+		return procesoDB.queryAll();
+    }
+	
 	public static void addPartido(PartidoPolitico p)
     {
 		partidoPoliticoDB.add(p);

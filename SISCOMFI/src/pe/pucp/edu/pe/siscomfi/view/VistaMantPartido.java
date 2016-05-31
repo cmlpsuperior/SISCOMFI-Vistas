@@ -250,6 +250,7 @@ public class VistaMantPartido extends JInternalFrame {
 					
 					if (nombre.equals("")){
 						JOptionPane.showMessageDialog(null, "El campo nombre no puede estar vacio");
+						
 					}
 					
 					else if (direccion.equals("")) {
@@ -258,13 +259,22 @@ public class VistaMantPartido extends JInternalFrame {
 					else if (cmbDistrito.getSelectedItem() ==null){
 						JOptionPane.showMessageDialog(null, "Debe seleccionar un distrito");
 					}
+					//campos no obligatorios:
+					else if (!correo.equals("") && !correo.toLowerCase().contains("@") ){
+						JOptionPane.showMessageDialog(null, "El correo debe tene el formato persona@partido.com");
+					}
+					else if (!representante.equals("") && ContieneNumero(representante) ==1 ){
+						JOptionPane.showMessageDialog(null, "El nombre del representante no puede tener numeros");
+					}
 					else{
+						
 						String[] tokens = cmbDistrito.getSelectedItem().toString().split(" ");
 						int idDistrito = Integer.parseInt(tokens[0]);
 						Date fechaRegistro = new Date(); //fecha actual
 						PartidoPolitico p = new PartidoPolitico ();
 						p.setNombrePartido(nombre);
 						p.setDireccion(direccion);
+						
 						p.setIdDistrito(idDistrito);
 						p.setRepresentante(representante);
 						p.setCorreo(correo);
@@ -298,23 +308,28 @@ public class VistaMantPartido extends JInternalFrame {
 				String correo = txtCorreo.getText();
 				String telefono = txtTelefono.getText();
 				
-				PartidoPolitico p = new PartidoPolitico();
-				p.setIdPartidoPolitco(id);
-				p.setNombrePartido(nombre);
-				p.setDireccion(direccion);
-				p.setIdDistrito(idDistrito);
-				p.setRepresentante(representante);
-				p.setCorreo(correo);
-				p.setTelefono(telefono);
-								
-				try {
-					siscomfiManager.updatePartido(p);
-					JOptionPane.showMessageDialog(null, "Se actualizo el partido satisfactoriamente");
-					refreshTblPartidos();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}	
+				if (txtCodigo.getText().equals("")){
+					JOptionPane.showMessageDialog(null, "Debe seleccionar un partido en la tabla");
+				}
+				else {
+					PartidoPolitico p = new PartidoPolitico();
+					p.setIdPartidoPolitco(id);
+					p.setNombrePartido(nombre);
+					p.setDireccion(direccion);
+					p.setIdDistrito(idDistrito);
+					p.setRepresentante(representante);
+					p.setCorreo(correo);
+					p.setTelefono(telefono);
+									
+					try {
+						siscomfiManager.updatePartido(p);
+						JOptionPane.showMessageDialog(null, "Se actualizo el partido satisfactoriamente");
+						refreshTblPartidos();
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 		btnModificar.setBounds(317, 210, 89, 23);
@@ -340,10 +355,20 @@ public class VistaMantPartido extends JInternalFrame {
 		getContentPane().add(btnEliminar);
 		
 		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
 		btnAceptar.setBounds(182, 451, 89, 23);
 		getContentPane().add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		btnCancelar.setBounds(453, 451, 89, 23);
 		getContentPane().add(btnCancelar);
 		
@@ -466,4 +491,14 @@ public class VistaMantPartido extends JInternalFrame {
 		txtCorreo.setText("");
 		txtTelefono.setText("");
 	}
+	
+	public int ContieneNumero(String palabra){
+		if (palabra.contains("1") || palabra.contains("2") || palabra.contains("3") || 
+				palabra.contains("4") || palabra.contains("5") || palabra.contains("6") || 
+				palabra.contains("7") || palabra.contains("8") || palabra.contains("9") || palabra.contains("0") )
+			return 1;
+		else 
+			return 0;
+	}
+	
 }

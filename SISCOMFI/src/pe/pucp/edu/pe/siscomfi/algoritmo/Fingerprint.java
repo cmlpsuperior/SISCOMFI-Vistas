@@ -290,5 +290,5 @@ public class Fingerprint {
 		double[][] grafoS = Fingerprint.matToGraph(tMinutaes);
 		return grafoS;
 	}
-
+	
 }

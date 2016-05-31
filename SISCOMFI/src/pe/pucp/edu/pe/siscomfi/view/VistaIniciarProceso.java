@@ -1,39 +1,30 @@
 package pe.pucp.edu.pe.siscomfi.view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
-import pe.pucp.edu.pe.siscomfi.model.Rol; //aca tiene que ir tipoProceso
-import pe.pucp.edu.pe.siscomfi.model.TipoProceso;
-import pe.pucp.edu.pe.siscomfi.model.Proceso;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 
-import javax.swing.UIManager;
-
-import org.jdatepicker.DefaultComponentFactory;
-import org.jdatepicker.JDatePicker;
-
-import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
-import java.rmi.RemoteException;
+import java.io.File;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class VistaIniciarProceso extends JInternalFrame {
+@SuppressWarnings("serial")
+public class VistaIniciarProceso extends JInternalFrame implements ActionListener{
 	private JTextField txtRuta;
 	private JTextField txtFase;
-	private JComboBox cbPartido;
+	private JComboBox<String> cbPartido;
+	private JButton btnRuta;
+	private JButton btnCancelar;
+	private JButton btnProcesar;
+	private JFileChooser jfcRuta;
 	
-
 	public VistaIniciarProceso() {
 		setClosable(true);
 		setTitle("Iniciar Proceso");
@@ -44,7 +35,7 @@ public class VistaIniciarProceso extends JInternalFrame {
 		lblNewLabel.setBounds(12, 63, 126, 16);
 		getContentPane().add(lblNewLabel);
 		
-        cbPartido = new JComboBox();
+        cbPartido = new JComboBox<String>();
 		cbPartido.setBounds(185, 43, 198, 20);
 		getContentPane().add(cbPartido);
 		fillCustomerCmb();
@@ -58,25 +49,15 @@ public class VistaIniciarProceso extends JInternalFrame {
 		
 		txtRuta = new JTextField();
 		txtRuta.setBounds(124, 96, 116, 22);
+		txtRuta.setEditable(false);
 		getContentPane().add(txtRuta);
 		txtRuta.setColumns(10);
 		
-		JButton button = new JButton("...");
-		button.setBounds(252, 95, 45, 25);
-		getContentPane().add(button);
+		btnRuta = new JButton("...");
+		btnRuta.setBounds(252, 95, 45, 25);
+		getContentPane().add(btnRuta);
 		
-		JButton btnProcesar = new JButton("Procesar");
-		btnProcesar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//Proceso p = new Proceso();
-				//p.setDescripción("Proceso iniciado por " + (String)cbPartido.getSelectedItem());
-				/*p.setFechaProceso1Inicio(fechaProceso1Inicio);
-				p.setFechaProceso1Fin(fechaProceso1Fin);
-				p.setFechaProceso2Inicio(fechaProceso2Inicio);
-				p.setFechaProceso2Fin(fechaProceso2Fin);*/
-			
-			}
-		});
+		btnProcesar = new JButton("Procesar");
 		btnProcesar.setBounds(41, 162, 97, 25);
 		getContentPane().add(btnProcesar);
 		
@@ -91,15 +72,14 @@ public class VistaIniciarProceso extends JInternalFrame {
 		lblFaseDelProceso.setBounds(12, 28, 108, 16);
 		getContentPane().add(lblFaseDelProceso);
 		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
+		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(172, 162, 97, 25);
 		getContentPane().add(btnCancelar);
 
+		//listener
+		btnCancelar.addActionListener(this);
+		btnRuta.addActionListener(this);
+		btnProcesar.addActionListener(this);
 	}
 	
 	public void fillCustomerCmb(){ //mostrare solo los clientes que estan activos
@@ -118,5 +98,20 @@ public class VistaIniciarProceso extends JInternalFrame {
 		}
 		
 		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnCancelar){
+			this.dispose();
+		}
+		
+		if (e.getSource() == btnRuta){
+			jfcRuta =  new JFileChooser();
+			jfcRuta.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			jfcRuta.showOpenDialog(this);
+			File fEscogido = jfcRuta.getSelectedFile();
+			txtRuta.setText(fEscogido.getPath());
+		}
 	}
 }

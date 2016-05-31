@@ -8,6 +8,9 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import pe.pucp.edu.pe.siscomfi.algoritmo.HelperMethods;
+
 import javax.swing.JPasswordField;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -47,23 +50,26 @@ public class VistaLogin implements ActionListener{
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
 	 */
-	public VistaLogin() {
+	public VistaLogin() throws IOException {
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws IOException 
 	 */
-	private void initialize() {
+	private void initialize() throws IOException {
 		frmSiscomfi = new JFrame();
-		//frmSiscomfi.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\samoel\\workspace\\Siscomfi\\Imagenes\\minilogo.png"));
+		BufferedImage imgMiniLogo = ImageIO.read(new File("./Imagenes/minilogo.png"));
+		frmSiscomfi.setIconImage(imgMiniLogo);
 		frmSiscomfi.setTitle("SISCOMFI");
 		frmSiscomfi.setBounds(100, 100, 498, 300);
 		frmSiscomfi.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSiscomfi.getContentPane().setLayout(null);
 		
-		JLabel lblUsuario = new JLabel("Usuario:");
+		JLabel lblUsuario = new JLabel("Correo:");
 		lblUsuario.setBounds(197, 51, 86, 14);
 		frmSiscomfi.getContentPane().add(lblUsuario);
 		
@@ -88,6 +94,13 @@ public class VistaLogin implements ActionListener{
 		lblRecuperar.setBounds(294, 236, 178, 14);
 		frmSiscomfi.getContentPane().add(lblRecuperar);
 		
+		JLabel lblLogo = new JLabel("");
+		lblLogo.setBounds(10, 11, 177, 239);
+		BufferedImage logo = ImageIO.read(new File("./Imagenes/logofinal.png"));
+		logo = HelperMethods.resizeImage(logo, lblLogo.getWidth(), lblLogo.getHeight(), logo.getType());
+		lblLogo.setIcon(new ImageIcon(logo));
+		frmSiscomfi.getContentPane().add(lblLogo);
+
 		//listener
 		btnIngresar.addActionListener(this);
 	}
@@ -102,6 +115,4 @@ public class VistaLogin implements ActionListener{
 			
 		}
 	}
-	
-	
 }

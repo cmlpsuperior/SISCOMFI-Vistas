@@ -8,8 +8,10 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+import pe.pucp.edu.pe.siscomfi.model.Departamento;
 import pe.pucp.edu.pe.siscomfi.model.Distrito;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
+import pe.pucp.edu.pe.siscomfi.model.Provincia;
 
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -32,6 +34,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class VistaMantPartido extends JInternalFrame {
 	private JTextField txtCodigo;
@@ -108,6 +112,18 @@ public class VistaMantPartido extends JInternalFrame {
 		panel.add(txtDireccion);
 		
 		cmbDepartamento = new JComboBox();
+		cmbDepartamento.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				cmbProvincia.removeAllItems();
+				cmbDistrito.removeAllItems();
+				int idDepartamento = 0;
+				if (cmbDepartamento.getSelectedItem() != null){
+					String[] tokens = cmbDepartamento.getSelectedItem().toString().split(" ");
+					idDepartamento = Integer.parseInt(tokens[0]);//Integer.parseInt(cmbDepartamento.getSelectedItem().toString().substring(0,2));					
+					LlenarCmbProvincia(idDepartamento);
+				}
+			}
+		});
 		cmbDepartamento.setBounds(145, 99, 190, 20);
 		panel.add(cmbDepartamento);
 		
@@ -120,6 +136,17 @@ public class VistaMantPartido extends JInternalFrame {
 		panel.add(label_4);
 		
 		cmbProvincia = new JComboBox();
+		cmbProvincia.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				cmbDistrito.removeAllItems();
+				if (cmbProvincia.getSelectedItem() != null){
+					String[] tokens = cmbProvincia.getSelectedItem().toString().split(" ");
+					int idProvincia = Integer.parseInt(tokens[0]);
+					//int idProvincia = Integer.parseInt(cmbProvincia.getSelectedItem().toString().substring(0,2));
+					LlenarCmbDistrito(idProvincia);
+				}
+			}
+		});
 		cmbProvincia.setBounds(145, 124, 190, 20);
 		panel.add(cmbProvincia);
 		
@@ -128,6 +155,11 @@ public class VistaMantPartido extends JInternalFrame {
 		panel.add(lblDistrito);
 		
 		cmbDistrito = new JComboBox();
+		cmbDistrito.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				
+			}
+		});
 		cmbDistrito.setBounds(145, 152, 190, 20);
 		panel.add(cmbDistrito);
 		
@@ -295,16 +327,17 @@ public class VistaMantPartido extends JInternalFrame {
 		getContentPane().add(btnEliminar);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(208, 451, 89, 23);
+		btnAceptar.setBounds(182, 451, 89, 23);
 		getContentPane().add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(366, 451, 89, 23);
+		btnCancelar.setBounds(453, 451, 89, 23);
 		getContentPane().add(btnCancelar);
 		
 		
 		//Llenamos el combobox
-		LlenarCmbDistrito();
+		LlenarCmbDepartamento();
+		//LlenarCmbDistrito();
 	}
 	
 	class MyTableModel extends AbstractTableModel{		
@@ -352,11 +385,11 @@ public class VistaMantPartido extends JInternalFrame {
 		
 	}
 	
-	public void LlenarCmbDistrito(){ //mostrare solo los clientes que estan activos
+	public void LlenarCmbDistrito(int idProvincia){ //mostrare solo los clientes que estan activos
 		cmbDistrito.removeAllItems();
 		ArrayList<Distrito> listaDistrito;
 		try {
-			listaDistrito = siscomfiManager.queryDistritosByIdProvincia(1);
+			listaDistrito = siscomfiManager.queryDistritosByIdProvincia(idProvincia);
 			for (int i=0; i<listaDistrito.size();i++){				
 				Distrito d = (Distrito)listaDistrito.get(i);
 				cmbDistrito.addItem(d.getIdDistrito()+" - " + d.getNombre());
@@ -369,6 +402,38 @@ public class VistaMantPartido extends JInternalFrame {
 		
 		
 	}
+	public void LlenarCmbProvincia(int idDepartamento){ //mostrare solo los clientes que estan activos
+		cmbProvincia.removeAllItems();
+		ArrayList<Provincia> listaProvincia;
+		try {
+			listaProvincia = siscomfiManager.queryProvinciaByIdDepartamento(idDepartamento);
+			for (int i=0; i<listaProvincia.size();i++){				
+				Provincia p = (Provincia)listaProvincia.get(i);
+				cmbProvincia.addItem(p.getIdProvincia()+" - " + p.getNombre());
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	public void LlenarCmbDepartamento(){ //mostrare solo los clientes que estan activos
+		cmbDepartamento.removeAllItems();
+		ArrayList<Departamento> listaDepartamento;
+		try {
+			listaDepartamento = siscomfiManager.queryAllDepartamento();
+			for (int i=0; i<listaDepartamento.size();i++){				
+				Departamento d = (Departamento)listaDepartamento.get(i);
+				cmbDepartamento.addItem(d.getIdDepartamento()+ " - " + d.getNombre());
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
 	public void refreshTblPartidos(){
 		try {
 			tableModelPartido.listaPartido = siscomfiManager.queryAllPartidos();

@@ -2,11 +2,13 @@ package pe.pucp.edu.pe.siscomfi.bm.BD;
 
 import java.util.ArrayList;
 
+import pe.pucp.edu.pe.siscomfi.model.Departamento;
 import pe.pucp.edu.pe.siscomfi.model.Distrito;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 import pe.pucp.edu.pe.siscomfi.model.Rol;
 import pe.pucp.edu.pe.siscomfi.model.Usuario;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
+import pe.pucp.edu.pe.siscomfi.model.Provincia;
 import pe.pucp.edu.pe.siscomfi.model.TipoProceso;
 
 public class siscomfiManager {
@@ -63,9 +65,18 @@ public class siscomfiManager {
 		return tipoProcesoDB.queryAll();
     }	
 	
+	//Ubicacion
 	public static ArrayList<Distrito> queryDistritosByIdProvincia(int idProvincia)
     {
 		return ubicacionDB.queryDistritosByIdProvincia(idProvincia);
+    }
+	public static ArrayList<Provincia> queryProvinciaByIdDepartamento(int idDepa)
+    {
+		return ubicacionDB.queryProvinciasByIdDepartamento(idDepa);
+    }
+	public static ArrayList<Departamento> queryAllDepartamento()
+    {
+		return ubicacionDB.queryAllDepartamento();
     }
 	
 }

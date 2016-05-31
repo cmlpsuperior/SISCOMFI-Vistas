@@ -266,6 +266,9 @@ public class VistaMantPartido extends JInternalFrame {
 					else if (!representante.equals("") && ContieneNumero(representante) ==1 ){
 						JOptionPane.showMessageDialog(null, "El nombre del representante no puede tener numeros");
 					}
+					else if (!telefono.equals("") && !EsNumeroEntero(telefono)){
+						JOptionPane.showMessageDialog(null, "El telefono debe ser solo numeros sin espacios");
+					}
 					else{
 						
 						String[] tokens = cmbDistrito.getSelectedItem().toString().split(" ");
@@ -310,6 +313,17 @@ public class VistaMantPartido extends JInternalFrame {
 				
 				if (txtCodigo.getText().equals("")){
 					JOptionPane.showMessageDialog(null, "Debe seleccionar un partido en la tabla");
+				}
+				
+				//campos no obligatorios:
+				else if (!correo.equals("") && !correo.toLowerCase().contains("@") ){
+					JOptionPane.showMessageDialog(null, "El correo debe tene el formato persona@partido.com");
+				}
+				else if (!representante.equals("") && ContieneNumero(representante) ==1 ){
+					JOptionPane.showMessageDialog(null, "El nombre del representante no puede tener numeros");
+				}
+				else if (!telefono.equals("") && !EsNumeroEntero(telefono)){
+					JOptionPane.showMessageDialog(null, "El telefono debe ser solo numeros sin espacios");
 				}
 				else {
 					PartidoPolitico p = new PartidoPolitico();
@@ -499,6 +513,14 @@ public class VistaMantPartido extends JInternalFrame {
 			return 1;
 		else 
 			return 0;
+	}
+	
+	public boolean EsNumeroEntero(String str) {
+	    try {
+	        Integer.parseInt(str);
+	        return true;
+	    } catch (NumberFormatException nfe) {}
+	    return false;
 	}
 	
 }

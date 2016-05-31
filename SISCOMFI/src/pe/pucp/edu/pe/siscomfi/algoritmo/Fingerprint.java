@@ -122,7 +122,7 @@ public class Fingerprint {
 						}
 					}
 					fjernest = f;
-					index = ind;
+					index = ind; 
 				}
 			}
 		}

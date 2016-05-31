@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
@@ -24,14 +25,19 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
-import java.rmi.RemoteException;
+import java.io.File;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class VistaIniciarProceso extends JInternalFrame {
+@SuppressWarnings("serial")
+public class VistaIniciarProceso extends JInternalFrame implements ActionListener{
 	private JTextField txtRuta;
 	private JTextField txtFase;
-	private JComboBox cbPartido;
+	private JComboBox<String> cbPartido;
+	private JButton btnRuta;
+	private JButton btnCancelar;
+	private JButton btnProcesar;
+	private JFileChooser jfcRuta;
 	private JComboBox cbDescProceso;	
 
 	public VistaIniciarProceso() {
@@ -44,7 +50,7 @@ public class VistaIniciarProceso extends JInternalFrame {
 		lblNewLabel.setBounds(12, 108, 126, 16);
 		getContentPane().add(lblNewLabel);
 		
-        cbPartido = new JComboBox();
+        cbPartido = new JComboBox<String>();
 		cbPartido.setBounds(168, 106, 173, 20);
 		getContentPane().add(cbPartido);
 		fillCustomerCmb();
@@ -63,9 +69,9 @@ public class VistaIniciarProceso extends JInternalFrame {
 		getContentPane().add(txtRuta);
 		txtRuta.setColumns(10);
 		
-		JButton button = new JButton("...");
-		button.setBounds(296, 140, 45, 25);
-		getContentPane().add(button);
+		btnRuta = new JButton("...");
+		btnRuta.setBounds(252, 95, 45, 25);
+		getContentPane().add(btnRuta);
 		
 		JButton btnProcesar = new JButton("Procesar");
 		btnProcesar.addActionListener(new ActionListener() {
@@ -93,12 +99,7 @@ public class VistaIniciarProceso extends JInternalFrame {
 		lblFaseDelProceso.setBounds(12, 73, 108, 16);
 		getContentPane().add(lblFaseDelProceso);
 		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
+		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(216, 207, 97, 25);
 		getContentPane().add(btnCancelar);
 		
@@ -108,6 +109,10 @@ public class VistaIniciarProceso extends JInternalFrame {
 		
 		
 
+		//listener
+		btnCancelar.addActionListener(this);
+		btnRuta.addActionListener(this);
+		btnProcesar.addActionListener(this);
 	}
 	
 	public void fillCustomerCmb(){ //mostrare solo los clientes que estan activos
@@ -144,5 +149,20 @@ public class VistaIniciarProceso extends JInternalFrame {
 		}
 		
 		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnCancelar){
+			this.dispose();
+		}
+		
+		if (e.getSource() == btnRuta){
+			jfcRuta =  new JFileChooser();
+			jfcRuta.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			jfcRuta.showOpenDialog(this);
+			File fEscogido = jfcRuta.getSelectedFile();
+			txtRuta.setText(fEscogido.getPath());
+		}
 	}
 }

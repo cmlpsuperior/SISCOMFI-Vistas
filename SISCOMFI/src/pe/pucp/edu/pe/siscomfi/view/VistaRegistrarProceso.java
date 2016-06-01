@@ -11,6 +11,14 @@ import javax.swing.JTextField;
 
 import org.jdatepicker.DefaultComponentFactory;
 import org.jdatepicker.JDatePicker;
+import org.jdatepicker.graphics.*; 
+import org.jdatepicker.impl.*; 
+
+import java.text.DateFormat; 
+import java.text.SimpleDateFormat;
+import java.util.Calendar; 
+import java.util.Date;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,11 +34,14 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 
+import java.text.DateFormat; 
+
 public class VistaRegistrarProceso extends JInternalFrame {
 	private JTextField txtDescripcion;
 	private JTextField txtMinAdherentes;
 	private JDatePicker picker1, picker2, picker3, picker4;
 	private JComboBox cbTipoProceso;
+	final long MILLSECS_PER_DAY = 24 * 60 * 60 * 1000; //Milisegundos al día
 	
 	public VistaRegistrarProceso() {
 		setClosable(true);
@@ -139,80 +150,163 @@ public class VistaRegistrarProceso extends JInternalFrame {
 			public void actionPerformed(ActionEvent e) {
 				Proceso p = new Proceso();
 				p.setDescripción(txtDescripcion.getText());
+				//picker1
+				//Date selectedDate1 = (Date) picker1.getModel().getValue();
+			    //DateFormat df1 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+				//String reportDate1 = df1.format(selectedDate1);
+				//JOptionPane.showMessageDialog(null,reportDate1);
+			    //picker2
+				//Date selectedDate2 = (Date) picker2.getModel().getValue();
+				//DateFormat df2 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+				//String reportDate2 = df2.format(selectedDate2);
+				//JOptionPane.showMessageDialog(null,reportDate2);
+			    //picker3
+				//Date selectedDate3 = (Date) picker3.getModel().getValue();
+				//DateFormat df3 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+				//String reportDate3 = df1.format(selectedDate3);
+				//JOptionPane.showMessageDialog(null,reportDate3);
+			    //picker4
+				//Date selectedDate4 = (Date) picker4.getModel().getValue();
+				//DateFormat df4 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+				//String reportDate4 = df4.format(selectedDate4);
+				//JOptionPane.showMessageDialog(null,reportDate4);
 				try {
-					//formato de extracción de fecha inicio fase 1
-					int day1 = picker1.getModel().getDay();
-					int month1 = picker1.getModel().getMonth();
-					int year1 = picker1.getModel().getYear();
 					
-					String day1S = String.format("%02d", day1); //convierto a String de 2 digitos y 4 digitos para el año
-					String month1S = String.format("%02d", month1+1);
-					String year1S = String.format("%04d", year1);
+					if (txtMinAdherentes.getText().equals("")){
+						JOptionPane.showMessageDialog(null, "Debe ingresar una cantidad mínima de adherentes");
+					}
+					else if (Integer.parseInt(txtMinAdherentes.getText()) < 0){
+						JOptionPane.showMessageDialog(null, "La cantidad mínima de adherentes debe ser mayor a cero");						
+					}
+					else if (txtDescripcion.getText().equals("")){
+						JOptionPane.showMessageDialog(null, "Debe ingresar una descripción");						
+					}					
+					else if (txtDescripcion.getText().length() > 20){
+						JOptionPane.showMessageDialog(null, "Debe ingresar una descripción de máximo 20 caracteres");
+					}
+					else if ( picker1.getModel().getYear()*10000 + 
+							  picker1.getModel().getMonth()*100 + 
+							  picker1.getModel().getDay()  == 
+							  picker3.getModel().getYear()*10000 + 
+							  picker3.getModel().getMonth()*100 + 
+							  picker3.getModel().getDay()){
+						//System.out.println(picker1.getModel().getValue());
+						JOptionPane.showMessageDialog(null, "Las fechas de inicio de fase 1 y fin de fase 1 no pueden ser las mismas.");
+					}
+					else if ( picker1.getModel().getYear()*10000 + 
+							  picker1.getModel().getMonth()*100 + 
+							  picker1.getModel().getDay()  > 
+							  picker3.getModel().getYear()*10000 + 
+							  picker3.getModel().getMonth()*100 + 
+							  picker3.getModel().getDay()){
+						//System.out.println(picker1.getModel().getValue());
+						JOptionPane.showMessageDialog(null, "La fecha de inicio de fase 1 no puede ser mayor a la de fin de fase 1.");
+					} 
+					else if ( picker2.getModel().getYear()*10000 + 
+							  picker2.getModel().getMonth()*100 + 
+							  picker2.getModel().getDay()  == 
+							  picker4.getModel().getYear()*10000 + 
+							  picker4.getModel().getMonth()*100 + 
+							  picker4.getModel().getDay()){
+						//System.out.println(picker1.getModel().getValue());
+						JOptionPane.showMessageDialog(null, "La fecha de inicio de fase 2 no puede ser la misma que la de fin de fase 2.");
+					} 
+					else if ( picker2.getModel().getYear()*10000 + 
+							  picker2.getModel().getMonth()*100 + 
+							  picker2.getModel().getDay()  > 
+							  picker4.getModel().getYear()*10000 + 
+							  picker4.getModel().getMonth()*100 + 
+							  picker4.getModel().getDay()){
+						//System.out.println(picker1.getModel().getValue());
+						JOptionPane.showMessageDialog(null, "La fecha de inicio de fase 2 no puede ser mayor a la de fin de fase 2.");
+					}
 					
-					String fecha1_1 = year1S + "-" + month1S + "-" + day1S; //los uno en un solo String con formato yyyy-MM-dd				
-					
-					SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
-					Date fechaIniFase1 = formatter1.parse(fecha1_1);
-					p.setFechaProceso1Inicio(fechaIniFase1); //aca recien asignamos
-					
-					//formato de extracción de fecha Inicio fase 2
-					int day2 = picker2.getModel().getDay();
-					int month2 = picker2.getModel().getMonth();
-					int year2 = picker2.getModel().getYear();
-					
-					String day2S = String.format("%02d", day2); //convierto a String de 2 digitos y 4 digitos para el año
-					String month2S = String.format("%02d", month2+1);
-					String year2S = String.format("%04d", year2);
-					
-					String fecha1_2 = year2S + "-" + month2S + "-" + day2S; //los uno en un solo String con formato yyyy-MM-dd
-					
-					SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
-					Date fechaIniFase2 = formatter2.parse(fecha1_2);
-					p.setFechaProceso2Inicio(fechaIniFase2); //aca recien asignamos
-					
-					//formato de extracción de fecha fin fase 1 
-					int day3 = picker3.getModel().getDay();
-					int month3 = picker3.getModel().getMonth();
-					int year3 = picker3.getModel().getYear();
-					
-					String day3S = String.format("%02d", day3); //convierto a String de 2 digitos y 4 digitos para el año
-					String month3S = String.format("%02d", month3+1);
-					String year3S = String.format("%04d", year3);
-					
-					String fecha2_1 = year3S + "-" + month3S + "-" + day3S; //los uno en un solo String con formato yyyy-MM-dd
-					
-					SimpleDateFormat formatter3 = new SimpleDateFormat("yyyy-MM-dd");
-					Date fechaFinFase1 = formatter3.parse(fecha2_1);
-					p.setFechaProceso1Fin(fechaFinFase1); //aca recien asignamos				
-					
-					//formato de extracción de fecha fin fase 2
-					int day4 = picker4.getModel().getDay();
-					int month4 = picker4.getModel().getMonth();
-					int year4 = picker4.getModel().getYear();
-					
-					String day4S = String.format("%02d", day4); //convierto a String de 2 digitos y 4 digitos para el año
-					String month4S = String.format("%02d", month4+1);
-					String year4S = String.format("%04d", year4);
-					
-					String fecha2_2 = year4S + "-" + month4S + "-" + day4S; //los uno en un solo String con formato yyyy-MM-dd
-					
-					SimpleDateFormat formatter4 = new SimpleDateFormat("yyyy-MM-dd");
-					Date fechaFinFase2 = formatter4.parse(fecha2_2);
-					p.setFechaProceso2Fin(fechaFinFase2); //aca recien asignamos	
-					
-					p.setIdTipoProceso( Integer.parseInt(cbTipoProceso.getSelectedItem().toString().substring(0, 1)));
-					
-					siscomfiManager.addProceso(p);
-					
-					JOptionPane.showMessageDialog(null, "Se registro el proceso satisfactoriamente");
-					LimpiarTextos ();
-					//refreshTblPartidos();
+					/*else if ( selectedDate3.compareTo(selectedDate1) > 0 ){
+						JOptionPane.showMessageDialog(null, "Las fechas de inicio de fase 1 no puede ser mayor a la de fin de fase 1");
+					}
+					else if ( selectedDate4.compareTo(selectedDate2) == 0 ){
+						JOptionPane.showMessageDialog(null, "Las fechas de inicio de fase 2 y fin de fase 2 no pueden ser las mismas");
+					}
+					else if ( selectedDate4.compareTo(selectedDate2) > 0 ){
+						JOptionPane.showMessageDialog(null, "Las fechas de inicio de fase 2 no puede ser mayor a la de fin de fase 2");
+					}*/
+					else {
+						
+						//formato de extracción de fecha inicio fase 1
+						int day1 = picker1.getModel().getDay();
+						int month1 = picker1.getModel().getMonth();
+						int year1 = picker1.getModel().getYear();
+						
+						String day1S = String.format("%02d", day1); //convierto a String de 2 digitos y 4 digitos para el año
+						String month1S = String.format("%02d", month1+1);
+						String year1S = String.format("%04d", year1);
+						
+						String fecha1_1 = year1S + "-" + month1S + "-" + day1S; //los uno en un solo String con formato yyyy-MM-dd				
+						
+						SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd");
+						Date fechaIniFase1 = formatter1.parse(fecha1_1);
+						p.setFechaProceso1Inicio(fechaIniFase1); //aca recien asignamos
+						
+						//formato de extracción de fecha Inicio fase 2
+						int day2 = picker2.getModel().getDay();
+						int month2 = picker2.getModel().getMonth();
+						int year2 = picker2.getModel().getYear();
+						
+						String day2S = String.format("%02d", day2); //convierto a String de 2 digitos y 4 digitos para el año
+						String month2S = String.format("%02d", month2+1);
+						String year2S = String.format("%04d", year2);
+						
+						String fecha1_2 = year2S + "-" + month2S + "-" + day2S; //los uno en un solo String con formato yyyy-MM-dd
+						
+						SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
+						Date fechaIniFase2 = formatter2.parse(fecha1_2);
+						p.setFechaProceso2Inicio(fechaIniFase2); //aca recien asignamos
+						
+						//formato de extracción de fecha fin fase 1 
+						int day3 = picker3.getModel().getDay();
+						int month3 = picker3.getModel().getMonth();
+						int year3 = picker3.getModel().getYear();
+						
+						String day3S = String.format("%02d", day3); //convierto a String de 2 digitos y 4 digitos para el año
+						String month3S = String.format("%02d", month3+1);
+						String year3S = String.format("%04d", year3);
+						
+						String fecha2_1 = year3S + "-" + month3S + "-" + day3S; //los uno en un solo String con formato yyyy-MM-dd
+						
+						SimpleDateFormat formatter3 = new SimpleDateFormat("yyyy-MM-dd");
+						Date fechaFinFase1 = formatter3.parse(fecha2_1);
+						p.setFechaProceso1Fin(fechaFinFase1); //aca recien asignamos				
+						
+						//formato de extracción de fecha fin fase 2
+						int day4 = picker4.getModel().getDay();
+						int month4 = picker4.getModel().getMonth();
+						int year4 = picker4.getModel().getYear();
+						
+						String day4S = String.format("%02d", day4); //convierto a String de 2 digitos y 4 digitos para el año
+						String month4S = String.format("%02d", month4+1);
+						String year4S = String.format("%04d", year4);
+						
+						String fecha2_2 = year4S + "-" + month4S + "-" + day4S; //los uno en un solo String con formato yyyy-MM-dd
+						
+						SimpleDateFormat formatter4 = new SimpleDateFormat("yyyy-MM-dd");
+						Date fechaFinFase2 = formatter4.parse(fecha2_2);
+						p.setFechaProceso2Fin(fechaFinFase2); //aca recien asignamos	
+						
+						p.setIdTipoProceso( Integer.parseInt(cbTipoProceso.getSelectedItem().toString().substring(0, 1)));
+						
+						siscomfiManager.addProceso(p);
+						
+						JOptionPane.showMessageDialog(null, "Se registro el proceso satisfactoriamente");
+						LimpiarTextos ();
+						//refreshTblPartidos();
+					}
 				}
 				catch (Exception a) {
 					a.printStackTrace();
 				}
-				
+				//System.out.println("funciono =D\n");
 			}
+			
 		});
 		btnRegistrar.setBounds(230, 220, 97, 25);
 		getContentPane().add(btnRegistrar);

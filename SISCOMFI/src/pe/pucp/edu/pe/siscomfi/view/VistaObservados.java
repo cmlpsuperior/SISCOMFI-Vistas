@@ -19,7 +19,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
-import pe.pucp.edu.pe.siscomfi.model.Adherente;
+//import pe.pucp.edu.pe.siscomfi.model.Adherente;
 import pe.pucp.edu.pe.siscomfi.model.Departamento;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 
@@ -119,7 +119,7 @@ public class VistaObservados extends JInternalFrame {
 	
 	
 	class MyTableModel extends DefaultTableModel{
-		ArrayList<Adherente> listaAdherente = null;
+		//ArrayList<Adherente> listaAdherente = null;
 		String titles[] = {"DNI","NOMBRE","AP. PATERNO","AP. MATERNO"};
 		
 		/*

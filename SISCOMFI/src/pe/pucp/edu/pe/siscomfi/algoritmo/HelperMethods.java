@@ -28,20 +28,7 @@ public class HelperMethods {
 		}		
 		return arr;
 	}
-	
-	public static double getAngle3Point(Point p1, Point p2, Point p3){
-		double p12 = p1.euclideanDistance(p2);
-		double p13 = p1.euclideanDistance(p3);
-		double p23 = p2.euclideanDistance(p3);
-		double pp12 = Math.pow(p12, 2);
-		double pp13 = Math.pow(p13, 2);
-		double pp23 = Math.pow(p23, 2);
-		double pNum = pp12 + pp13 - pp23;
-		double pDem = 2 * p12 * p13;
-		double angle = Math.acos(pNum/pDem);
-		return angle;		
-	}
-	
+
 	public static int getTamTabla(ImagePlus planillon) {
 		int x = 1;
 		int y = 0;

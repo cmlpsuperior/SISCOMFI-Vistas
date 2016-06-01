@@ -64,7 +64,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JScrollPane scpLog;
 	private JProgressBar pgBar;
 	private JPanel pnLog;
-	
+
 	public VistaIniciarProceso() {
 		setClosable(true);
 		setTitle("Iniciar Proceso");
@@ -246,7 +246,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 					double[][] grafoSuspect = Fingerprint.imageGraph(file.getAbsolutePath());
 					double porc = Fingerprint.comparition(grafoOriginal, grafoSuspect);
 					String resultado = Fingerprint.resultado(porc);
-					pgBar.setValue(num* 100 / cantFile );
+					pgBar.setValue(num * 100 / cantFile);
 					pgBar.update(pgBar.getGraphics());
 					String lineaLog = "Imagen " + num++ + ": Resultado-> " + resultado + " - Porcentaje -> " + porc;
 					txtLog.append(lineaLog + "\n");

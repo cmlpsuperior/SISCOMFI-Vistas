@@ -19,6 +19,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+import pe.pucp.edu.pe.siscomfi.model.Adherente;
 import pe.pucp.edu.pe.siscomfi.model.Departamento;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 
@@ -111,13 +112,26 @@ public class VistaObservados extends JInternalFrame {
 		JButton btnRechazado = new JButton("Rechazado");
 		btnRechazado.setBounds(218, 80, 134, 23);
 		panel_1.add(btnRechazado);
+		
+		LlenarCmbPartidosObservados();
 
 	}
 	
 	
 	class MyTableModel extends DefaultTableModel{
-			
+		ArrayList<Adherente> listaAdherente = null;
 		String titles[] = {"DNI","NOMBRE","AP. PATERNO","AP. MATERNO"};
+		
+		/*
+		public MyTableModel (){
+			try {
+				this.listaAdherente =  siscomfiManager.qu);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		*/
 		@Override
 		public int getColumnCount() {
 			// TODO Auto-generated method stub
@@ -135,15 +149,15 @@ public class VistaObservados extends JInternalFrame {
 		}
 			
 	}
-	/*
+	
 	public void LlenarCmbPartidosObservados(){ //mostrare solo los clientes que estan activos
 		cmbPartido.removeAllItems();
 		ArrayList<PartidoPolitico> listaObservados;
 		try {
-			listaObservados = siscomfiManager.queryAllDepartamento();
-			for (int i=0; i<listaDepartamento.size();i++){				
-				Departamento d = (Departamento)listaDepartamento.get(i);
-				cmbDepartamento.addItem(d.getIdDepartamento()+ " - " + d.getNombre());
+			listaObservados = siscomfiManager.queryAllPartidosConObservados();
+			for (int i=0; i<listaObservados.size();i++){				
+				PartidoPolitico p = (PartidoPolitico)listaObservados.get(i);
+				cmbPartido.addItem(p.getIdPartidoPolitco() + " - " + p.getNombrePartido());
 			}
 			
 		} catch (Exception e) {
@@ -151,6 +165,6 @@ public class VistaObservados extends JInternalFrame {
 			e.printStackTrace();
 		}		
 	}
-	*/
+	
 
 }

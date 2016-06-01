@@ -37,10 +37,10 @@ public class MySQLDAOFactory extends DAOFactory{
 		return new MySQLDAOTipoProceso();
 	}
 	
-	@Override
-	public DAOAdherente getDAOAdherente() { //NO VAMOS A HACE MANTENIMIENTO AL TIPO DE PROCESO
+	//@Override
+	/*public DAOAdherente getDAOAdherente() { //NO VAMOS A HACE MANTENIMIENTO AL TIPO DE PROCESO
 		// TODO Auto-generated method stub
 		return new MySQLDAOAdherente();
 	}
-	
+	*/
 }

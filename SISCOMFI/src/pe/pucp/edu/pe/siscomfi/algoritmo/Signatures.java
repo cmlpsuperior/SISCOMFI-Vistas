@@ -60,6 +60,48 @@ public class Signatures {
 		return rec;
 	}	
 
+	
+	public static Point getAngleImage2(BufferedImage img) {
+		int width = img.getWidth();
+		int left = 0;
+		int right = width-1;
+		double angleProm = 0.0;
+		int cont = 0;
+		while(left < right){
+			Point pL = null;
+			Point pR = null;
+			//Punto Izquierda
+			for (int i = img.getHeight() - 1; i >= 0; i--) {
+				if (img.getRGB(left, i) == Color.BLACK.getRGB()) {
+					pL = new Point(i, left);
+					break;
+				}
+			}
+			//System.out.println("pL?: " + pL == null);
+			//Punto Derecha
+			for (int i = img.getHeight() - 1; i >= 0; i--) {
+				if (img.getRGB(right, i) == Color.BLACK.getRGB()) {
+					pR = new Point(i, right);
+					break;
+				}
+			}
+			//System.out.println("pR?: " + pR == null);
+			//Angulo entre estos puntos
+			double anglePoints = pL.getAnglePoint(pR);
+			angleProm += anglePoints;
+			
+			//Sigo contando para el siguiente punto
+			left++;
+			right--;
+			
+			//contador de puntos
+			cont++;
+		}
+		double angleFinal = angleProm / cont;
+		Point pFinal = new Point(0,0);
+		pFinal.setAngle(angleFinal);
+		return pFinal;
+	}
 	public static Point getAngleImage(BufferedImage img) {
 
 		double angleP = 0.0;
@@ -108,7 +150,7 @@ public class Signatures {
 
 	}
 
-	private static double compare(BufferedImage cDbimg, BufferedImage crop2) {
+	public static double compare(BufferedImage cDbimg, BufferedImage crop2) {
 		int m = 0, n = 0, p = 0, pixelColor, color;
 		int w = cDbimg.getWidth();
 		int h = cDbimg.getHeight();
@@ -154,7 +196,7 @@ public class Signatures {
 
 		// saca el angulo de rotacion
 		Point pRot = Signatures.getAngleImage(ccSuspect);
-		System.out.println("Angle: " + Math.toDegrees(pRot.getAngle()));
+		//System.out.println("Angle: " + Math.toDegrees(pRot.getAngle()));
 		// rotamos la imagen
 		if (Math.toDegrees(pRot.getAngle()) > 11)
 			IJ.run(impSuspect, "Rotate... ",

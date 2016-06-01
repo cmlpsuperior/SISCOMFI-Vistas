@@ -84,4 +84,11 @@ public class siscomfiManager {
 		return ubicacionDB.queryAllDepartamento();
     }
 	
+	
+	//PartidosPoliticos:
+	public static ArrayList<PartidoPolitico> queryAllPartidosConObservados()
+    {
+		return partidoPoliticoDB.queryAllObservados();
+    }
+	
 }

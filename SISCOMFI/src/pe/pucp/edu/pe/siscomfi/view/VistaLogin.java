@@ -27,7 +27,7 @@ public class VistaLogin implements ActionListener{
 
 	private JFrame frmSiscomfi;
 	private JTextField txtUsuario;
-	private JPasswordField passwordField;
+	private JPasswordField txtPassword;
 	private JButton btnIngresar;
 	
 	private VistaMenu vMenu;
@@ -82,9 +82,9 @@ public class VistaLogin implements ActionListener{
 		frmSiscomfi.getContentPane().add(txtUsuario);
 		txtUsuario.setColumns(10);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(305, 108, 137, 20);
-		frmSiscomfi.getContentPane().add(passwordField);
+		txtPassword = new JPasswordField();
+		txtPassword.setBounds(305, 108, 137, 20);
+		frmSiscomfi.getContentPane().add(txtPassword);
 		
 		btnIngresar = new JButton("INGRESAR");
 		btnIngresar.setBounds(323, 158, 108, 23);

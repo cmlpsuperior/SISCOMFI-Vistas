@@ -39,4 +39,11 @@ public class PartidoPoliticoDB {
     	return daoPartidoPolitico.queryById(idPartido);
     	
     }
+    
+    //Observados
+    public ArrayList<PartidoPolitico> queryAllObservados()
+    {
+    	return daoPartidoPolitico.queryAllObservados();
+    	
+    }
 }

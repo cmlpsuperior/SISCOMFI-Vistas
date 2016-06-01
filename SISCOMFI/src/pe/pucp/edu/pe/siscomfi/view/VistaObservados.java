@@ -11,10 +11,16 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
+import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+import pe.pucp.edu.pe.siscomfi.model.Departamento;
+import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 
 public class VistaObservados extends JInternalFrame {
 	private JTextField txtCantObservados;
@@ -22,7 +28,7 @@ public class VistaObservados extends JInternalFrame {
 	private JTextField txtAdherente;
 	private JTextField txtCodigoPlanillon;
 	
-	
+	private JComboBox cmbPartido;
 	private MyTableModel tableModelAdherentes ;
 
 	public VistaObservados() {
@@ -55,9 +61,9 @@ public class VistaObservados extends JInternalFrame {
 		txtCantObservados.setBounds(171, 46, 208, 20);
 		panel.add(txtCantObservados);
 		
-		JComboBox cbPartido = new JComboBox();
-		cbPartido.setBounds(171, 21, 208, 20);
-		panel.add(cbPartido);
+		cmbPartido = new JComboBox();
+		cmbPartido.setBounds(171, 21, 208, 20);
+		panel.add(cmbPartido);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBounds(10, 228, 395, 140);
@@ -129,5 +135,22 @@ public class VistaObservados extends JInternalFrame {
 		}
 			
 	}
+	/*
+	public void LlenarCmbPartidosObservados(){ //mostrare solo los clientes que estan activos
+		cmbPartido.removeAllItems();
+		ArrayList<PartidoPolitico> listaObservados;
+		try {
+			listaObservados = siscomfiManager.queryAllDepartamento();
+			for (int i=0; i<listaDepartamento.size();i++){				
+				Departamento d = (Departamento)listaDepartamento.get(i);
+				cmbDepartamento.addItem(d.getIdDepartamento()+ " - " + d.getNombre());
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	*/
 
 }

@@ -242,6 +242,68 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		}
 		return p;
 	}
+
+	@Override
+	public ArrayList<PartidoPolitico> queryAllObservados	() { //Esta listando todos los partidos que estan actualmente en un proceso
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<PartidoPolitico> arr = new ArrayList<PartidoPolitico>();
+		try {
+			//Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			//Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+								DBConnection.user,
+								DBConnection.password);
+			//Paso 3: Preparar la sentencia
+			String sql = 	" select pa.*    " +
+							" from PartidoPoliticoxProceso pp join Proceso p on pp.idProceso =  p.idProceso  									" +
+							" 								  join PartidoPolitico pa on pa.idPartidoPolitico = pp.idPartidoPolitico			" +		
+							" where (Now() between p.FechaProceso1Inicio and p.FechaProceso1Fin) or 											" +
+							"		(Now() between p.FechaProceso2Inicio and p.FechaProceso2Fin)   			 									" ;
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			//Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			//Paso 5(opc.): Procesar los resultados
+			while (rs.next()){
+				int id = rs.getInt("idPartidoPolitico");
+				String nombre = rs.getString("Nombre");
+				String rep = rs.getString("Representante");
+				String correo = rs.getString("CorreoRepresentante");
+				String direccion = rs.getString("Direccion");
+				String telefono = rs.getString("Telefono");
+				int idDistrito = rs.getInt("idDistrito");
+				Date fechaRegistro = rs.getTimestamp("FechaRegistro");
+				String estadoActivo = rs.getString("EstadoActivo");
+				
+				PartidoPolitico p = new PartidoPolitico();
+				p.setIdPartidoPolitco(id);
+				p.setNombrePartido(nombre);
+				p.setRepresentante(rep);
+				p.setCorreo(correo);
+				p.setDireccion(direccion);
+				p.setTelefono(telefono);
+				p.setIdDistrito(idDistrito);
+				p.setFechaRegistro(fechaRegistro);
+				p.setEstadoActivo(estadoActivo);
+				
+				arr.add(p);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			//Paso 6(OJO): Cerrar la conexión
+			try { if (pstmt!= null) pstmt.close();} 
+				catch (Exception e){e.printStackTrace();};
+			try { if (conn!= null) conn.close();} 
+				catch (Exception e){e.printStackTrace();};						
+		}
+		return arr;
+	}
 	
 }
 

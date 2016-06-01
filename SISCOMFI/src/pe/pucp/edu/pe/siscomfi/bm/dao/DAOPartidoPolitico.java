@@ -9,5 +9,5 @@ public interface DAOPartidoPolitico {
 	void delete (int idPartido);
 	ArrayList<PartidoPolitico> queryAll();
 	PartidoPolitico queryById(int idPartido);
-
+	ArrayList<PartidoPolitico> queryAllObservados();
 }

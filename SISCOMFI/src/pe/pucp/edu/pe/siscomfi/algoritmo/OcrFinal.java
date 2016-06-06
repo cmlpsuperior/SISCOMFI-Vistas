@@ -51,7 +51,7 @@ public class OcrFinal {
 			FileReader f;// the actual file stream
 			BufferedReader r;// used to read the file line by line
 
-			f = new FileReader(new File("./sample.dat"));
+			f = new FileReader(new File("./numberTrain.dat"));
 			r = new BufferedReader(f);
 			String line;
 			int i = 0;

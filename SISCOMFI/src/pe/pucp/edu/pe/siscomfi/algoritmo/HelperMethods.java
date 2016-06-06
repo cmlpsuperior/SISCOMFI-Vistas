@@ -219,9 +219,9 @@ public class HelperMethods {
 		ImagePlus filaOriginal = new Duplicator().run(fila);
 		int dist_x = 5 + tCampos[0];
 		for (int w = 1; w < 5; w++) {
-			System.out.print("Antes: " + dist_x + " Tam: " + tCampos[w]);
+			//System.out.print("Antes: " + dist_x + " Tam: " + tCampos[w]);
 			
-			System.out.println(" Despues:" + dist_x);
+			//System.out.println(" Despues:" + dist_x);
 			fila.setRoi(dist_x,0,tCampos[w],fila.getHeight());
 			IJ.run(fila, "Crop", "");
 			partes.add(fila);

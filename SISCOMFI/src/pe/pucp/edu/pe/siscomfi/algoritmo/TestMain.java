@@ -24,23 +24,26 @@ public class TestMain {
 
 		}
 		List<ImagePlus> parteLista = HelperMethods.getPartesFila(lista.get(1), recortadoOriginal);
-		//0 -> DNI, 1 -> nombre + apellido
-		int len = 48;
-		List<ImagePlus> datos = HelperMethods.cropSection(parteLista.get(1), len);
+		// 0 -> DNI, 1 -> nombre + apellido
+		int len = 1;
+		List<ImagePlus> datos = HelperMethods.cropSection(parteLista.get(2), len);
 		for (ImagePlus mm : datos) {
 			mm.show();
 		}
 
 		// CARGAR OCR - COMPARAR
 
-		/*
-		 * OcrFinal ocr = new OcrFinal(); ocr.cargarEntrenamiento();
-		 * ocr.entrenarRed(); for (int i = 1; i < 25; i++) { ImagePlus imp =
-		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\test\\p" + i +
-		 * ".JPG"); IJ.run(imp, "Make Binary", ""); BufferedImage img2 =
-		 * imp.getBufferedImage(); System.out.print("resultado de p" + i + ": "
-		 * ); ocr.reconocer(img2); }
-		 */
+		OcrFinal ocr = new OcrFinal();
+		ocr.cargarEntrenamiento();
+		ocr.entrenarRed();
+		for (int i = 1; i < 25; i++) {
+			ImagePlus imp = IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\test\\p" + i + ".JPG");
+			IJ.run(imp, "Make Binary", "");
+			BufferedImage img2 = imp.getBufferedImage();
+			System.out.print("resultado de p" + i + ": ");
+			ocr.reconocer(img2);
+		}
+
 		// FIRMAS
 
 		/*

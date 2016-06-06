@@ -13,6 +13,7 @@ import javax.swing.JButton;
 
 import pe.pucp.edu.pe.siscomfi.algoritmo.Fingerprint;
 import pe.pucp.edu.pe.siscomfi.algoritmo.HelperMethods;
+import pe.pucp.edu.pe.siscomfi.algoritmo.OcrFinal;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.Rol; //aca tiene que ir tipoProceso
 import pe.pucp.edu.pe.siscomfi.model.TipoProceso;
@@ -26,6 +27,7 @@ import org.jdatepicker.JDatePicker;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.plugin.Duplicator;
 import ij.process.ImageProcessor;
 
 import java.awt.Color;
@@ -37,6 +39,7 @@ import java.awt.font.ImageGraphicAttribute;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 import javax.swing.JPanel;
@@ -54,21 +57,25 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JButton btnProcesar;
 	private JFileChooser jfcRuta;
 	private JComboBox<String> cbDescProceso;
-	private JLabel lblExtra;
 	private JTextArea txtLog;
-	private JButton btnCambiar;
 	private BufferedImage imageComparar;
-	private String pathImageComparar;
-	private File[] imagesPaths;
+	private String pathPadronProcesar;
+	private File[] padronPaths;
 	private JScrollPane scpLog;
 	private JProgressBar pgBar;
 	private JPanel pnLog;
+	private OcrFinal ocrNumbers;
 
 	public VistaIniciarProceso() {
 		setClosable(true);
 		setTitle("Iniciar Proceso");
-		setBounds(100, 100, 843, 535);
+		setBounds(100, 100, 436, 499);
 		getContentPane().setLayout(null);
+
+		// OCR--
+		ocrNumbers = new OcrFinal();
+		ocrNumbers.cargarEntrenamiento();
+		ocrNumbers.entrenarRed();
 
 		JLabel lblNewLabel = new JLabel("Partido Pol\u00EDtico:");
 		lblNewLabel.setBounds(12, 108, 126, 16);
@@ -99,7 +106,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(btnRuta);
 
 		btnProcesar = new JButton("Procesar");
-		btnProcesar.setBounds(155, 190, 97, 25);
+		btnProcesar.setBounds(75, 190, 97, 25);
 		getContentPane().add(btnProcesar);
 
 		txtFase = new JTextField();
@@ -114,28 +121,17 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(lblFaseDelProceso);
 
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(277, 190, 97, 25);
+		btnCancelar.setBounds(230, 190, 97, 25);
 		getContentPane().add(btnCancelar);
 
 		JLabel lblDescripcionDelProceso = new JLabel("Descripcion del proceso:");
 		lblDescripcionDelProceso.setBounds(12, 38, 143, 16);
 		getContentPane().add(lblDescripcionDelProceso);
 
-		JPanel pnOriginal = new JPanel();
-		pnOriginal.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Imagen Original",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnOriginal.setBounds(12, 250, 170, 245);
-		getContentPane().add(pnOriginal);
-		pnOriginal.setLayout(null);
-
-		lblExtra = new JLabel("");
-		lblExtra.setBounds(6, 16, 158, 222);
-		pnOriginal.add(lblExtra);
-
 		pnLog = new JPanel();
 		pnLog.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Log", TitledBorder.LEADING,
 				TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnLog.setBounds(427, 250, 353, 173);
+		pnLog.setBounds(31, 278, 353, 173);
 		getContentPane().add(pnLog);
 		pnLog.setLayout(null);
 
@@ -148,23 +144,17 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		txtLog.setEditable(false);
 		txtLog.setText("");
 
-		btnCambiar = new JButton("Cambiar");
-		btnCambiar.setBounds(31, 191, 89, 23);
-		getContentPane().add(btnCambiar);
-
 		pgBar = new JProgressBar();
-		pgBar.setBounds(458, 143, 299, 17);
+		pgBar.setBounds(63, 250, 299, 17);
 		getContentPane().add(pgBar);
 
 		// listener
 		btnCancelar.addActionListener(this);
 		btnRuta.addActionListener(this);
 		btnProcesar.addActionListener(this);
-		btnCambiar.addActionListener(this);
 	}
 
-	public void fillCustomerCmb() { // mostrare solo los clientes que estan
-									// activos
+	public void fillCustomerCmb() {
 		cbPartido.removeAllItems();
 		ArrayList<PartidoPolitico> PartidoPoliticoList;
 		try {
@@ -206,43 +196,67 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			this.dispose();
 		}
 
-		if (e.getSource() == btnCambiar) {
-			JFileChooser extra = new JFileChooser();
-			extra.showOpenDialog(this);
-			File fEscogido = extra.getSelectedFile();
-			int w = lblExtra.getWidth(), h = lblExtra.getHeight();
-			pathImageComparar = fEscogido.getAbsolutePath();
-			BufferedImage bfEscogida = setImagetoLabel(fEscogido.getAbsolutePath(), w, h);
-			lblExtra.setIcon(new ImageIcon(bfEscogida));
-		}
 		if (e.getSource() == btnRuta) {
 			jfcRuta = new JFileChooser();
 			jfcRuta.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			jfcRuta.showOpenDialog(this);
 			File fEscogido = jfcRuta.getSelectedFile();
+			pathPadronProcesar = fEscogido.getAbsolutePath();
 			txtRuta.setText(fEscogido.getPath());
-			imagesPaths = fEscogido.listFiles();
+			padronPaths = fEscogido.listFiles();
 		}
 
 		if (e.getSource() == btnProcesar) {
-			int num = 1;
-			if (!pathImageComparar.isEmpty() && imagesPaths.length != 0) {
-				int cantFile = imagesPaths.length;
-				double[][] grafoOriginal = Fingerprint.imageGraph(pathImageComparar);
-				for (File file : imagesPaths) {
-					// System.out.println(file.getAbsolutePath());
-					double[][] grafoSuspect = Fingerprint.imageGraph(file.getAbsolutePath());
-					double porc = Fingerprint.comparition(grafoOriginal, grafoSuspect);
-					String resultado = Fingerprint.resultado(porc);
-					pgBar.setValue(num * 100 / cantFile);
+			int numPadrones = 0;
+			//System.out.println(pathPadronProcesar);
+			if (!pathPadronProcesar.isEmpty()) {
+				int cantPadrones = padronPaths.length;
+				for (File padron : padronPaths) {
+					System.out.println("Padron:" + (numPadrones + 1));
+					ImagePlus imgPlanillon = IJ.openImage(padron.getAbsolutePath());
+					ImagePlus planillonRecortado = HelperMethods.recortarPlanillon(imgPlanillon, imgPlanillon);
+					ImagePlus auxPlanillon = new Duplicator().run(planillonRecortado);
+					List<ImagePlus> filasPlanillon = HelperMethods.getFilasPlanillon(planillonRecortado);
+					int nFilas = 1;
+					for (ImagePlus fila : filasPlanillon) {
+						List<ImagePlus> partesFila = HelperMethods.getPartesFila(fila, auxPlanillon);
+						List<ImagePlus> dniFila = HelperMethods.cropSection(partesFila.get(0), 8);
+						List<ImagePlus> firmaFila = HelperMethods.cropSection(partesFila.get(2), 1);
+						ImagePlus huellaFila = partesFila.get(3);
+						String dni = "";
+						// DNI
+						partesFila.get(0).show();
+						for (ImagePlus numero : dniFila) {
+							numero.show();
+							String number = ocrNumbers.reconocer(numero.getBufferedImage());
+							dni.concat(number);
+						}
+						System.out.println("Fila "+nFilas + ": Dni " + dni);
+					}
+					pgBar.setValue(numPadrones * 100 / cantPadrones);
 					pgBar.update(pgBar.getGraphics());
-					String lineaLog = "Imagen " + num++ + ": Resultado-> " + resultado + " - Porcentaje -> " + porc;
-					txtLog.append(lineaLog + "\n");
-					txtLog.update(txtLog.getGraphics());
-					System.out.println(lineaLog);
 				}
-			} else
-				JOptionPane.showMessageDialog(this, "Escoga una imagen o un directorio de imagenes a comparar");
+			} else {
+				JOptionPane.showMessageDialog(this, "Escojan un directorio.");
+			}
+			/*
+			 * int num = 1; if (!pathImageComparar.isEmpty() &&
+			 * imagesPaths.length != 0) { int cantFile = imagesPaths.length;
+			 * double[][] grafoOriginal =
+			 * Fingerprint.imageGraph(pathImageComparar); for (File file :
+			 * imagesPaths) { // System.out.println(file.getAbsolutePath());
+			 * double[][] grafoSuspect =
+			 * Fingerprint.imageGraph(file.getAbsolutePath()); double porc =
+			 * Fingerprint.comparition(grafoOriginal, grafoSuspect); String
+			 * resultado = Fingerprint.resultado(porc); pgBar.setValue(num * 100
+			 * / cantFile); pgBar.update(pgBar.getGraphics()); String lineaLog =
+			 * "Imagen " + num++ + ": Resultado-> " + resultado +
+			 * " - Porcentaje -> " + porc; txtLog.append(lineaLog + "\n");
+			 * txtLog.update(txtLog.getGraphics());
+			 * System.out.println(lineaLog); } } else
+			 * JOptionPane.showMessageDialog(this,
+			 * "Escoga una imagen o un directorio de imagenes a comparar");
+			 */
 		}
 	}
 

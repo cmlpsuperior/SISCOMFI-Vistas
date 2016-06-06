@@ -55,7 +55,6 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JFileChooser jfcRuta;
 	private JComboBox<String> cbDescProceso;
 	private JLabel lblExtra;
-	private JLabel lblCompara;
 	private JTextArea txtLog;
 	private JButton btnCambiar;
 	private BufferedImage imageComparar;
@@ -132,17 +131,6 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		lblExtra = new JLabel("");
 		lblExtra.setBounds(6, 16, 158, 222);
 		pnOriginal.add(lblExtra);
-
-		JPanel pnComparacion = new JPanel();
-		pnComparacion.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Imagen a Comparar",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnComparacion.setBounds(224, 250, 170, 245);
-		getContentPane().add(pnComparacion);
-		pnComparacion.setLayout(null);
-
-		lblCompara = new JLabel("");
-		lblCompara.setBounds(6, 16, 158, 222);
-		pnComparacion.add(lblCompara);
 
 		pnLog = new JPanel();
 		pnLog.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Log", TitledBorder.LEADING,

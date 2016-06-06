@@ -19,6 +19,74 @@ import pe.pucp.edu.pe.siscomfi.model.Point;
 
 public class HelperMethods {
 	
+	public static ImagePlus removeBlanks(ImagePlus ip) {
+        ImagePlus trimImage = new Duplicator().run(ip);
+        int lowerBound = 0, upperBound = ip.getHeight();
+
+        int threshold = 3;
+        //lowerBound
+        int col = threshold;
+        boolean reachedNumber = false;
+        while (reachedNumber == false && (col < (ip.getHeight() / 2))) {
+            for (int row = 0; row < ip.getWidth(); row++) {
+                if (ip.getPixel(row, col)[0] == 255) {
+                    reachedNumber = true;
+                }
+            }
+            if (reachedNumber == false) {
+                col++;
+            }
+        }
+        lowerBound = col;
+
+        //upperBound
+        col = ip.getHeight() - threshold;
+        reachedNumber = false;
+        while (reachedNumber == false && (col > (ip.getHeight() / 2))) {
+            for (int row = 0; row < ip.getWidth(); row++) {
+                if (ip.getPixel(row, col)[0] == 255) {
+                    reachedNumber = true;
+                }
+            }
+            if (reachedNumber == false) {
+                col--;
+            }
+        }
+        upperBound = col;
+
+        if (upperBound > lowerBound && lowerBound < trimImage.getWidth() / 2 && upperBound > trimImage.getWidth() / 2) {
+            trimImage.setRoi(0, lowerBound - 1, trimImage.getWidth(), upperBound - lowerBound + 1);
+            IJ.run(trimImage, "Crop", "");
+        }
+        return trimImage;
+    }
+	
+	public static List<ImagePlus> cropSection(ImagePlus originalImg, int len) {
+        ImagePlus img = new Duplicator().run(originalImg);
+        List<ImagePlus> imageList = new ArrayList<ImagePlus>();
+        int defaultHeight = 5, lowerBound;
+        for (int i = 0; i < len; i++) {
+            int sectionWidth = 0;
+
+            ImagePlus element = new Duplicator().run(img);
+            while (element.getPixel(sectionWidth, defaultHeight)[0] != 0) {
+                sectionWidth++;
+            }
+
+            lowerBound = sectionWidth;
+            while (element.getPixel(sectionWidth, defaultHeight)[0] == 0) {
+                sectionWidth++;
+            }
+
+            element.setRoi(lowerBound, 5, sectionWidth - 2, element.getHeight() - 10);
+            IJ.run(element, "Crop", "");
+            imageList.add(element);
+            img.setRoi(sectionWidth, 0, img.getWidth() - sectionWidth + 1, img.getHeight());
+            IJ.run(img, "Crop", "");
+        }
+        return imageList;
+    }
+	
 	public static byte[][] imgToByte(int[][] img){
 		byte[][] arr = new byte[img[0].length][img.length];
 		for(int i = 0 ; i < img[0].length;i++){

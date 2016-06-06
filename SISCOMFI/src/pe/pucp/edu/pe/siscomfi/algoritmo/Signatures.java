@@ -60,7 +60,6 @@ public class Signatures {
 		return rec;
 	}	
 
-	
 	public static Point getAngleImage2(BufferedImage img) {
 		int width = img.getWidth();
 		int left = 0;
@@ -87,21 +86,24 @@ public class Signatures {
 			}
 			//System.out.println("pR?: " + pR == null);
 			//Angulo entre estos puntos
-			double anglePoints = pL.getAnglePoint(pR);
-			angleProm += anglePoints;
-			
+			if(pL != null && pR != null){
+				double anglePoints = pL.getAnglePoint(pR);
+				angleProm += anglePoints;
+				//contador de puntos
+				cont++;
+			}			
 			//Sigo contando para el siguiente punto
 			left++;
 			right--;
 			
-			//contador de puntos
-			cont++;
+			
 		}
 		double angleFinal = angleProm / cont;
 		Point pFinal = new Point(0,0);
 		pFinal.setAngle(angleFinal);
 		return pFinal;
 	}
+	
 	public static Point getAngleImage(BufferedImage img) {
 
 		double angleP = 0.0;

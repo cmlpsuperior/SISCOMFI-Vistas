@@ -23,8 +23,8 @@ import ij.IJ;
 import ij.ImagePlus;
 
 public class OcrFinal {
-	static final int DOWNSAMPLE_WIDTH = 28;
-	static final int DOWNSAMPLE_HEIGHT = 28;
+	static final int DOWNSAMPLE_WIDTH = 50;
+	static final int DOWNSAMPLE_HEIGHT = 50;
 	private final Entry entry = new Entry();
 	private final DefaultListModel letterListModel = new DefaultListModel();
 	private final List<String> lettersL = new ArrayList<String>();
@@ -32,7 +32,7 @@ public class OcrFinal {
 	private SOM net;
 
 	private BufferedImage mnistToBImg(DigitImage img) {
-		BufferedImage img2 = new BufferedImage(28, 28, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage img2 = new BufferedImage(DOWNSAMPLE_WIDTH, DOWNSAMPLE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		byte[] arr = img.getImageData();
 		int cont = 0;
 		for (int w = 0; w < 28; w++) {

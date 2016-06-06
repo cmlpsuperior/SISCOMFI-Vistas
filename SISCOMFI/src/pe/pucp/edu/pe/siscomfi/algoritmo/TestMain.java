@@ -24,7 +24,10 @@ public class TestMain {
 
 		}
 		List<ImagePlus> parteLista = HelperMethods.getPartesFila(lista.get(1), recortadoOriginal);
-		for (ImagePlus mm : parteLista) {
+		//0 -> DNI, 1 -> nombre + apellido
+		int len = 48;
+		List<ImagePlus> datos = HelperMethods.cropSection(parteLista.get(1), len);
+		for (ImagePlus mm : datos) {
 			mm.show();
 		}
 
@@ -55,38 +58,53 @@ public class TestMain {
 		/*
 		 * ImagePlus impOriginal =
 		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\t2.jpg");
-		 * IJ.run(impOriginal,"Make Binary",""); double angleOriginal =
+		 * IJ.run(impOriginal, "Make Binary", ""); IJ.run(impOriginal,
+		 * "Skeletonize", ""); double angleOriginal =
 		 * Signatures.getAngleImage2(impOriginal.getBufferedImage()).getAngle();
+		 * IJ.saveAs(impOriginal, "Jpeg",
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\prep\\original.jpg");
 		 * 
 		 * ImagePlus impSuspect =
 		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\t1.jpg");
-		 * IJ.run(impSuspect,"Make Binary",""); double angleSuspect =
+		 * IJ.run(impSuspect, "Make Binary", ""); IJ.run(impSuspect,
+		 * "Skeletonize", ""); double angleSuspect =
 		 * Signatures.getAngleImage2(impSuspect.getBufferedImage()).getAngle();
+		 * IJ.saveAs(impSuspect, "Jpeg",
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\prep\\suspect.jpg");
 		 * 
 		 * angleOriginal = (angleOriginal < 0) ? Math.PI * 2 - angleOriginal :
 		 * angleOriginal; angleSuspect = (angleSuspect < 0) ? Math.PI * 2 -
-		 * angleSuspect : angleSuspect;
+		 * angleSuspect : angleSuspect; System.out.println(
+		 * "Angulo del Original: " + angleOriginal); System.out.println(
+		 * "Angulo del Suspect: " + angleSuspect);
 		 * 
 		 * double angleProm = (angleOriginal + angleSuspect) / 2; double
 		 * angleExtraOriginal = angleProm - angleOriginal; double
-		 * angleExtraSuspect = angleProm - angleSuspect;
+		 * angleExtraSuspect = angleProm - angleSuspect; System.out.println(
+		 * "Angulo Promedio: " + angleProm); System.out.println(
+		 * "Extra Original: " + Math.toDegrees(angleExtraOriginal));
+		 * System.out.println("Extra Suspect: " +
+		 * Math.toDegrees(angleExtraSuspect));
+		 * 
 		 * 
 		 * ImageProcessor ipOriginal = impOriginal.getProcessor();
-		 * ipOriginal.setBackgroundValue(255);
-		 * ipOriginal.rotate(angleExtraOriginal); impOriginal = new
-		 * ImagePlus("", ipOriginal);
+		 * ipOriginal.setBackgroundValue(0);
+		 * ipOriginal.rotate(Math.toDegrees(angleExtraOriginal)); ImagePlus
+		 * ipOriginalGirada = new ImagePlus("Original Girada", ipOriginal);
+		 * IJ.saveAs(ipOriginalGirada, "Jpeg",
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\prep\\originalGirada.jpg");
 		 * 
 		 * ImageProcessor ipSuspect = impSuspect.getProcessor();
 		 * ipSuspect.setBackgroundValue(255);
-		 * ipSuspect.rotate(angleExtraSuspect);
+		 * ipSuspect.rotate(Math.toDegrees(angleExtraSuspect));
 		 * ipSuspect.resize(impOriginal.getWidth(), impOriginal.getHeight());
-		 * impSuspect = new ImagePlus("", ipSuspect);
-		 * System.out.println(impSuspect);
+		 * ImagePlus ipSuspectGirada = new ImagePlus("", ipSuspect);
+		 * IJ.saveAs(ipSuspectGirada, "Jpeg",
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\prep\\suspectGirada.jpg");
 		 * 
 		 * System.out.println("Original: h = " + impOriginal.getHeight() +
-		 * " w = "+ impOriginal.getWidth()); System.out.println("Suspect: h = "
-		 * + impSuspect.getHeight() + " w = "+ impSuspect.getWidth());
-		 * 
+		 * " w = " + impOriginal.getWidth()); System.out.println("Suspect: h = "
+		 * + impSuspect.getHeight() + " w = " + impSuspect.getWidth());
 		 * 
 		 * double res = Signatures.compare(impOriginal.getBufferedImage(),
 		 * impSuspect.getBufferedImage()); System.out.println(res);

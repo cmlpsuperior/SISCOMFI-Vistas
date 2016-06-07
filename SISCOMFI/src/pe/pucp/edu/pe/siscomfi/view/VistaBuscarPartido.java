@@ -48,6 +48,11 @@ public class VistaBuscarPartido extends JInternalFrame {
 		txtNombre.setBounds(114, 36, 244, 20);
 		getContentPane().add(txtNombre);
 		
+		txtRepresentante = new JTextField();
+		txtRepresentante.setBounds(114, 60, 244, 20);
+		getContentPane().add(txtRepresentante);
+		txtRepresentante.setColumns(10);
+		
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 122, 348, 129);
 		getContentPane().add(panel);
@@ -64,26 +69,28 @@ public class VistaBuscarPartido extends JInternalFrame {
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (txtCodigo.getText() == null || txtCodigo.getText() == "" ){
-					
-					if (txtNombre.getText() == null || txtNombre.getText() == ""){
-						
-						
-						if (txtRepresentante.getText() == null || txtRepresentante.getText() == ""){
-							JOptionPane.showMessageDialog(null, "Llene almenos un campo de busqueda");
+				try{
+					if (txtCodigo.getText().equals("")){						
+						if (txtNombre.getText().equals("")){
+							if (txtRepresentante.getText().equals("")){
+								JOptionPane.showMessageDialog(null, "Llene al menos un campo de busqueda");
+							}
+							else {
+								//buscar por representante
+							}
 						}
-						else{
-							//buscar por representante;
+						else {
+							//buscar por Nombre del partido
 						}
 					}
 					else {
-						//buscar por Nombre del partido;
+						//por por ID de partido politico
 					}
+				}
+				catch (Exception a) {
+					a.printStackTrace();
+				}
 					
-				}
-				else {
-					//buscar por ID de partido politico;
-				}
 			}
 		});
 		btnBuscar.setBounds(10, 88, 89, 23);
@@ -94,6 +101,11 @@ public class VistaBuscarPartido extends JInternalFrame {
 		getContentPane().add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		btnCancelar.setBounds(215, 262, 89, 23);
 		getContentPane().add(btnCancelar);
 		
@@ -101,11 +113,6 @@ public class VistaBuscarPartido extends JInternalFrame {
 		lblRepresentante.setBounds(10, 63, 94, 14);
 		getContentPane().add(lblRepresentante);
 		
-		txtRepresentante = new JTextField();
-		txtRepresentante.setBounds(114, 60, 244, 20);
-		getContentPane().add(txtRepresentante);
-		txtRepresentante.setColumns(10);
-
 	}
 	
 	

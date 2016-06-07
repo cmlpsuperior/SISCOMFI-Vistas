@@ -220,16 +220,6 @@ public class VistaRegistrarProceso extends JInternalFrame {
 						//System.out.println(picker1.getModel().getValue());
 						JOptionPane.showMessageDialog(null, "La fecha de inicio de fase 2 no puede ser mayor a la de fin de fase 2.");
 					}
-					
-					/*else if ( selectedDate3.compareTo(selectedDate1) > 0 ){
-						JOptionPane.showMessageDialog(null, "Las fechas de inicio de fase 1 no puede ser mayor a la de fin de fase 1");
-					}
-					else if ( selectedDate4.compareTo(selectedDate2) == 0 ){
-						JOptionPane.showMessageDialog(null, "Las fechas de inicio de fase 2 y fin de fase 2 no pueden ser las mismas");
-					}
-					else if ( selectedDate4.compareTo(selectedDate2) > 0 ){
-						JOptionPane.showMessageDialog(null, "Las fechas de inicio de fase 2 no puede ser mayor a la de fin de fase 2");
-					}*/
 					else {
 						
 						//formato de extracción de fecha inicio fase 1

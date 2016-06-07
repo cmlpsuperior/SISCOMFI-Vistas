@@ -85,11 +85,14 @@ public class VistaBuscarPartido extends JInternalFrame {
 							}
 							else {
 								//buscar por representante
-								
+								String representante = txtRepresentante.getText();
+								refreshTblPartidos_byRepresentante(representante);
 							}
 						}
 						else {
 							//buscar por Nombre del partido
+							String nombrePartido = txtNombre.getText();
+							refreshTblPartidos_byNombre(nombrePartido);
 						}
 					}
 					else {
@@ -97,8 +100,7 @@ public class VistaBuscarPartido extends JInternalFrame {
 						int idPartido = Integer.parseInt(txtCodigo.getText());
 						//Integer.parseInt(cbTipoProceso.getSelectedItem().toString().substring(0, 1))
 						//pp=siscomfiManager.queryPartidoById(idPartido);
-						refreshTblPartidos_byId(idPartido);
-						
+						refreshTblPartidos_byId(idPartido);						
 					}
 				}
 				catch (Exception a) {
@@ -183,6 +185,28 @@ public class VistaBuscarPartido extends JInternalFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
+	}
+	
+	public void refreshTblPartidos_byRepresentante(String representante){
+		try {
+			tableModelPartidos.listaPartidos.clear();
+			tableModelPartidos.listaPartidos.add(siscomfiManager.queryPartido_byRepresentante(representante));
+			tableModelPartidos.fireTableChanged(null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	public void refreshTblPartidos_byNombre(String nombrePartido){
+		try {
+			tableModelPartidos.listaPartidos.clear();
+			tableModelPartidos.listaPartidos.add(siscomfiManager.queryPartido_byNombre(nombrePartido));
+			tableModelPartidos.fireTableChanged(null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 	
 	

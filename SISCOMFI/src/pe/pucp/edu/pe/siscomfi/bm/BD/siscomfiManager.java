@@ -61,6 +61,13 @@ public class siscomfiManager {
 		return partidoPoliticoDB.queryById(idPartido);
     }
 	
+	public static PartidoPolitico queryPartido_byRepresentante(String representante){
+		return partidoPoliticoDB.queryByRepresentante(representante);
+	}
+	
+	public static PartidoPolitico queryPartido_byNombre(String nombre){
+		return partidoPoliticoDB.queryByNombre(nombre);
+	}
 	
 	public static void addProceso(Proceso p)
     {

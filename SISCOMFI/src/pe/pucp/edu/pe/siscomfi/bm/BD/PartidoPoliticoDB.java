@@ -40,6 +40,18 @@ public class PartidoPoliticoDB {
     	
     }
     
+    public PartidoPolitico queryByRepresentante(String representante)
+    {
+    	return daoPartidoPolitico.queryByRepresentante(representante);
+    	
+    }
+    
+    public PartidoPolitico queryByNombre(String nombre)
+    {
+    	return daoPartidoPolitico.queryByNombre(nombre);
+    	
+    }
+    
     //Observados
     public ArrayList<PartidoPolitico> queryAllObservados()
     {

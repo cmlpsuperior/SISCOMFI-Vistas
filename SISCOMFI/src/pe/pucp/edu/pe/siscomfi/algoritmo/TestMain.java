@@ -25,15 +25,15 @@ public class TestMain {
 		}
 		List<ImagePlus> parteLista = HelperMethods.getPartesFila(lista.get(1), recortadoOriginal);
 		// 0 -> DNI, 1 -> nombre + apellido
-		int len = 1;
-		List<ImagePlus> datos = HelperMethods.cropSection(parteLista.get(2), len);
+		int len = 8;
+		List<ImagePlus> datos = HelperMethods.cropSection(parteLista.get(0), len);
 		for (ImagePlus mm : datos) {
 			mm.show();
 		}
 
 		// CARGAR OCR - COMPARAR
 
-		OcrFinal ocr = new OcrFinal();
+		/*OcrFinal ocr = new OcrFinal();
 		ocr.cargarEntrenamiento();
 		ocr.entrenarRed();
 		for (int i = 1; i < 25; i++) {
@@ -42,7 +42,7 @@ public class TestMain {
 			BufferedImage img2 = imp.getBufferedImage();
 			System.out.print("resultado de p" + i + ": ");
 			ocr.reconocer(img2);
-		}
+		}*/
 
 		// FIRMAS
 

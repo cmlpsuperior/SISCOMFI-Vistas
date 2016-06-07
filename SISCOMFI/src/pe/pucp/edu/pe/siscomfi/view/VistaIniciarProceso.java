@@ -212,7 +212,23 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			if (!pathPadronProcesar.isEmpty()) {
 				int cantPadrones = padronPaths.length;
 				for (File padron : padronPaths) {
-					System.out.println("Padron:" + (numPadrones + 1));
+					ImagePlus img = IJ.openImage(padron.getAbsolutePath());
+					ImagePlus recortado = HelperMethods.recortarPlanillon(img, img);
+					ImagePlus recortadoOriginal = new Duplicator().run(recortado);
+
+					List<ImagePlus> lista = HelperMethods.getFilasPlanillon(recortado);
+					for (ImagePlus mm : lista) { // mm.show();
+
+					}
+					List<ImagePlus> parteLista = HelperMethods.getPartesFila(lista.get(1), recortadoOriginal);
+					// 0 -> DNI, 1 -> nombre + apellido
+					int len = 8;
+					List<ImagePlus> datos = HelperMethods.cropSection(parteLista.get(0), len);
+					for (ImagePlus mm : datos) {
+						mm.show();
+					}
+					break;
+					/*System.out.println("Padron:" + (numPadrones + 1));
 					ImagePlus imgPlanillon = IJ.openImage(padron.getAbsolutePath());
 					ImagePlus planillonRecortado = HelperMethods.recortarPlanillon(imgPlanillon, imgPlanillon);
 					ImagePlus auxPlanillon = new Duplicator().run(planillonRecortado);
@@ -234,7 +250,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 						System.out.println("Fila "+nFilas + ": Dni " + dni);
 					}
 					pgBar.setValue(numPadrones * 100 / cantPadrones);
-					pgBar.update(pgBar.getGraphics());
+					pgBar.update(pgBar.getGraphics());*/
 				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Escojan un directorio.");

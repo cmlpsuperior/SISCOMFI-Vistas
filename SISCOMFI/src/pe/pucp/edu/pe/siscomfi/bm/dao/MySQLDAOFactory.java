@@ -39,12 +39,12 @@ public class MySQLDAOFactory extends DAOFactory{
 	
 
 	//@Override
-	/*public DAOAdherente getDAOAdherente() { //NO VAMOS A HACE MANTENIMIENTO AL TIPO DE PROCESO
+	public DAOAdherente getDAOAdherente() { //NO VAMOS A HACE MANTENIMIENTO AL TIPO DE PROCESO
 
 		// TODO Auto-generated method stub
 		return new MySQLDAOAdherente();
 
-	}*/
+	}
 	
 
 }

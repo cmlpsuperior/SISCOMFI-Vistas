@@ -36,10 +36,5 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		return null;
 	}
 
-	@Override
-	public ArrayList<Adherente> queryAllAdherente() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

@@ -10,5 +10,4 @@ public interface DAOAdherente {
 	void delete (int idAdherente);
 	ArrayList<Adherente> queryAll();
 	Adherente queryById(int idAdherente);
-	ArrayList<Adherente> queryAllAdherente();
 }

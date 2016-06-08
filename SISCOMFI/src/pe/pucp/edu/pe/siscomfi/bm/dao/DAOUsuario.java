@@ -9,6 +9,7 @@ public interface DAOUsuario {
 	void delete (int idUsuario);
 	//ArrayList<Usuario> queryAll();
 	Usuario queryById(int idUsuario);
+	boolean queryByLogin(String nombreCorreo, String pass);
 	//ArrayList<Usuario> queryByFilter(String name);
 
 }

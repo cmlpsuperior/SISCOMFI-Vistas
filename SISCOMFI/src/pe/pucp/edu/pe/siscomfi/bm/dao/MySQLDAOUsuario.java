@@ -4,6 +4,7 @@ import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -58,6 +59,49 @@ public class MySQLDAOUsuario implements DAOUsuario {
 				catch (Exception e){e.printStackTrace();};						
 		}
 		
+	}
+	
+	//@Override
+	public boolean queryByLogin(String nombreCorreo, String pass) {
+					
+		Connection conn = null;
+		PreparedStatement pstmt = null;		
+		ResultSet rs = null;
+		try {
+			//Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			
+			//Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+								DBConnection.user,
+								DBConnection.password);
+			
+			//Paso 3: Preparar la sentencia
+			String sql =  "SELECT * FROM Usuario WHERE correoElectronico = ? AND contrasenia = ? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			//pstmt.setInt(1, p.getId());
+			pstmt.setString(1, nombreCorreo);
+			pstmt.setString(2, pass);
+			
+			//Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			//Paso 5(opc.): Procesar los resultados		
+			if (rs.next() == true)   
+				return true;
+			else 
+				return false;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			//Paso 6(OJO): Cerrar la conexión
+			try { if (pstmt!= null) pstmt.close();} 
+				catch (Exception e){e.printStackTrace();};
+			try { if (conn!= null) conn.close();} 
+				catch (Exception e){e.printStackTrace();};						
+		}
+		return false;
 	}
 
 	@Override

@@ -7,9 +7,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import pe.pucp.edu.pe.siscomfi.algoritmo.HelperMethods;
+import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 
 import javax.swing.JPasswordField;
 import java.awt.Toolkit;
@@ -87,7 +89,7 @@ public class VistaLogin implements ActionListener{
 		frmSiscomfi.getContentPane().add(txtPassword);
 		
 		btnIngresar = new JButton("INGRESAR");
-		btnIngresar.setBounds(323, 158, 108, 23);
+		btnIngresar.setBounds(331, 154, 108, 23);
 		frmSiscomfi.getContentPane().add(btnIngresar);
 		
 		JLabel lblRecuperar = new JLabel("\u00BFOlvid\u00F3 su contrase\u00F1a?");
@@ -109,9 +111,29 @@ public class VistaLogin implements ActionListener{
 	public void actionPerformed(ActionEvent event) {
 		if(event.getSource() == btnIngresar){
 			//frmSiscomfi.setVisible(false);
-			frmSiscomfi.dispose();
+			
+			try{
+				String nombreCorreo = txtUsuario.getText();
+				char[] pass1 = txtPassword.getPassword();
+				String pass = new String(pass1);
+				boolean valor = siscomfiManager.queryByLogin(nombreCorreo, pass);
+				if (valor) {
+					frmSiscomfi.dispose();
+					vMenu = new VistaMenu();
+					vMenu.setVisible(true);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Usuario y contraseña incorrecto");
+				}
+			}
+			catch (Exception a) {
+				a.printStackTrace();
+				return ;
+			}			
+			
+			/*frmSiscomfi.dispose();
 			vMenu = new VistaMenu();
-			vMenu.setVisible(true);
+			vMenu.setVisible(true);*/
 			
 		}
 	}

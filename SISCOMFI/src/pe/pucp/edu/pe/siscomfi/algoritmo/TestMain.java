@@ -33,7 +33,7 @@ public class TestMain {
 		 * HelperMethods.cropSection(parteLista.get(0), len); for (ImagePlus mm
 		 * : datos) { mm.show(); }
 		 */
-
+		
 		// CARGAR OCR - COMPARAR
 		OcrFinal ocr = new OcrFinal();
 		ocr.cargarEntrenamiento();

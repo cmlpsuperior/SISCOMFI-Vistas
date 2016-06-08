@@ -242,6 +242,118 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		}
 		return p;
 	}
+	
+	@Override
+	public PartidoPolitico queryByRepresentante(String representante) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		PartidoPolitico p = null;
+		try {
+			//Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			//Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+								DBConnection.user,
+								DBConnection.password);
+			//Paso 3: Preparar la sentencia
+			String sql = "SELECT * FROM PartidoPolitico "
+					+ "WHERE Representante=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, representante);
+			//Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			//Paso 5(opc.): Procesar los resultados
+			if (rs.next()){
+				int id = rs.getInt("idPartidoPolitico");
+				String nombre = rs.getString("Nombre");
+				String rep = rs.getString("Representante");
+				String correo = rs.getString("CorreoRepresentante");
+				String direccion = rs.getString("Direccion");
+				String telefono = rs.getString("Telefono");
+				int idDistrito = rs.getInt("idDistrito");
+				Date fechaRegistro = rs.getTimestamp("FechaRegistro");		
+				
+				p = new PartidoPolitico();
+				p.setIdPartidoPolitco(id);
+				p.setNombrePartido(nombre);
+				p.setRepresentante(rep);
+				p.setCorreo(correo);
+				p.setDireccion(direccion);
+				p.setTelefono(telefono);
+				p.setIdDistrito(idDistrito);
+				p.setFechaRegistro(fechaRegistro);
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			//Paso 6(OJO): Cerrar la conexión
+			try { if (pstmt!= null) pstmt.close();} 
+				catch (Exception e){e.printStackTrace();};
+			try { if (conn!= null) conn.close();} 
+				catch (Exception e){e.printStackTrace();};						
+		}
+		return p;
+	}
+	
+	@Override
+	public PartidoPolitico queryByNombre(String nombreP) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		PartidoPolitico p = null;
+		try {
+			//Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			//Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+								DBConnection.user,
+								DBConnection.password);
+			//Paso 3: Preparar la sentencia
+			String sql = "SELECT * FROM PartidoPolitico "
+					+ "WHERE Nombre=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, nombreP);
+			//Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			//Paso 5(opc.): Procesar los resultados
+			if (rs.next()){
+				int id = rs.getInt("idPartidoPolitico");
+				String nombre = rs.getString("Nombre");
+				String rep = rs.getString("Representante");
+				String correo = rs.getString("CorreoRepresentante");
+				String direccion = rs.getString("Direccion");
+				String telefono = rs.getString("Telefono");
+				int idDistrito = rs.getInt("idDistrito");
+				Date fechaRegistro = rs.getTimestamp("FechaRegistro");		
+				
+				p = new PartidoPolitico();
+				p.setIdPartidoPolitco(id);
+				p.setNombrePartido(nombre);
+				p.setRepresentante(rep);
+				p.setCorreo(correo);
+				p.setDireccion(direccion);
+				p.setTelefono(telefono);
+				p.setIdDistrito(idDistrito);
+				p.setFechaRegistro(fechaRegistro);
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			//Paso 6(OJO): Cerrar la conexión
+			try { if (pstmt!= null) pstmt.close();} 
+				catch (Exception e){e.printStackTrace();};
+			try { if (conn!= null) conn.close();} 
+				catch (Exception e){e.printStackTrace();};						
+		}
+		return p;
+	}
+	
+	
 
 	@Override
 	public ArrayList<PartidoPolitico> queryAllObservados	() { //Esta listando todos los partidos que estan actualmente en un proceso

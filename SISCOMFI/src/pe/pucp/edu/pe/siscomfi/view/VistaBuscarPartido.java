@@ -6,7 +6,12 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+
+import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
@@ -14,6 +19,7 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class VistaBuscarPartido extends JInternalFrame {
@@ -64,11 +70,13 @@ public class VistaBuscarPartido extends JInternalFrame {
 		tblPartido = new JTable();
 		spnPartido.setViewportView(tblPartido);
 		tableModelPartidos = new MyTableModel();
-		tblPartido.setModel(tableModelPartidos);
+		tblPartido.setModel(tableModelPartidos);		
 		
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				PartidoPolitico pp = new PartidoPolitico();
+				
 				try{
 					if (txtCodigo.getText().equals("")){						
 						if (txtNombre.getText().equals("")){
@@ -77,14 +85,22 @@ public class VistaBuscarPartido extends JInternalFrame {
 							}
 							else {
 								//buscar por representante
+								String representante = txtRepresentante.getText();
+								refreshTblPartidos_byRepresentante(representante);
 							}
 						}
 						else {
 							//buscar por Nombre del partido
+							String nombrePartido = txtNombre.getText();
+							refreshTblPartidos_byNombre(nombrePartido);
 						}
 					}
 					else {
-						//por por ID de partido politico
+						//buscar por ID de partido politico
+						int idPartido = Integer.parseInt(txtCodigo.getText());
+						//Integer.parseInt(cbTipoProceso.getSelectedItem().toString().substring(0, 1))
+						//pp=siscomfiManager.queryPartidoById(idPartido);
+						refreshTblPartidos_byId(idPartido);						
 					}
 				}
 				catch (Exception a) {
@@ -96,7 +112,7 @@ public class VistaBuscarPartido extends JInternalFrame {
 		btnBuscar.setBounds(10, 88, 89, 23);
 		getContentPane().add(btnBuscar);
 		
-		JButton btnAceptar = new JButton("Aceptar");
+		JButton btnAceptar = new JButton("Aceptar");		
 		btnAceptar.setBounds(63, 262, 89, 23);
 		getContentPane().add(btnAceptar);
 		
@@ -116,24 +132,83 @@ public class VistaBuscarPartido extends JInternalFrame {
 	}
 	
 	
-	class MyTableModel extends DefaultTableModel{
+	class MyTableModel extends AbstractTableModel{
+		ArrayList<PartidoPolitico> listaPartidos = null;
+		String [] titles = {"CODIGO","PARTIDO","REPRESENT.","TELEFONO"};
 		
-		String titles[] = {"CODIGO","PARTIDO","REPRESENT.","TELEFONO"};
+		public MyTableModel (){
+			try {
+				this.listaPartidos =  siscomfiManager.queryAllPartidos();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		@Override
 		public int getColumnCount() {
 			// TODO Auto-generated method stub
 			return titles.length;
 		}
 
+		@Override
+		public Object getValueAt(int row, int col) {
+			String value = "";
+			switch(col){
+				case 0:  value = "" + listaPartidos.get(row).getIdPartidoPolitco(); break;
+				case 1:  value = listaPartidos.get(row).getNombrePartido(); break;
+				case 2:  value = "" + listaPartidos.get(row).getRepresentante(); break;	
+				case 3:  value = "" + listaPartidos.get(row).getTelefono(); break;
+				case 4:  value = "" + listaPartidos.get(row).getEstadoActivo(); break;
+			}
+			return value;
+		}
+		
 		public String getColumnName(int col){
 			return titles[col];
-		}		
+		}
 
 		@Override
-		public Object getValueAt(int arg0, int arg1) {
+		public int getRowCount() {
 			// TODO Auto-generated method stub
-			return null;
+			return listaPartidos.size();
 		}
 			
 	}
+	
+	public void refreshTblPartidos_byId(int idPartido){
+		try {
+			tableModelPartidos.listaPartidos.clear();
+			tableModelPartidos.listaPartidos.add(siscomfiManager.queryPartidoById(idPartido));
+			tableModelPartidos.fireTableChanged(null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	public void refreshTblPartidos_byRepresentante(String representante){
+		try {
+			tableModelPartidos.listaPartidos.clear();
+			tableModelPartidos.listaPartidos.add(siscomfiManager.queryPartido_byRepresentante(representante));
+			tableModelPartidos.fireTableChanged(null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	public void refreshTblPartidos_byNombre(String nombrePartido){
+		try {
+			tableModelPartidos.listaPartidos.clear();
+			tableModelPartidos.listaPartidos.add(siscomfiManager.queryPartido_byNombre(nombrePartido));
+			tableModelPartidos.fireTableChanged(null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	
+	
 }

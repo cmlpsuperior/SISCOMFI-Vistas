@@ -114,8 +114,12 @@ CREATE TABLE RegistroElector (
        DNI                  char(8) NOT NULL,
        FechaNacimiento      datetime NOT NULL,
        Huella               varchar(100) NOT NULL,
-       Firma                varchar(100) NOT NULL
+       Firma                varchar(100) NOT NULL,
+       idDistrito           int NOT NULL
 );
+
+ALTER TABLE RegistroElector
+	ADD FOREIGN KEY (idDistrito) REFERENCES Distrito (idDistrito);
 
 
 

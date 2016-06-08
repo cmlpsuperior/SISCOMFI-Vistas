@@ -209,10 +209,10 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		if (e.getSource() == btnProcesar) {
 			int numPadrones = 0;
 			//System.out.println(pathPadronProcesar);
-			if (!pathPadronProcesar.isEmpty()) {
+			if (pathPadronProcesar != null || !pathPadronProcesar.isEmpty() ) {
 				int cantPadrones = padronPaths.length;
 				for (File padron : padronPaths) {
-					ImagePlus img = IJ.openImage(padron.getAbsolutePath());
+					/*ImagePlus img = IJ.openImage(padron.getAbsolutePath());
 					ImagePlus recortado = HelperMethods.recortarPlanillon(img, img);
 					ImagePlus recortadoOriginal = new Duplicator().run(recortado);
 
@@ -227,30 +227,37 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 					for (ImagePlus mm : datos) {
 						mm.show();
 					}
-					break;
-					/*System.out.println("Padron:" + (numPadrones + 1));
+					break;*/
+					System.out.println("Padron:" + (numPadrones + 1));
 					ImagePlus imgPlanillon = IJ.openImage(padron.getAbsolutePath());
-					ImagePlus planillonRecortado = HelperMethods.recortarPlanillon(imgPlanillon, imgPlanillon);
+					ImagePlus planillonRecortado = HelperMethods.recortarPlanillon2(imgPlanillon, imgPlanillon);
 					ImagePlus auxPlanillon = new Duplicator().run(planillonRecortado);
-					List<ImagePlus> filasPlanillon = HelperMethods.getFilasPlanillon(planillonRecortado);
+					List<ImagePlus> filasPlanillon = HelperMethods.getFilasPlanillon3(planillonRecortado);
 					int nFilas = 1;
 					for (ImagePlus fila : filasPlanillon) {
 						List<ImagePlus> partesFila = HelperMethods.getPartesFila(fila, auxPlanillon);
 						List<ImagePlus> dniFila = HelperMethods.cropSection(partesFila.get(0), 8);
 						List<ImagePlus> firmaFila = HelperMethods.cropSection(partesFila.get(2), 1);
 						ImagePlus huellaFila = partesFila.get(3);
-						String dni = "";
+						String dni = " ";
 						// DNI
-						partesFila.get(0).show();
+						//partesFila.get(0).show();
+						String log = "Fila "+ nFilas + ": Dni = ";
 						for (ImagePlus numero : dniFila) {
-							numero.show();
+							//numero.show();
 							String number = ocrNumbers.reconocer(numero.getBufferedImage());
-							dni.concat(number);
+							//System.out.print(number);
+							dni += number;
+							//System.out.println(dni);
 						}
-						System.out.println("Fila "+nFilas + ": Dni " + dni);
+						log += dni;
+						System.out.println();
+						txtLog.append(log + "\n");
+						txtLog.update(txtLog.getGraphics());
+						nFilas++;
 					}
 					pgBar.setValue(numPadrones * 100 / cantPadrones);
-					pgBar.update(pgBar.getGraphics());*/
+					pgBar.update(pgBar.getGraphics());
 				}
 			} else {
 				JOptionPane.showMessageDialog(this, "Escojan un directorio.");

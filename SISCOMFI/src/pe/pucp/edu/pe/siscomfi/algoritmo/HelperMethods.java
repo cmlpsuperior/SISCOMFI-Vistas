@@ -18,86 +18,96 @@ import ij.process.ImageProcessor;
 import pe.pucp.edu.pe.siscomfi.model.Point;
 
 public class HelperMethods {
-	
-	public static ImagePlus removeBlanks(ImagePlus ip) {
-        ImagePlus trimImage = new Duplicator().run(ip);
-        int lowerBound = 0, upperBound = ip.getHeight();
 
-        int threshold = 3;
-        //lowerBound
-        int col = threshold;
-        boolean reachedNumber = false;
-        while (reachedNumber == false && (col < (ip.getHeight() / 2))) {
-            for (int row = 0; row < ip.getWidth(); row++) {
-                if (ip.getPixel(row, col)[0] == 255) {
-                    reachedNumber = true;
-                }
-            }
-            if (reachedNumber == false) {
-                col++;
-            }
-        }
-        lowerBound = col;
+	//cortar antiguo
+	public static List<ImagePlus> getPartesFila2(ImagePlus fila, ImagePlus planillon) {
+		IJ.run(planillon, "Make Binary", "");
+		int x = 7;
+		int y = 0;
+		int r = 0;
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			y++;
+		}
+		System.out.println("TopNegro:" + y);
+		while (r != 0) {
+			r = planillon.getPixel(x, y)[0];
+			y++;
+		}
+		System.out.println("BotNegro:" + y);
+		//y +=1; 
+		int[] tCampos = new int[5];
 
-        //upperBound
-        col = ip.getHeight() - threshold;
-        reachedNumber = false;
-        while (reachedNumber == false && (col > (ip.getHeight() / 2))) {
-            for (int row = 0; row < ip.getWidth(); row++) {
-                if (ip.getPixel(row, col)[0] == 255) {
-                    reachedNumber = true;
-                }
-            }
-            if (reachedNumber == false) {
-                col--;
-            }
-        }
-        upperBound = col;
-
-        if (upperBound > lowerBound && lowerBound < trimImage.getWidth() / 2 && upperBound > trimImage.getWidth() / 2) {
-            trimImage.setRoi(0, lowerBound - 1, trimImage.getWidth(), upperBound - lowerBound + 1);
-            IJ.run(trimImage, "Crop", "");
-        }
-        return trimImage;
-    }
-	
-	public static List<ImagePlus> cropSection(ImagePlus originalImg, int len) {
-        ImagePlus img = new Duplicator().run(originalImg);
-        List<ImagePlus> imageList = new ArrayList<ImagePlus>();
-        int defaultHeight = 5, lowerBound;
-        for (int i = 0; i < len; i++) {
-            int sectionWidth = 0;
-
-            ImagePlus element = new Duplicator().run(img);
-            while (element.getPixel(sectionWidth, defaultHeight)[0] != 0) {
-                sectionWidth++;
-            }
-
-            lowerBound = sectionWidth;
-            while (element.getPixel(sectionWidth, defaultHeight)[0] == 0) {
-                sectionWidth++;
-            }
-
-            element.setRoi(lowerBound, 5, sectionWidth - 2, element.getHeight() - 10);
-            IJ.run(element, "Crop", "");
-            imageList.add(element);
-            img.setRoi(sectionWidth, 0, img.getWidth() - sectionWidth + 1, img.getHeight());
-            IJ.run(img, "Crop", "");
-        }
-        return imageList;
-    }
-	
-	public static byte[][] imgToByte(int[][] img){
-		byte[][] arr = new byte[img[0].length][img.length];
-		for(int i = 0 ; i < img[0].length;i++){
-			for(int j = 0 ; j < img.length;j++){
-				arr[i][j] = (byte)img[i][j];
+		for (int i = 0; i < 5; i++) {
+			while (r != 0) {
+				r = planillon.getPixel(x, y)[0];
+				x++;
 			}
-		}		
-		return arr;
+			int xLeft = x;
+			System.out.print("Campo: " + i + " FilaLeft: " + xLeft);
+			while (r == 0) {
+				r = planillon.getPixel(x, y)[0];
+				x++;
+			}
+			int xRight = x;
+			System.out.println(" FilaRight: " + xRight);
+			int espacioCampo = xRight - xLeft + 1;
+			tCampos[i] = espacioCampo;
+		}
+		List<ImagePlus> partes = new ArrayList<ImagePlus>();
+		ImagePlus filaOriginal = new Duplicator().run(fila);
+		int dist_x = 5 + tCampos[0];
+		for (int w = 1; w < 5; w++) {
+			System.out.print("Antes: " + dist_x + " Tam: " + tCampos[w]);
+			
+			System.out.println(" Despues:" + dist_x);
+			fila.setRoi(dist_x,0,tCampos[w],fila.getHeight());
+			IJ.run(fila, "Crop", "");
+			partes.add(fila);
+			fila = new Duplicator().run(filaOriginal);
+			dist_x += tCampos[w];	
+		}
+		return partes;
 	}
 
-	public static int getTamTabla(ImagePlus planillon) {
+	public static ImagePlus recortarPlanillon2(ImagePlus img, ImagePlus original) {
+		ImagePlus planillon = new Duplicator().run(img);
+		IJ.run(planillon, "Make Binary", "");
+
+		int y = planillon.getHeight() / 2, x = 0, r = 0, g, b;
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			x++;
+		}
+		planillon.setRoi(x - 1, 0, planillon.getWidth() - (x - 1), planillon.getHeight());
+		IJ.run(planillon, "Crop", "");
+
+		y = planillon.getHeight();
+		x = 5;
+		r = 0;
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			y--;
+		}
+
+		planillon.setRoi(0, 0, planillon.getWidth(), y + 1);
+		IJ.run(planillon, "Crop", "");
+
+		original.setRoi(original.getWidth() - planillon.getWidth(), 0, planillon.getWidth(), planillon.getHeight());
+		IJ.run(original, "Crop", "");
+
+		ImageProcessor imP = img.getProcessor();
+		imP.setRoi(0, 0, 1, original.getHeight());
+		imP.setValue(0);
+		imP.fill();
+		imP.setRoi(0, original.getHeight() - 1, original.getWidth(), 1);
+		imP.setValue(0);
+		imP.fill();
+
+		return original;
+	}
+	
+	public static int getTamTabla2(ImagePlus planillon) {
 		int x = 1;
 		int y = 0;
 		int r = 0;
@@ -114,7 +124,25 @@ public class HelperMethods {
 		return x;
 	}
 
-	public static int getTamFila(ImagePlus planillon) {
+	public static int getTamTabla3(ImagePlus planillon) {
+		int x = 1;
+		int y = 0;
+		int r = 0;
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			y++;
+		}
+		r = 0;
+		y += 2;
+		x = planillon.getWidth()-1;
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			x--;
+		}
+		return x;
+	}
+	
+	public static int getTamFila2(ImagePlus planillon) {
 		int x = 5, r = 1, y = planillon.getHeight() - 1;
 		while (r != 0) {
 			r = planillon.getPixel(x, y)[0];
@@ -133,13 +161,55 @@ public class HelperMethods {
 		return tamFila;
 	}
 
-	public static List<ImagePlus> getFilasPlanillon(ImagePlus planillon) {
+	public static List<ImagePlus> getFilasPlanillon3(ImagePlus planillon) {
 
 		IJ.run(planillon, "Make Binary", "");
 		// System.out.println("h: " + planillon.getHeight() + " w: " +
 		// planillon.getWidth());
 
-		int tamTabla = getTamTabla(planillon);
+		int tamTabla = getTamTabla3(planillon);
+		//System.out.println("tamTabla: " + tamTabla);
+		int x = 1, r = 1, y = planillon.getHeight() - 1;
+		// int tamFila = getTamFila(planillon);
+		List<ImagePlus> filas = new ArrayList<ImagePlus>();
+		ImagePlus original = new Duplicator().run(planillon);
+		// System.out.println("tamFila: " + tamFila + " tamTabla: " + tamTabla);
+		y = planillon.getHeight() - 1;
+		x = negroDerecha(r, x, planillon.getHeight()/2, planillon);
+		x+=2;
+		//System.out.println("negro derecha: " + x);
+		for (int i = 1; i < 9; i++) {
+			//x = 5;
+			r = 1;
+			while (r != 0) {
+				r = planillon.getPixel(x, y)[0];
+				y--;
+			}
+			int yBotFila = y + 1;
+			while (r == 0) {
+				r = planillon.getPixel(x, y)[0];
+				y--;
+			}
+			int yTopFila = y;
+			int tamFila = yBotFila - yTopFila;
+			//System.out.println(i + ": tamFila = " + tamTabla);
+			planillon.setRoi(0, yTopFila, tamTabla, tamFila + 2);
+			IJ.run(planillon, "Crop", "");
+			filas.add(planillon);
+			planillon = new Duplicator().run(original);
+			y = yTopFila;
+		}
+
+		return filas;
+	}
+	
+	public static List<ImagePlus> getFilasPlanillon2(ImagePlus planillon) {
+
+		IJ.run(planillon, "Make Binary", "");
+		// System.out.println("h: " + planillon.getHeight() + " w: " +
+		// planillon.getWidth());
+
+		int tamTabla = getTamTabla2(planillon);
 		// System.out.println("tamTabla: " + tamTabla);
 		int x = 1, r = 1, y = planillon.getHeight() - 1;
 		// int tamFila = getTamFila(planillon);
@@ -170,8 +240,155 @@ public class HelperMethods {
 
 		return filas;
 	}
+	//
 
-	public static int[][] imgToMat(BufferedImage bin){
+	public static ImagePlus removeBlanks(ImagePlus ip) {
+		ImagePlus trimImage = new Duplicator().run(ip);
+		int lowerBound = 0, upperBound = ip.getHeight();
+
+		int threshold = 3;
+		// lowerBound
+		int col = threshold;
+		boolean reachedNumber = false;
+		while (reachedNumber == false && (col < (ip.getHeight() / 2))) {
+			for (int row = 0; row < ip.getWidth(); row++) {
+				if (ip.getPixel(row, col)[0] == 255) {
+					reachedNumber = true;
+				}
+			}
+			if (reachedNumber == false) {
+				col++;
+			}
+		}
+		lowerBound = col;
+
+		// upperBound
+		col = ip.getHeight() - threshold;
+		reachedNumber = false;
+		while (reachedNumber == false && (col > (ip.getHeight() / 2))) {
+			for (int row = 0; row < ip.getWidth(); row++) {
+				if (ip.getPixel(row, col)[0] == 255) {
+					reachedNumber = true;
+				}
+			}
+			if (reachedNumber == false) {
+				col--;
+			}
+		}
+		upperBound = col;
+
+		if (upperBound > lowerBound && lowerBound < trimImage.getWidth() / 2 && upperBound > trimImage.getWidth() / 2) {
+			trimImage.setRoi(0, lowerBound - 1, trimImage.getWidth(), upperBound - lowerBound + 1);
+			IJ.run(trimImage, "Crop", "");
+		}
+		return trimImage;
+	}
+
+	public static List<ImagePlus> cropSection(ImagePlus originalImg, int len) {
+		ImagePlus img = new Duplicator().run(originalImg);
+		List<ImagePlus> imageList = new ArrayList<ImagePlus>();
+		int defaultHeight = 5, lowerBound;
+		for (int i = 0; i < len; i++) {
+			int sectionWidth = 0;
+
+			ImagePlus element = new Duplicator().run(img);
+			while (element.getPixel(sectionWidth, defaultHeight)[0] != 0) {
+				sectionWidth++;
+			}
+
+			lowerBound = sectionWidth;
+			while (element.getPixel(sectionWidth, defaultHeight)[0] == 0) {
+				sectionWidth++;
+			}
+
+			element.setRoi(lowerBound, 5, sectionWidth - 2, element.getHeight() - 10);
+			IJ.run(element, "Crop", "");
+			imageList.add(element);
+			img.setRoi(sectionWidth, 0, img.getWidth() - sectionWidth + 1, img.getHeight());
+			IJ.run(img, "Crop", "");
+		}
+		return imageList;
+	}
+
+	public static byte[][] imgToByte(int[][] img) {
+		byte[][] arr = new byte[img[0].length][img.length];
+		for (int i = 0; i < img[0].length; i++) {
+			for (int j = 0; j < img.length; j++) {
+				arr[i][j] = (byte) img[i][j];
+			}
+		}
+		return arr;
+	}
+
+	public static int getTamTabla(ImagePlus planillon) {
+		int x = 1;
+		int y = 0;
+		int r = 0;
+
+		y = negroAbajo(r, x, y, planillon);
+		r = 0;
+		y = blancoAbajo(r, x, y, planillon);
+		r = 1;
+		x = negroDerecha(r, x, y, planillon);
+		return x;
+	}
+
+	public static int getTamFila(ImagePlus planillon) {
+		int x = 5, r = 1, y = planillon.getHeight() - 1;
+		while (r != 0) {
+			r = planillon.getPixel(x, y)[0];
+			y--;
+		}
+		int yBotFila = y + 1;
+		// System.out.println("Bot: " + yBotFila);
+
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			y--;
+		}
+		int yTopFila = y;
+		// System.out.println("Top: " + yTopFila);
+		int tamFila = yBotFila - yTopFila;
+		return tamFila;
+	}
+
+	public static List<ImagePlus> getFilasPlanillon(ImagePlus planillon) {
+
+		IJ.run(planillon, "Make Binary", "");
+		// System.out.println("h: " + planillon.getHeight() + " w: " +
+		// planillon.getWidth());
+		//planillon.show();
+		int tamTabla = getTamTabla(planillon);
+		// System.out.println("tamTabla: " + tamTabla);
+		int x = 0, r = 1, y = planillon.getHeight() / 2;
+		
+		List<ImagePlus> filas = new ArrayList<ImagePlus>();
+		ImagePlus original = new Duplicator().run(planillon);
+		// System.out.println("tamFila: " + tamFila + " tamTabla: " + tamTabla);
+		x = negroDerecha(r, x, y, planillon);
+		x += 2;
+		y = negroArriba(r, x, planillon.getHeight() - 1, planillon);
+
+		for (int i = 1; i < 9; i++) {
+			y = negroArriba(r, x, y, planillon);
+
+			int yBotFila = y + 1;
+			r = 0;
+			y = blancoArriba(r, x, y, planillon);
+
+			int yTopFila = y;
+			int tamFila = yBotFila - yTopFila;
+			planillon.setRoi(0, yTopFila, tamTabla, tamFila + 2);
+			IJ.run(planillon, "Crop", "");
+			filas.add(planillon);
+			planillon = new Duplicator().run(original);
+			y = yTopFila;
+		}
+
+		return filas;
+	}
+
+	public static int[][] imgToMat(BufferedImage bin) {
 		int[][] mati = new int[bin.getWidth()][];
 		for (int x = 0; x < bin.getWidth(); x++) {
 			mati[x] = new int[bin.getHeight()];
@@ -181,22 +398,22 @@ public class HelperMethods {
 		}
 		return mati;
 	}
-	
+
 	public static List<ImagePlus> getPartesFila(ImagePlus fila, ImagePlus planillon) {
 		IJ.run(planillon, "Make Binary", "");
-		int x = 5;
+		int x = 7;
 		int y = 0;
 		int r = 0;
 		while (r == 0) {
 			r = planillon.getPixel(x, y)[0];
 			y++;
 		}
-		//System.out.println("TopNegro:" + y);
+		// System.out.println("TopNegro:" + y);
 		while (r != 0) {
 			r = planillon.getPixel(x, y)[0];
 			y++;
 		}
-		//System.out.println("BotNegro:" + y);
+		// System.out.println("BotNegro:" + y);
 		int[] tCampos = new int[5];
 
 		for (int i = 0; i < 5; i++) {
@@ -205,13 +422,13 @@ public class HelperMethods {
 				x++;
 			}
 			int xLeft = x;
-			//System.out.print("Campo: " + i + " FilaLeft: " + xLeft);
+			// System.out.print("Campo: " + i + " FilaLeft: " + xLeft);
 			while (r == 0) {
 				r = planillon.getPixel(x, y)[0];
 				x++;
 			}
 			int xRight = x;
-			//System.out.println(" FilaRight: " + xRight);
+			// System.out.println(" FilaRight: " + xRight);
 			int espacioCampo = xRight - xLeft + 1;
 			tCampos[i] = espacioCampo;
 		}
@@ -219,37 +436,86 @@ public class HelperMethods {
 		ImagePlus filaOriginal = new Duplicator().run(fila);
 		int dist_x = 5 + tCampos[0];
 		for (int w = 1; w < 5; w++) {
-			//System.out.print("Antes: " + dist_x + " Tam: " + tCampos[w]);
-			
-			//System.out.println(" Despues:" + dist_x);
-			fila.setRoi(dist_x,0,tCampos[w],fila.getHeight());
+			// System.out.print("Antes: " + dist_x + " Tam: " + tCampos[w]);
+
+			// System.out.println(" Despues:" + dist_x);
+			fila.setRoi(dist_x, 0, tCampos[w], fila.getHeight());
 			IJ.run(fila, "Crop", "");
 			partes.add(fila);
 			fila = new Duplicator().run(filaOriginal);
-			dist_x += tCampos[w];	
+			dist_x += tCampos[w];
 		}
 		return partes;
+	}
+
+	public static int negroDerecha(int r, int x, int y, ImagePlus planillon) {
+		while (r != 0) {
+			r = planillon.getPixel(x, y)[0];
+			x++;
+		}
+		return x;
+	}
+
+	public static int negroArriba(int r, int x, int y, ImagePlus planillon) {
+		while (r != 0) {
+			r = planillon.getPixel(x, y)[0];
+			y--;
+		}
+		return y;
+	}
+
+	public static int negroAbajo(int r, int x, int y, ImagePlus planillon) {
+		while (r != 0) {
+			r = planillon.getPixel(x, y)[0];
+			y++;
+		}
+		return y;
+	}
+
+	public static int blancoDerecha(int r, int x, int y, ImagePlus planillon) {
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			x++;
+		}
+		return x;
+	}
+
+	public static int blancoArriba(int r, int x, int y, ImagePlus planillon) {
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			y--;
+		}
+		return y;
+	}
+
+	public static int blancoAbajo(int r, int x, int y, ImagePlus planillon) {
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			y++;
+		}
+		return y;
 	}
 
 	public static ImagePlus recortarPlanillon(ImagePlus img, ImagePlus original) {
 		ImagePlus planillon = new Duplicator().run(img);
 		IJ.run(planillon, "Make Binary", "");
 
-		int y = planillon.getHeight() / 2, x = 0, r = 0, g, b;
-		while (r == 0) {
-			r = planillon.getPixel(x, y)[0];
-			x++;
-		}
+		int y = planillon.getHeight() / 2, x = 0, r = 1, g, b;
+
+		x = negroDerecha(r, x, y, planillon);
+		r = 0;
+		x = blancoDerecha(r, x, y, planillon);
+
 		planillon.setRoi(x - 1, 0, planillon.getWidth() - (x - 1), planillon.getHeight());
 		IJ.run(planillon, "Crop", "");
 
 		y = planillon.getHeight();
 		x = 5;
 		r = 0;
-		while (r == 0) {
-			r = planillon.getPixel(x, y)[0];
-			y--;
-		}
+
+		y = negroArriba(r, x, y, planillon);
+		r = 0;
+		y = blancoArriba(r, x, y, planillon);
 
 		planillon.setRoi(0, 0, planillon.getWidth(), y + 1);
 		IJ.run(planillon, "Crop", "");

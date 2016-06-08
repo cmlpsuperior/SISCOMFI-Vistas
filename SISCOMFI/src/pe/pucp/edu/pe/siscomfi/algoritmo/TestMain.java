@@ -15,17 +15,23 @@ public class TestMain {
 
 		// PARTE PARA CORTAR PLANILLON
 
-		ImagePlus img = IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\padron\\padron3.jpg");
-		ImagePlus recortado = HelperMethods.recortarPlanillon(img, img);
+		ImagePlus img = IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\padron\\padron2.jpg");
+		ImagePlus recortado = HelperMethods.recortarPlanillon2(img, img);
+		// recortado.show();
+		//IJ.saveAs(recortado, "Jpeg","C:\\Users\\samoel\\Desktop\\TestImage\\padron\\pp.jpg");
 		ImagePlus recortadoOriginal = new Duplicator().run(recortado);
 
-		List<ImagePlus> lista = HelperMethods.getFilasPlanillon(recortado);
-		for (ImagePlus mm : lista) { // mm.show();
+		List<ImagePlus> lista = HelperMethods.getFilasPlanillon3(recortado);
+		/*for (ImagePlus mm : lista) {
+			mm.show();
+		}*/
 
+		List<ImagePlus> parteLista = HelperMethods.getPartesFila2(lista.get(1), recortadoOriginal);
+		for (ImagePlus mm : parteLista) {
+			mm.show();
 		}
-		List<ImagePlus> parteLista = HelperMethods.getPartesFila(lista.get(1), recortadoOriginal);
 		// 0 -> DNI, 1 -> nombre + apellido
-		int len = 8;
+		/*int len = 8;
 		List<ImagePlus> datos = HelperMethods.cropSection(parteLista.get(0), len);
 		for (ImagePlus mm : datos) {
 			mm.show();
@@ -33,16 +39,14 @@ public class TestMain {
 
 		// CARGAR OCR - COMPARAR
 
-		/*OcrFinal ocr = new OcrFinal();
-		ocr.cargarEntrenamiento();
-		ocr.entrenarRed();
-		for (int i = 1; i < 25; i++) {
-			ImagePlus imp = IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\test\\p" + i + ".JPG");
-			IJ.run(imp, "Make Binary", "");
-			BufferedImage img2 = imp.getBufferedImage();
-			System.out.print("resultado de p" + i + ": ");
-			ocr.reconocer(img2);
-		}*/
+		/*
+		 * OcrFinal ocr = new OcrFinal(); ocr.cargarEntrenamiento();
+		 * ocr.entrenarRed(); for (int i = 1; i < 25; i++) { ImagePlus imp =
+		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\test\\p" + i +
+		 * ".JPG"); IJ.run(imp, "Make Binary", ""); BufferedImage img2 =
+		 * imp.getBufferedImage(); System.out.print("resultado de p" + i + ": "
+		 * ); ocr.reconocer(img2); }
+		 */
 
 		// FIRMAS
 

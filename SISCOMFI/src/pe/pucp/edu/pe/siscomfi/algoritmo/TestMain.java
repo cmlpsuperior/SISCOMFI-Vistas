@@ -15,37 +15,53 @@ public class TestMain {
 
 		// PARTE PARA CORTAR PLANILLON
 
-		ImagePlus img = IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\padron\\padron2.jpg");
-		ImagePlus recortado = HelperMethods.recortarPlanillon2(img, img);
-		// recortado.show();
-		//IJ.saveAs(recortado, "Jpeg","C:\\Users\\samoel\\Desktop\\TestImage\\padron\\pp.jpg");
-		ImagePlus recortadoOriginal = new Duplicator().run(recortado);
-
-		List<ImagePlus> lista = HelperMethods.getFilasPlanillon3(recortado);
-		/*for (ImagePlus mm : lista) {
-			mm.show();
-		}*/
-
-		List<ImagePlus> parteLista = HelperMethods.getPartesFila2(lista.get(1), recortadoOriginal);
-		for (ImagePlus mm : parteLista) {
-			mm.show();
-		}
-		// 0 -> DNI, 1 -> nombre + apellido
-		/*int len = 8;
-		List<ImagePlus> datos = HelperMethods.cropSection(parteLista.get(0), len);
-		for (ImagePlus mm : datos) {
-			mm.show();
-		}
+		/*
+		 * ImagePlus img = IJ.openImage(
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\padron\\padron4.jpg");
+		 * ImagePlus recortado = HelperMethods.recortarPlanillon2(img, img); //
+		 * recortado.show(); // IJ.saveAs(recortado, //
+		 * "Jpeg","C:\\Users\\samoel\\Desktop\\TestImage\\padron\\pp.jpg");
+		 * ImagePlus recortadoOriginal = new Duplicator().run(recortado);
+		 * 
+		 * List<ImagePlus> lista = HelperMethods.getFilasPlanillon3(recortado);
+		 * for (ImagePlus mm : lista) { mm.show(); }
+		 * 
+		 * /* List<ImagePlus> parteLista =
+		 * HelperMethods.getPartesFila2(lista.get(1), recortadoOriginal); for
+		 * (ImagePlus mm : parteLista) { mm.show(); } // 0 -> DNI, 1 -> nombre +
+		 * apellido /*int len = 8; List<ImagePlus> datos =
+		 * HelperMethods.cropSection(parteLista.get(0), len); for (ImagePlus mm
+		 * : datos) { mm.show(); }
+		 */
 
 		// CARGAR OCR - COMPARAR
+		OcrFinal ocr = new OcrFinal();
+		ocr.cargarEntrenamiento();
+		ocr.entrenarRed();
+		for (int i = 1; i < 25; i++) {
+			ImagePlus imp = IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\test\\p" + i + ".JPG");
+			IJ.run(imp, "Make Binary", "");
+			BufferedImage img2 = imp.getBufferedImage();
+			System.out.print("resultado de p" + i + ": ");
+			ocr.reconocer(img2);
+		}
+
+		// HUELLA
 
 		/*
-		 * OcrFinal ocr = new OcrFinal(); ocr.cargarEntrenamiento();
-		 * ocr.entrenarRed(); for (int i = 1; i < 25; i++) { ImagePlus imp =
-		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\test\\p" + i +
-		 * ".JPG"); IJ.run(imp, "Make Binary", ""); BufferedImage img2 =
-		 * imp.getBufferedImage(); System.out.print("resultado de p" + i + ": "
-		 * ); ocr.reconocer(img2); }
+		 * double[][] graphOriginal = Fingerprint.imageGraph(
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\002_1.jpg"); String
+		 * filename = ""; for (int i = 2; i < 50; i++) { for (int j = 1; j < 3;
+		 * j++) { if (i < 10) filename =
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\00" + i + "_" + j +
+		 * ".jpg"; else filename =
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\0" + i + "_" + j +
+		 * ".jpg";
+		 * 
+		 * double[][] graphSuspect = Fingerprint.imageGraph(filename); double
+		 * res = Fingerprint.comparition(graphOriginal, graphSuspect);
+		 * System.out.println(Fingerprint.resultado(res) + " Porcentaje: " +
+		 * res); } }
 		 */
 
 		// FIRMAS
@@ -54,66 +70,8 @@ public class TestMain {
 		 * ImagePlus impOriginal =
 		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\f3.jpg");
 		 * ImagePlus impSuspect =
-		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\f4.jpg");
-		 * 
-		 * double res =
-		 * Signatures.compareSignatures(impOriginal.getBufferedImage(),
-		 * impSuspect.getBufferedImage()); System.out.println("Comparacion: " +
-		 * res);
-		 */
-
-		/*
-		 * ImagePlus impOriginal =
-		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\t2.jpg");
-		 * IJ.run(impOriginal, "Make Binary", ""); IJ.run(impOriginal,
-		 * "Skeletonize", ""); double angleOriginal =
-		 * Signatures.getAngleImage2(impOriginal.getBufferedImage()).getAngle();
-		 * IJ.saveAs(impOriginal, "Jpeg",
-		 * "C:\\Users\\samoel\\Desktop\\TestImage\\prep\\original.jpg");
-		 * 
-		 * ImagePlus impSuspect =
-		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\t1.jpg");
-		 * IJ.run(impSuspect, "Make Binary", ""); IJ.run(impSuspect,
-		 * "Skeletonize", ""); double angleSuspect =
-		 * Signatures.getAngleImage2(impSuspect.getBufferedImage()).getAngle();
-		 * IJ.saveAs(impSuspect, "Jpeg",
-		 * "C:\\Users\\samoel\\Desktop\\TestImage\\prep\\suspect.jpg");
-		 * 
-		 * angleOriginal = (angleOriginal < 0) ? Math.PI * 2 - angleOriginal :
-		 * angleOriginal; angleSuspect = (angleSuspect < 0) ? Math.PI * 2 -
-		 * angleSuspect : angleSuspect; System.out.println(
-		 * "Angulo del Original: " + angleOriginal); System.out.println(
-		 * "Angulo del Suspect: " + angleSuspect);
-		 * 
-		 * double angleProm = (angleOriginal + angleSuspect) / 2; double
-		 * angleExtraOriginal = angleProm - angleOriginal; double
-		 * angleExtraSuspect = angleProm - angleSuspect; System.out.println(
-		 * "Angulo Promedio: " + angleProm); System.out.println(
-		 * "Extra Original: " + Math.toDegrees(angleExtraOriginal));
-		 * System.out.println("Extra Suspect: " +
-		 * Math.toDegrees(angleExtraSuspect));
-		 * 
-		 * 
-		 * ImageProcessor ipOriginal = impOriginal.getProcessor();
-		 * ipOriginal.setBackgroundValue(0);
-		 * ipOriginal.rotate(Math.toDegrees(angleExtraOriginal)); ImagePlus
-		 * ipOriginalGirada = new ImagePlus("Original Girada", ipOriginal);
-		 * IJ.saveAs(ipOriginalGirada, "Jpeg",
-		 * "C:\\Users\\samoel\\Desktop\\TestImage\\prep\\originalGirada.jpg");
-		 * 
-		 * ImageProcessor ipSuspect = impSuspect.getProcessor();
-		 * ipSuspect.setBackgroundValue(255);
-		 * ipSuspect.rotate(Math.toDegrees(angleExtraSuspect));
-		 * ipSuspect.resize(impOriginal.getWidth(), impOriginal.getHeight());
-		 * ImagePlus ipSuspectGirada = new ImagePlus("", ipSuspect);
-		 * IJ.saveAs(ipSuspectGirada, "Jpeg",
-		 * "C:\\Users\\samoel\\Desktop\\TestImage\\prep\\suspectGirada.jpg");
-		 * 
-		 * System.out.println("Original: h = " + impOriginal.getHeight() +
-		 * " w = " + impOriginal.getWidth()); System.out.println("Suspect: h = "
-		 * + impSuspect.getHeight() + " w = " + impSuspect.getWidth());
-		 * 
-		 * double res = Signatures.compare(impOriginal.getBufferedImage(),
+		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\ff.jpg"); double
+		 * res = Signatures.compareSignatures(impOriginal.getBufferedImage(),
 		 * impSuspect.getBufferedImage()); System.out.println(res);
 		 */
 

@@ -20,6 +20,56 @@ import pe.pucp.edu.pe.siscomfi.model.Point;
 public class HelperMethods {
 
 	//cortar antiguo
+	public static List<ImagePlus> getPartesFila3(ImagePlus fila, ImagePlus planillon) {
+		IJ.run(planillon, "Make Binary", "");
+		int x = 7;
+		int y = 0;
+		int r = 0;
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			y++;
+		}
+		System.out.println("TopNegro:" + y);
+		while (r != 0) {
+			r = planillon.getPixel(x, y)[0];
+			y++;
+		}
+		System.out.println("BotNegro:" + y);
+		//y +=2; 
+		int[] tCampos = new int[5];
+
+		for (int i = 0; i < 5; i++) {
+			while (r != 0) {
+				r = planillon.getPixel(x, y)[0];
+				x++;
+			}
+			int xLeft = x;
+			System.out.print("Campo: " + i + " FilaLeft: " + xLeft);
+			while (r == 0) {
+				r = planillon.getPixel(x, y)[0];
+				x++;
+			}
+			int xRight = x;
+			System.out.println(" FilaRight: " + xRight);
+			int espacioCampo = xRight - xLeft + 1;
+			tCampos[i] = espacioCampo;
+		}
+		List<ImagePlus> partes = new ArrayList<ImagePlus>();
+		ImagePlus filaOriginal = new Duplicator().run(fila);
+		int dist_x = 5 + tCampos[0];
+		for (int w = 1; w < 5; w++) {
+			System.out.print("Antes: " + dist_x + " Tam: " + tCampos[w]);
+			
+			System.out.println(" Despues:" + dist_x);
+			fila.setRoi(dist_x,0,tCampos[w],fila.getHeight());
+			IJ.run(fila, "Crop", "");
+			partes.add(fila);
+			fila = new Duplicator().run(filaOriginal);
+			dist_x += tCampos[w];	
+		}
+		return partes;
+	}
+	
 	public static List<ImagePlus> getPartesFila2(ImagePlus fila, ImagePlus planillon) {
 		IJ.run(planillon, "Make Binary", "");
 		int x = 7;
@@ -35,7 +85,7 @@ public class HelperMethods {
 			y++;
 		}
 		System.out.println("BotNegro:" + y);
-		//y +=1; 
+		//y +=2; 
 		int[] tCampos = new int[5];
 
 		for (int i = 0; i < 5; i++) {

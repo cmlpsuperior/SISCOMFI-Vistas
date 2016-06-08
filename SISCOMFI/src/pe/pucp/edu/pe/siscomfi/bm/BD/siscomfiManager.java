@@ -69,6 +69,10 @@ public class siscomfiManager {
 		return partidoPoliticoDB.queryByNombre(nombre);
 	}
 	
+	public static boolean queryByLogin(String nombreCorreo, String pass){
+		return usuarioDB.queryByLogin(nombreCorreo, pass);
+	}
+	
 	public static void addProceso(Proceso p)
     {
 		procesoDB.add(p);

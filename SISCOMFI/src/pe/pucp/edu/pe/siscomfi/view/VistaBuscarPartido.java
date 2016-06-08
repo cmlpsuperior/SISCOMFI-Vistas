@@ -33,7 +33,7 @@ public class VistaBuscarPartido extends JInternalFrame {
 	public VistaBuscarPartido() {
 		setClosable(true);
 		setTitle("Buscar partido politico");
-		setBounds(100, 100, 384, 328);
+		setBounds(100, 100, 384, 297);
 		getContentPane().setLayout(null);
 		
 		JLabel lblNombre = new JLabel("Nombre");
@@ -109,12 +109,8 @@ public class VistaBuscarPartido extends JInternalFrame {
 					
 			}
 		});
-		btnBuscar.setBounds(10, 88, 89, 23);
+		btnBuscar.setBounds(45, 86, 89, 23);
 		getContentPane().add(btnBuscar);
-		
-		JButton btnAceptar = new JButton("Aceptar");		
-		btnAceptar.setBounds(63, 262, 89, 23);
-		getContentPane().add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
@@ -122,7 +118,7 @@ public class VistaBuscarPartido extends JInternalFrame {
 				dispose();
 			}
 		});
-		btnCancelar.setBounds(215, 262, 89, 23);
+		btnCancelar.setBounds(216, 86, 89, 23);
 		getContentPane().add(btnCancelar);
 		
 		JLabel lblRepresentante = new JLabel("Representante");
@@ -138,7 +134,7 @@ public class VistaBuscarPartido extends JInternalFrame {
 		
 		public MyTableModel (){
 			try {
-				this.listaPartidos =  siscomfiManager.queryAllPartidos();
+				this.listaPartidos = siscomfiManager.queryAllPartidos();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

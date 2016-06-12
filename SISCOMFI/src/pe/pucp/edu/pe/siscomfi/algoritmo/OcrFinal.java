@@ -35,7 +35,7 @@ public class OcrFinal {
 			archFile = "./numberTrain10k.dat";
 		}
 		if (tipo == 2){
-			archFile = "./letterTrain.dat";
+			archFile = "./lettersTrain.dat";
 		}
 		this.cargarEntrenamiento();
 		this.entrenarRed();
@@ -114,7 +114,7 @@ public class OcrFinal {
 
 		final int best = this.net.classify(input);
 		final String letra = lettersL.get(best);
-		System.out.println("La letra es " + letra + " (Neurona #" + best + " fired)");
+		//System.out.println("La letra es " + letra + " (Neurona #" + best + " fired)");
 		return letra;
 	}
 

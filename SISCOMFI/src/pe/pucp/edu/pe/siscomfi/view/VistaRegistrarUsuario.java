@@ -39,24 +39,7 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 		getContentPane().setLayout(null);
 		
 		JButton btnRegistrar = new JButton("Registrar");
-		fillCustomerCmb();
-		
-		btnRegistrar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Usuario u = new Usuario ();
-				u.setNombre(txtNombre.getText());
-				u.setApellidoPaterno(txtApPaterno.getText());
-				u.setApellidoMaterno(txtApMaterno.getText());
-				u.setCorreoElectronico(txtCorreo.getText());
-				u.setDni(txtDni.getText());
-				
-				u.setIdRol( Integer.parseInt( cbRolUsuario.getSelectedItem().toString().substring(0, 1)));
-				
-				siscomfiManager.addUsuario(u);
-			}
-		});
-		btnRegistrar.setBounds(71, 247, 113, 23);
-		getContentPane().add(btnRegistrar);
+		//fillCustomerCmb();
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
@@ -70,7 +53,7 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "USUARIO", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel.setBounds(10, 11, 421, 225);
+		panel.setBounds(10, 11, 421, 223);
 		getContentPane().add(panel);
 		
 		JLabel label = new JLabel("Nombre (*)");
@@ -140,6 +123,26 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 		cbRolUsuario = new JComboBox();
 		cbRolUsuario.setBounds(145, 177, 266, 20);
 		panel.add(cbRolUsuario);
+		fillCustomerCmb();	
+		
+		
+		btnRegistrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Usuario u = new Usuario ();
+				u.setNombre(txtNombre.getText());
+				u.setApellidoPaterno(txtApPaterno.getText());
+				u.setApellidoMaterno(txtApMaterno.getText());
+				u.setCorreoElectronico(txtCorreo.getText());
+				u.setDni(txtDni.getText());
+				
+				u.setIdRol( Integer.parseInt( cbRolUsuario.getSelectedItem().toString().substring(0, 1)));
+				
+				siscomfiManager.addUsuario(u);
+			}
+		});
+		btnRegistrar.setBounds(71, 247, 113, 23);
+		getContentPane().add(btnRegistrar);
+		
 		
 		
 		

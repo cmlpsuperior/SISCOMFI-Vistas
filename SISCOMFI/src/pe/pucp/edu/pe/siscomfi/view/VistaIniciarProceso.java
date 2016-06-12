@@ -139,7 +139,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			PartidoPoliticoList = siscomfiManager.queryAllPartidos();
 			for (int i = 0; i < PartidoPoliticoList.size(); i++) {
 				PartidoPolitico pp = (PartidoPolitico) PartidoPoliticoList.get(i);
-				cbPartido.addItem(pp.getIdPartidoPolitco() + " - " + pp.getNombrePartido());
+				cbPartido.addItem(pp.getIdPartidoPolitico() + " - " + pp.getNombrePartido());
 			}
 
 		} catch (Exception e) {

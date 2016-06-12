@@ -157,7 +157,7 @@ public class VistaObservados extends JInternalFrame {
 			listaObservados = siscomfiManager.queryAllPartidosConObservados();
 			for (int i=0; i<listaObservados.size();i++){				
 				PartidoPolitico p = (PartidoPolitico)listaObservados.get(i);
-				cmbPartido.addItem(p.getIdPartidoPolitco() + " - " + p.getNombrePartido());
+				cmbPartido.addItem(p.getIdPartidoPolitico() + " - " + p.getNombrePartido());
 			}
 			
 		} catch (Exception e) {

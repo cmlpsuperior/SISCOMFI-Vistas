@@ -215,7 +215,7 @@ public class VistaMantPartido extends JInternalFrame {
 					PartidoPolitico p=null;
 					try {
 						p = siscomfiManager.queryPartidoById(idPartido);
-						txtCodigo.setText(p.getIdPartidoPolitco() + "");
+						txtCodigo.setText(p.getIdPartidoPolitico() + "");
 						txtNombre.setText(p.getNombrePartido());
 						txtDireccion.setText(p.getDireccion());
 						
@@ -421,7 +421,7 @@ public class VistaMantPartido extends JInternalFrame {
 		public Object getValueAt(int row, int col) {
 			String value = "";
 			switch(col){
-				case 0:  value = "" + listaPartido.get(row).getIdPartidoPolitco(); break;
+				case 0:  value = "" + listaPartido.get(row).getIdPartidoPolitico(); break;
 				case 1:  value = listaPartido.get(row).getNombrePartido(); break;
 				case 2:  value = "" + listaPartido.get(row).getRepresentante(); break;	
 				case 3:  value = "" + listaPartido.get(row).getTelefono(); break;

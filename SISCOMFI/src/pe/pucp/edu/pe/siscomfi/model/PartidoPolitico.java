@@ -22,7 +22,7 @@ public class PartidoPolitico {
 	public void setEstadoActivo(String estadoActivo) {
 		this.estadoActivo = estadoActivo;
 	}
-	public int getIdPartidoPolitco() {
+	public int getIdPartidoPolitico() {
 		return idPartidoPolitco;
 	}
 	public void setIdPartidoPolitco(int idPartidoPolitco) {

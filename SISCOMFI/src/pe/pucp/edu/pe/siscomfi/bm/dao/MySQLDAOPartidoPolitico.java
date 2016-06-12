@@ -82,7 +82,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 			pstmt.setString(2, p.getCorreo());
 			pstmt.setString(3, p.getDireccion());
 			pstmt.setString(4, p.getTelefono());
-			pstmt.setInt(5, p.getIdPartidoPolitco());
+			pstmt.setInt(5, p.getIdPartidoPolitico());
 			//Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
 			//Paso 5(opc.): Procesar los resultados			

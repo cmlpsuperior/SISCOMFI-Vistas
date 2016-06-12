@@ -10,4 +10,5 @@ public interface DAOAdherente {
 	void delete (int idAdherente);
 	ArrayList<Adherente> queryAll();
 	Adherente queryById(int idAdherente);
+	void delete_OBS(int idAdherente);
 }

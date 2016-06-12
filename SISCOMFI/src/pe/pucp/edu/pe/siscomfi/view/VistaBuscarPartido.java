@@ -151,7 +151,7 @@ public class VistaBuscarPartido extends JInternalFrame {
 		public Object getValueAt(int row, int col) {
 			String value = "";
 			switch(col){
-				case 0:  value = "" + listaPartidos.get(row).getIdPartidoPolitco(); break;
+				case 0:  value = "" + listaPartidos.get(row).getIdPartidoPolitico(); break;
 				case 1:  value = listaPartidos.get(row).getNombrePartido(); break;
 				case 2:  value = "" + listaPartidos.get(row).getRepresentante(); break;	
 				case 3:  value = "" + listaPartidos.get(row).getTelefono(); break;

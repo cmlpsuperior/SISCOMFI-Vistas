@@ -235,7 +235,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 					List<ImagePlus> filasPlanillon = HelperMethods.getFilasPlanillon3(planillonRecortado);
 					int nFilas = 1;
 					for (ImagePlus fila : filasPlanillon) {
-						List<ImagePlus> partesFila = HelperMethods.getPartesFila(fila, auxPlanillon);
+						List<ImagePlus> partesFila = HelperMethods.getPartesFila2(fila, auxPlanillon);
 						List<ImagePlus> dniFila = HelperMethods.cropSection(partesFila.get(0), 8);
 						List<ImagePlus> firmaFila = HelperMethods.cropSection(partesFila.get(2), 1);
 						ImagePlus huellaFila = partesFila.get(3);

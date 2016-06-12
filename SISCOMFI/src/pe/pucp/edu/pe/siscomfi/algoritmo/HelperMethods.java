@@ -18,7 +18,168 @@ import ij.process.ImageProcessor;
 import pe.pucp.edu.pe.siscomfi.model.Point;
 
 public class HelperMethods {
+	
+	//cortar original
+	public static int getTamTablaO(ImagePlus planillon) {
+		int x = 1;
+		int y = 0;
+		int r = 0;
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			y++;
+		}
+		// System.out.println("yTopTabla: " + y);
+		// y += 2;
+		while (r != 0) {
+			r = planillon.getPixel(x, y)[0];
+			x++;
+		}
+		return x;
+	}
 
+	public static int getTamFilaO(ImagePlus planillon) {
+		int x = 5, r = 1, y = planillon.getHeight() - 1;
+		while (r != 0) {
+			r = planillon.getPixel(x, y)[0];
+			y--;
+		}
+		int yBotFila = y + 1;
+		// System.out.println("Bot: " + yBotFila);
+
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			y--;
+		}
+		int yTopFila = y;
+		// System.out.println("Top: " + yTopFila);
+		int tamFila = yBotFila - yTopFila;
+		return tamFila;
+	}
+
+	public static List<ImagePlus> getFilasPlanillonO(ImagePlus planillon) {
+
+		IJ.run(planillon, "Make Binary", "");
+		// System.out.println("h: " + planillon.getHeight() + " w: " +
+		// planillon.getWidth());
+
+		int tamTabla = getTamTabla(planillon);
+		// System.out.println("tamTabla: " + tamTabla);
+		int x = 1, r = 1, y = planillon.getHeight() - 1;
+		// int tamFila = getTamFila(planillon);
+		List<ImagePlus> filas = new ArrayList<ImagePlus>();
+		ImagePlus original = new Duplicator().run(planillon);
+		// System.out.println("tamFila: " + tamFila + " tamTabla: " + tamTabla);
+		y = planillon.getHeight() - 1;
+		for (int i = 1; i < 9; i++) {
+			x = 5;
+			r = 1;
+			while (r != 0) {
+				r = planillon.getPixel(x, y)[0];
+				y--;
+			}
+			int yBotFila = y + 1;
+			while (r == 0) {
+				r = planillon.getPixel(x, y)[0];
+				y--;
+			}
+			int yTopFila = y;
+			int tamFila = yBotFila - yTopFila;
+			planillon.setRoi(0, yTopFila, tamTabla, tamFila + 2);
+			IJ.run(planillon, "Crop", "");
+			filas.add(planillon);
+			planillon = new Duplicator().run(original);
+			y = yTopFila;
+		}
+
+		return filas;
+	}
+	
+	public static List<ImagePlus> getPartesFilaO(ImagePlus fila, ImagePlus planillon) {
+		IJ.run(planillon, "Make Binary", "");
+		int x = 5;
+		int y = 0;
+		int r = 0;
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			y++;
+		}
+		// System.out.println("TopNegro:" + y);
+		while (r != 0) {
+			r = planillon.getPixel(x, y)[0];
+			y++;
+		}
+		// System.out.println("BotNegro:" + y);
+		int[] tCampos = new int[5];
+
+		for (int i = 0; i < 5; i++) {
+			while (r != 0) {
+				r = planillon.getPixel(x, y)[0];
+				x++;
+			}
+			int xLeft = x;
+			// System.out.print("Campo: " + i + " FilaLeft: " + xLeft);
+			while (r == 0) {
+				r = planillon.getPixel(x, y)[0];
+				x++;
+			}
+			int xRight = x;
+			// System.out.println(" FilaRight: " + xRight);
+			int espacioCampo = xRight - xLeft + 1;
+			tCampos[i] = espacioCampo;
+		}
+		List<ImagePlus> partes = new ArrayList<ImagePlus>();
+		ImagePlus filaOriginal = new Duplicator().run(fila);
+		int dist_x = 5 + tCampos[0];
+		for (int w = 1; w < 5; w++) {
+			System.out.print("Antes: " + dist_x + " Tam: " + tCampos[w]);
+
+			System.out.println(" Despues:" + dist_x);
+			fila.setRoi(dist_x, 0, tCampos[w], fila.getHeight());
+			IJ.run(fila, "Crop", "");
+			partes.add(fila);
+			fila = new Duplicator().run(filaOriginal);
+			dist_x += tCampos[w];
+		}
+		return partes;
+	}
+
+	public static ImagePlus recortarPlanillonO(ImagePlus img, ImagePlus original) {
+		ImagePlus planillon = new Duplicator().run(img);
+		IJ.run(planillon, "Make Binary", "");
+
+		int y = planillon.getHeight() / 2, x = 0, r = 0, g, b;
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			x++;
+		}
+		planillon.setRoi(x - 1, 0, planillon.getWidth() - (x - 1), planillon.getHeight());
+		IJ.run(planillon, "Crop", "");
+
+		y = planillon.getHeight();
+		x = 5;
+		r = 0;
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			y--;
+		}
+
+		planillon.setRoi(0, 0, planillon.getWidth(), y + 1);
+		IJ.run(planillon, "Crop", "");
+
+		original.setRoi(original.getWidth() - planillon.getWidth(), 0, planillon.getWidth(), planillon.getHeight());
+		IJ.run(original, "Crop", "");
+
+		ImageProcessor imP = img.getProcessor();
+		imP.setRoi(0, 0, 1, original.getHeight());
+		imP.setValue(0);
+		imP.fill();
+		imP.setRoi(0, original.getHeight() - 1, original.getWidth(), 1);
+		imP.setValue(0);
+		imP.fill();
+
+		return original;
+	}
+	
 	//cortar antiguo
 	public static List<ImagePlus> getPartesFila3(ImagePlus fila, ImagePlus planillon) {
 		IJ.run(planillon, "Make Binary", "");

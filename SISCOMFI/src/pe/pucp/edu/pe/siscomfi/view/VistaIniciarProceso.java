@@ -1,41 +1,26 @@
 package pe.pucp.edu.pe.siscomfi.view;
 
-import java.awt.EventQueue;
-
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import pe.pucp.edu.pe.siscomfi.algoritmo.Fingerprint;
 import pe.pucp.edu.pe.siscomfi.algoritmo.HelperMethods;
-import pe.pucp.edu.pe.siscomfi.algoritmo.OcrFinal;
+import pe.pucp.edu.pe.siscomfi.algoritmo.OcrProy;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
-import pe.pucp.edu.pe.siscomfi.model.Rol; //aca tiene que ir tipoProceso
-import pe.pucp.edu.pe.siscomfi.model.TipoProceso;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 
 import javax.swing.UIManager;
 
-import org.jdatepicker.DefaultComponentFactory;
-import org.jdatepicker.JDatePicker;
-
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
-import ij.process.ImageProcessor;
-
 import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
-import java.awt.font.ImageGraphicAttribute;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -58,24 +43,17 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JFileChooser jfcRuta;
 	private JComboBox<String> cbDescProceso;
 	private JTextArea txtLog;
-	private BufferedImage imageComparar;
 	private String pathPadronProcesar;
 	private File[] padronPaths;
 	private JScrollPane scpLog;
 	private JProgressBar pgBar;
 	private JPanel pnLog;
-	private OcrFinal ocrNumbers;
 
 	public VistaIniciarProceso() {
 		setClosable(true);
 		setTitle("Iniciar Proceso");
 		setBounds(100, 100, 436, 499);
 		getContentPane().setLayout(null);
-
-		// OCR--
-		ocrNumbers = new OcrFinal();
-		ocrNumbers.cargarEntrenamiento();
-		ocrNumbers.entrenarRed();
 
 		JLabel lblNewLabel = new JLabel("Partido Pol\u00EDtico:");
 		lblNewLabel.setBounds(12, 108, 126, 16);
@@ -175,10 +153,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		cbDescProceso.removeAllItems();
 		ArrayList<Proceso> ProcesoList;
 		try {
-			ProcesoList = siscomfiManager.queryAllProcesos(); // en realidad
-																// solo veremos
-																// su
-																// descripcion
+			ProcesoList = siscomfiManager.queryAllProcesos();
 			for (int i = 0; i < ProcesoList.size(); i++) {
 				Proceso pro = (Proceso) ProcesoList.get(i);
 				cbDescProceso.addItem(pro.getIdProceso() + " - " + pro.getDescripción());
@@ -208,47 +183,53 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 
 		if (e.getSource() == btnProcesar) {
 			int numPadrones = 0;
-			//System.out.println(pathPadronProcesar);
-			if (pathPadronProcesar != null || !pathPadronProcesar.isEmpty() ) {
+			String log = "";
+			// System.out.println(pathPadronProcesar);
+			if (pathPadronProcesar != null || !pathPadronProcesar.isEmpty()) {
 				int cantPadrones = padronPaths.length;
 				for (File padron : padronPaths) {
-					/*ImagePlus img = IJ.openImage(padron.getAbsolutePath());
-					ImagePlus recortado = HelperMethods.recortarPlanillon(img, img);
-					ImagePlus recortadoOriginal = new Duplicator().run(recortado);
+					/*
+					 * ImagePlus img = IJ.openImage(padron.getAbsolutePath());
+					 * ImagePlus recortado =
+					 * HelperMethods.recortarPlanillon(img, img); ImagePlus
+					 * recortadoOriginal = new Duplicator().run(recortado);
+					 * 
+					 * List<ImagePlus> lista =
+					 * HelperMethods.getFilasPlanillon(recortado); for
+					 * (ImagePlus mm : lista) { // mm.show();
+					 * 
+					 * } List<ImagePlus> parteLista =
+					 * HelperMethods.getPartesFila(lista.get(1),
+					 * recortadoOriginal); // 0 -> DNI, 1 -> nombre + apellido
+					 * int len = 8; List<ImagePlus> datos =
+					 * HelperMethods.cropSection(parteLista.get(0), len); for
+					 * (ImagePlus mm : datos) { mm.show(); } break;
+					 */
+					System.out.println("Padron: " + (numPadrones + 1));
+					txtLog.append("Padron: " + (numPadrones + 1) + "\n");
 
-					List<ImagePlus> lista = HelperMethods.getFilasPlanillon(recortado);
-					for (ImagePlus mm : lista) { // mm.show();
-
-					}
-					List<ImagePlus> parteLista = HelperMethods.getPartesFila(lista.get(1), recortadoOriginal);
-					// 0 -> DNI, 1 -> nombre + apellido
-					int len = 8;
-					List<ImagePlus> datos = HelperMethods.cropSection(parteLista.get(0), len);
-					for (ImagePlus mm : datos) {
-						mm.show();
-					}
-					break;*/
-					System.out.println("Padron:" + (numPadrones + 1));
 					ImagePlus imgPlanillon = IJ.openImage(padron.getAbsolutePath());
-					ImagePlus planillonRecortado = HelperMethods.recortarPlanillon2(imgPlanillon, imgPlanillon);
+					ImagePlus planillonRecortado = HelperMethods.recortarPlanillonO(imgPlanillon, imgPlanillon);
 					ImagePlus auxPlanillon = new Duplicator().run(planillonRecortado);
-					List<ImagePlus> filasPlanillon = HelperMethods.getFilasPlanillon3(planillonRecortado);
+					List<ImagePlus> filasPlanillon = HelperMethods.getFilasPlanillonO(planillonRecortado);
 					int nFilas = 1;
 					for (ImagePlus fila : filasPlanillon) {
-						List<ImagePlus> partesFila = HelperMethods.getPartesFila2(fila, auxPlanillon);
+						List<ImagePlus> partesFila = HelperMethods.getPartesFilaO(fila, auxPlanillon);
 						List<ImagePlus> dniFila = HelperMethods.cropSection(partesFila.get(0), 8);
 						List<ImagePlus> firmaFila = HelperMethods.cropSection(partesFila.get(2), 1);
 						ImagePlus huellaFila = partesFila.get(3);
 						String dni = " ";
 						// DNI
-						//partesFila.get(0).show();
-						String log = "Fila "+ nFilas + ": Dni = ";
+						// partesFila.get(0).show();
+						
+						log = "Fila " + nFilas + ": Procesando Dni = ";
+						
 						for (ImagePlus numero : dniFila) {
-							//numero.show();
-							String number = ocrNumbers.reconocer(numero.getBufferedImage());
-							//System.out.print(number);
+							// numero.show();
+							String number = OcrProy.ocrNumbers.reconocer(numero.getBufferedImage());
+							// System.out.print(number);
 							dni += number;
-							//System.out.println(dni);
+							// System.out.println(dni);
 						}
 						log += dni;
 						System.out.println();
@@ -256,6 +237,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 						txtLog.update(txtLog.getGraphics());
 						nFilas++;
 					}
+					numPadrones++;
 					pgBar.setValue(numPadrones * 100 / cantPadrones);
 					pgBar.update(pgBar.getGraphics());
 				}
@@ -283,10 +265,11 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		}
 	}
 
-	private BufferedImage setImagetoLabel(String path, int w, int h) {
-		ImagePlus imgEscogida = IJ.openImage(path);
-		imageComparar = imgEscogida.getBufferedImage();
-		BufferedImage bfEscogida = HelperMethods.resizeImage(imageComparar, w, h, imageComparar.getType());
-		return bfEscogida;
-	}
+	/*
+	 * private BufferedImage setImagetoLabel(String path, int w, int h) {
+	 * ImagePlus imgEscogida = IJ.openImage(path); imageComparar =
+	 * imgEscogida.getBufferedImage(); BufferedImage bfEscogida =
+	 * HelperMethods.resizeImage(imageComparar, w, h, imageComparar.getType());
+	 * return bfEscogida; }
+	 */
 }

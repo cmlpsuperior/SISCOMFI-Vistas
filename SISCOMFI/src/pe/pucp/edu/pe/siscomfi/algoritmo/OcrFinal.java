@@ -1,11 +1,9 @@
 package pe.pucp.edu.pe.siscomfi.algoritmo;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +24,30 @@ public class OcrFinal {
 	static final int DOWNSAMPLE_WIDTH = 50;
 	static final int DOWNSAMPLE_HEIGHT = 50;
 	private final Entry entry = new Entry();
-	private final DefaultListModel letterListModel = new DefaultListModel();
+	private final DefaultListModel<SampleData> letterListModel = new DefaultListModel<SampleData>();
 	private final List<String> lettersL = new ArrayList<String>();
 	private final Sample sample = new Sample(DOWNSAMPLE_WIDTH, DOWNSAMPLE_HEIGHT);
 	private SOM net;
-
-	private BufferedImage mnistToBImg(DigitImage img) {
+	private String archFile = "";
+	
+	public OcrFinal(int tipo){
+		if (tipo == 1){
+			archFile = "./numberTrain10k.dat";
+		}
+		if (tipo == 2){
+			archFile = "./letterTrain.dat";
+		}
+		this.cargarEntrenamiento();
+		this.entrenarRed();
+	}
+	
+	public void clearLists(){
+		letterListModel.clear();
+		lettersL.clear();
+		//net.
+	}
+	
+	public BufferedImage mnistToBImg(DigitImage img) {
 		BufferedImage img2 = new BufferedImage(DOWNSAMPLE_WIDTH, DOWNSAMPLE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		byte[] arr = img.getImageData();
 		int cont = 0;
@@ -51,7 +67,7 @@ public class OcrFinal {
 			FileReader f;// the actual file stream
 			BufferedReader r;// used to read the file line by line
 
-			f = new FileReader(new File("./numberTrain.dat"));
+			f = new FileReader(new File(archFile));
 			r = new BufferedReader(f);
 			String line;
 			int i = 0;

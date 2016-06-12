@@ -188,23 +188,6 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			if (pathPadronProcesar != null || !pathPadronProcesar.isEmpty()) {
 				int cantPadrones = padronPaths.length;
 				for (File padron : padronPaths) {
-					/*
-					 * ImagePlus img = IJ.openImage(padron.getAbsolutePath());
-					 * ImagePlus recortado =
-					 * HelperMethods.recortarPlanillon(img, img); ImagePlus
-					 * recortadoOriginal = new Duplicator().run(recortado);
-					 * 
-					 * List<ImagePlus> lista =
-					 * HelperMethods.getFilasPlanillon(recortado); for
-					 * (ImagePlus mm : lista) { // mm.show();
-					 * 
-					 * } List<ImagePlus> parteLista =
-					 * HelperMethods.getPartesFila(lista.get(1),
-					 * recortadoOriginal); // 0 -> DNI, 1 -> nombre + apellido
-					 * int len = 8; List<ImagePlus> datos =
-					 * HelperMethods.cropSection(parteLista.get(0), len); for
-					 * (ImagePlus mm : datos) { mm.show(); } break;
-					 */
 					System.out.println("Padron: " + (numPadrones + 1));
 					txtLog.append("Padron: " + (numPadrones + 1) + "\n");
 
@@ -221,9 +204,9 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 						String dni = " ";
 						// DNI
 						// partesFila.get(0).show();
-						
+
 						log = "Fila " + nFilas + ": Procesando Dni = ";
-						
+
 						for (ImagePlus numero : dniFila) {
 							// numero.show();
 							String number = OcrProy.ocrNumbers.reconocer(numero.getBufferedImage());
@@ -235,6 +218,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 						System.out.println();
 						txtLog.append(log + "\n");
 						txtLog.update(txtLog.getGraphics());
+						
 						nFilas++;
 					}
 					numPadrones++;
@@ -244,32 +228,6 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			} else {
 				JOptionPane.showMessageDialog(this, "Escojan un directorio.");
 			}
-			/*
-			 * int num = 1; if (!pathImageComparar.isEmpty() &&
-			 * imagesPaths.length != 0) { int cantFile = imagesPaths.length;
-			 * double[][] grafoOriginal =
-			 * Fingerprint.imageGraph(pathImageComparar); for (File file :
-			 * imagesPaths) { // System.out.println(file.getAbsolutePath());
-			 * double[][] grafoSuspect =
-			 * Fingerprint.imageGraph(file.getAbsolutePath()); double porc =
-			 * Fingerprint.comparition(grafoOriginal, grafoSuspect); String
-			 * resultado = Fingerprint.resultado(porc); pgBar.setValue(num * 100
-			 * / cantFile); pgBar.update(pgBar.getGraphics()); String lineaLog =
-			 * "Imagen " + num++ + ": Resultado-> " + resultado +
-			 * " - Porcentaje -> " + porc; txtLog.append(lineaLog + "\n");
-			 * txtLog.update(txtLog.getGraphics());
-			 * System.out.println(lineaLog); } } else
-			 * JOptionPane.showMessageDialog(this,
-			 * "Escoga una imagen o un directorio de imagenes a comparar");
-			 */
 		}
 	}
-
-	/*
-	 * private BufferedImage setImagetoLabel(String path, int w, int h) {
-	 * ImagePlus imgEscogida = IJ.openImage(path); imageComparar =
-	 * imgEscogida.getBufferedImage(); BufferedImage bfEscogida =
-	 * HelperMethods.resizeImage(imageComparar, w, h, imageComparar.getType());
-	 * return bfEscogida; }
-	 */
 }

@@ -118,7 +118,7 @@ public class siscomfiManager {
 	public static ArrayList<Adherente> queryAllAdherente(){
 		return adherenteDB.queryAll();
 	}
-	public Adherente queryAdherenteById(int idAdherente){
+	public static Adherente queryAdherenteById(int idAdherente){
 		return adherenteDB.queryById(idAdherente);
 	}
 	

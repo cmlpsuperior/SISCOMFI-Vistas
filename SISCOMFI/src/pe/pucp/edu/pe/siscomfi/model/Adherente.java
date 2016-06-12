@@ -10,8 +10,21 @@ public class Adherente {
 	String appMaterno;
 	String dni;
 	Date fechaNacimiento;
+	String rHuella;
+	String rFirma;
 	
-	
+	public String getrHuella() {
+		return rHuella;
+	}
+	public void setrHuella(String rHuella) {
+		this.rHuella = rHuella;
+	}
+	public String getrFirma() {
+		return rFirma;
+	}
+	public void setrFirma(String rFirma) {
+		this.rFirma = rFirma;
+	}
 	public int getIdAdherente() {
 		return idAdherente;
 	}

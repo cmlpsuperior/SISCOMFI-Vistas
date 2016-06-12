@@ -9,7 +9,7 @@ import pe.pucp.edu.pe.siscomfi.model.Rol;
 
 
 
-public class RolDB {
+public class RolDB { 
 	DAOFactory daoFactory = DAOFactory.getDAOFactory(DBConnection.dbType);
     DAORol daoRol = daoFactory.getDAORol(); // POLIMORFISMO
     

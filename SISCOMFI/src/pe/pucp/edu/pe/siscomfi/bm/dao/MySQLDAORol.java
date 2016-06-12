@@ -38,7 +38,7 @@ public class MySQLDAORol implements DAORol{
 			while (rs.next()){
 				int id = rs.getInt("idRol");
 				String nombre = rs.getString("Nombre");
-				String vista = rs.getString("Vista");
+				//String vista = rs.getString("Vista");
 				
 				Rol u = new Rol();
 				u.setIdRol(id);

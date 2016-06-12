@@ -28,7 +28,8 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 	private JTextField txtApMaterno;
 	private JTextField txtCorreo;
 	private JTextField txtDni;
-	private JComboBox cbRol;
+	private JComboBox cbRolUsuario;
+	
 	
 
 	public VistaRegistrarUsuario() {
@@ -38,6 +39,8 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 		getContentPane().setLayout(null);
 		
 		JButton btnRegistrar = new JButton("Registrar");
+		fillCustomerCmb();
+		
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Usuario u = new Usuario ();
@@ -47,7 +50,7 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 				u.setCorreoElectronico(txtCorreo.getText());
 				u.setDni(txtDni.getText());
 				
-				u.setIdRol( Integer.parseInt( cbRol.getSelectedItem().toString().substring(0, 1)));
+				u.setIdRol( Integer.parseInt( cbRolUsuario.getSelectedItem().toString().substring(0, 1)));
 				
 				siscomfiManager.addUsuario(u);
 			}
@@ -93,10 +96,10 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 		lblRol.setBounds(10, 180, 125, 14);
 		panel.add(lblRol);
 		
-		cbRol = new JComboBox();
+		/*cbRol = new JComboBox();
 		cbRol.setBounds(145, 177, 266, 20);
-		panel.add(cbRol);
-		fillCustomerCmb();
+		getContentPane().add(cbRol);
+		fillCustomerCmb();*/
 		
 		JLabel lblApPaterno = new JLabel("Ap. Paterno (*)");
 		lblApPaterno.setBounds(10, 80, 125, 14);
@@ -133,18 +136,24 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 		txtDni.setBounds(145, 152, 266, 20);
 		panel.add(txtDni);
 		txtDni.setColumns(10);
-
+		
+		cbRolUsuario = new JComboBox();
+		cbRolUsuario.setBounds(145, 177, 266, 20);
+		panel.add(cbRolUsuario);
+		
+		
+		
 	}
 	
 	
 	public void fillCustomerCmb(){ //mostrare solo los clientes que estan activos
-		cbRol.removeAllItems();
+		cbRolUsuario.removeAllItems();
 		ArrayList<Rol> rolList;
 		try {
 			rolList = siscomfiManager.queryAllRoles();
 			for (int i=0; i<rolList.size();i++){				
 				Rol r = (Rol)rolList.get(i);
-				cbRol.addItem(r.getIdRol()+" - " + r.getNombre());
+				cbRolUsuario.addItem(r.getIdRol() +" - " + r.getNombre());
 			}
 			
 		} catch (Exception e) {

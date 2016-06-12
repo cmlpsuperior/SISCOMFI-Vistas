@@ -23,23 +23,7 @@ public class PruebaNuevoOCR {
 		//IJ.run(img, "Make Binary", "");
 		recortarCostadosProcesarPadron(img);
 		
-		/*
-		int alturaFila= Math.round((hPrueba*(img.getWidth())) /wPrueba) -2 ; //altura fija de una fila
-		int yFinal;
-		
-		yFinal = img.getHeight();
-		for (i=2; i<=8; i++){
-			ImagePlus imgCopia = new Duplicator ().run(img);
-			
-			
-			imgCopia.setRoi(2, yFinal - alturaFila, imgCopia.getWidth(), alturaFila);
-             IJ.run(imgCopia, "Crop", "");   
-             
-             yFinal = (yFinal- alturaFila) - 1;
-            imgCopia.show();
-		}
-		*/
-		
+				
 		int alturaFila= Math.round((hPrueba*(img.getWidth() - 1)) /wPrueba) ; //altura fija de una fila
 		int anchoNumeracion = Math.round((colNumeracion*(img.getWidth()  - 1) ) /wPrueba );
 		int anchoUnDigDni = Math.round((colDniUnDig*(img.getWidth() - 1) ) /wPrueba );
@@ -61,29 +45,50 @@ public class PruebaNuevoOCR {
             
             IJ.saveAs(imgCopia, "Jpeg", "Imagenes\\001_salida_"+i+".jpg" );
             //nos quedamos con el bloque de dni;
-            //extraerDni(imgCopia, anchoUnDigDni );
+            extraerDigDni(imgCopia);
+            //extraerHuella(imgCopia);
+            //extraerFirma(imgCopia);
             imgCopia.show();
             
 		}
 		IJ.saveAs(img, "Jpeg", "Imagenes\\001_salida.jpg" );
 	}
 	
-	
+	//extraerHuella(imgCopia);
+
 	public static void quitarBordes (ImagePlus img, int anchoQuitar){
 		
-		img.setRoi(anchoQuitar, 8, img.getWidth()-8, img.getHeight()-10);		
-        IJ.run(img, "Crop", "");  
+		img.setRoi(anchoQuitar, 10, img.getWidth()-8, img.getHeight()-10);		
+        IJ.run(img, "Crop", ""); 
 	}
 	
-	public static void extraerDni(ImagePlus img, int ancho){
-		
-				
-		for (int j = 0; j<8;j++){
-			ImagePlus imgCopia = new Duplicator ().run(img);	
-			img.setRoi(j*ancho, 2, ancho, imgCopia.getHeight()-2);		
-			IJ.run(imgCopia, "Crop", "");  
-			imgCopia.show();
+	public static void extraerDigDni(ImagePlus img){
+		int r = 0, i, m;    
+		int posicionFinal=0;
+		int anchototal = img.getWidth();
+		int alturatotal = img.getHeight();
+		for (m=0; m<8; m++){	
+			ImagePlus imgCopia = new Duplicator ().run(img);
+			anchototal = imgCopia.getWidth();
+			alturatotal = imgCopia.getHeight();
+				        
+	        for(i=0 ;i<anchototal ;i++){
+	            r = imgCopia.getPixel(i, 3)[0];
+	            if(r!=0){
+	                posicionFinal = i;
+	                break;    
+	            }
+	        }
+	        imgCopia.setRoi(0, 0, posicionFinal-1, alturatotal);		
+	        IJ.run(imgCopia, "Crop", ""); 
+	        imgCopia.show();
+	        
+	        //cortamos la img para quitar el digito ya sacado
+	        img.setRoi(posicionFinal+2, 0, anchototal, alturatotal);		
+	        IJ.run(img, "Crop", ""); 
+	        img.show();
 		}
+		
 	}
 	 public static void alinearPadron(ImagePlus padronJ){  
 		 

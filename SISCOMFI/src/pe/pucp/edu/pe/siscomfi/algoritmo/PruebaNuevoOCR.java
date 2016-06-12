@@ -2,7 +2,6 @@ package pe.pucp.edu.pe.siscomfi.algoritmo;
 
 import java.io.IOException;
 import java.util.List;
-
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;

@@ -19,7 +19,7 @@ public class PruebaNuevoOCR {
 	static int colDniUnDig = 14;
 
 	public static void main(String[] args) throws IOException {
-		/*int i;
+		int i;
 
 		ImagePlus img = IJ.openImage("Imagenes\\001.jpg");
 		// IJ.run(img, "Make Binary", "");
@@ -53,7 +53,7 @@ public class PruebaNuevoOCR {
 			System.out.println("Fila " + (i + 1) + ": DNI -> " + dni);
 
 		}
-		// IJ.saveAs(img, "Jpeg", "Imagenes\\001_salida.jpg");*/
+		// IJ.saveAs(img, "Jpeg", "Imagenes\\001_salida.jpg");
 	}
 
 	public static void quitarBordes(ImagePlus img, int anchoQuitar) {

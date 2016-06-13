@@ -37,7 +37,7 @@ public class PruebaNuevoOCR {
 		int i;
 		ArrayList<ImagePlus> firmaHuella = new ArrayList<ImagePlus> ();
 		String workingDir = System.getProperty("user.dir");
-				
+
 		recortarCostadosProcesarPadron(planillon);
 
 		int alturaFila = Math.round((hPrueba * (planillon.getWidth() - 1)) / wPrueba);

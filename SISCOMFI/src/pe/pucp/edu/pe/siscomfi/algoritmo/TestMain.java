@@ -32,11 +32,11 @@ public class TestMain {
 		}
 		//img.show();
 		List<ImagePlus> filas = HelperMethods.sacarFilasPlanillon(img);
-		/*for(ImagePlus fila: filas){
+		for(ImagePlus fila: filas){
 			fila.show();
-		}*/
+		}
 		
-		List<ImagePlus> partes = HelperMethods.sacarDatosFila(filas.get(0), tCampos);
+		/*List<ImagePlus> partes = HelperMethods.sacarDatosFila(filas.get(0), tCampos);
 		for(ImagePlus fila: partes){
 			fila.show();
 		}

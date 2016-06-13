@@ -37,9 +37,7 @@ public class PruebaNuevoOCR {
 		int i;
 		ArrayList<ImagePlus> firmaHuella = new ArrayList<ImagePlus> ();
 		String workingDir = System.getProperty("user.dir");
-		
-		// IJ.run(img, "Make Binary", "");
-		alinearPadron(planillon);
+				
 		recortarCostadosProcesarPadron(planillon);
 
 		int alturaFila = Math.round((hPrueba * (planillon.getWidth() - 1)) / wPrueba);
@@ -216,20 +214,6 @@ public class PruebaNuevoOCR {
 			}
 		}
 
-		// Verificamos el lado derecho
-		/*
-		 * for(int j=width;j>0;j--){ int R = padronJ.getPixel(j, pixels)[0];
-		 * if(R == 0){ if (j !=0){ padronJ.setRoi(0,j,width-j-1,height-1);
-		 * IJ.run(padronJ, "Crop", ""); break; } } }
-		 * 
-		 * 
-		 * //Verificamos abajo
-		 * 
-		 * for(int i=height; i>0 ; i--){ int R = padronJ.getPixel(pixels, i)[0];
-		 * if(R==0){//r=255 , g=0 , b=0 if (i != 0){
-		 * padronJ.setRoi(i,0,width-i-1,height-1); IJ.run(padronJ, "Crop", "");
-		 * //padronJ.show(); } break; } }
-		 */
 	}
 
 	public static void recortarCostadosProcesarPadron(ImagePlus padronJ) {
@@ -246,9 +230,7 @@ public class PruebaNuevoOCR {
 		eliminarLineasNegras(padronJ);
 		alinearPadron(padronJ);
 
-		//////////////
-		// ELIMINA LA PARTE DE LA IZQUIERDA
-		//////////////
+		// ELIMINAR IZQUIERDA		
 
 		int width = padronJ.getWidth();
 		int height = padronJ.getHeight();
@@ -272,9 +254,8 @@ public class PruebaNuevoOCR {
 
 		padronJ.setRoi(i, 0, width - auxI - 1, height - 1);
 		IJ.run(padronJ, "Crop", "");
-		//////////////
-		// ELIMINA LA PARTE DE ABAJO
-		//////////////
+
+		//ELIMINAR ABAJO
 		width = padronJ.getWidth();
 		height = padronJ.getHeight();
 
@@ -292,9 +273,7 @@ public class PruebaNuevoOCR {
 		padronJ.setRoi(0, 0, width - 1, i - 1);
 		IJ.run(padronJ, "Crop", "");
 
-		//////////////
-		// ELIMINA LA PARTE DE LA DERECHA
-		//////////////
+		//ELIMINAR DERECHA
 		width = padronJ.getWidth();
 		height = padronJ.getHeight();
 
@@ -322,7 +301,7 @@ public class PruebaNuevoOCR {
 		padronJ.setRoi(0, 0, j, height);
 		IJ.run(padronJ, "Crop", "");
 		// IJ.run(padronJ, "Skeletonize", "");
-		padronJ.show();
+		//padronJ.show();
 
 	}
 

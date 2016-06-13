@@ -10,6 +10,7 @@ import javax.swing.JButton;
 
 import pe.pucp.edu.pe.siscomfi.algoritmo.HelperMethods;
 import pe.pucp.edu.pe.siscomfi.algoritmo.OcrProy;
+import pe.pucp.edu.pe.siscomfi.algoritmo.PruebaNuevoOCR;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
@@ -43,8 +44,8 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JFileChooser jfcRuta;
 	private JComboBox<String> cbDescProceso;
 	private JTextArea txtLog;
-	private String pathPadronProcesar;
-	private File[] padronPaths;
+	private String pathPadronProcesar =null;
+	private File[] padronPaths=  null;
 	private JScrollPane scpLog;
 	private JProgressBar pgBar;
 	private JPanel pnLog;
@@ -192,21 +193,27 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 					txtLog.append("Padron: " + (numPadrones + 1) + "\n");
 
 					ImagePlus imgPlanillon = IJ.openImage(padron.getAbsolutePath());
-					ImagePlus planillonRecortado = HelperMethods.recortarPlanillonO(imgPlanillon, imgPlanillon);
-					ImagePlus auxPlanillon = new Duplicator().run(planillonRecortado);
-					List<ImagePlus> filasPlanillon = HelperMethods.getFilasPlanillonO(planillonRecortado);
-					int nFilas = 1;
-					for (ImagePlus fila : filasPlanillon) {
-						List<ImagePlus> partesFila = HelperMethods.getPartesFilaO(fila, auxPlanillon);
-						List<ImagePlus> dniFila = HelperMethods.cropSection(partesFila.get(0), 8);
-						List<ImagePlus> firmaFila = HelperMethods.cropSection(partesFila.get(2), 1);
-						ImagePlus huellaFila = partesFila.get(3);
-						String dni = " ";
+					try {
+					PruebaNuevoOCR.procesarPlanillon(imgPlanillon, padron.getName());
+					}  catch (Exception a) {
+						// TODO Auto-generated catch block
+						a.printStackTrace();
+					}
+					//ImagePlus planillonRecortado = HelperMethods.recortarPlanillonO(imgPlanillon, imgPlanillon);
+					//ImagePlus auxPlanillon = new Duplicator().run(planillonRecortado);
+					//List<ImagePlus> filasPlanillon = HelperMethods.getFilasPlanillonO(planillonRecortado);
+					//int nFilas = 1;
+					//for (ImagePlus fila : filasPlanillon) {
+					//	List<ImagePlus> partesFila = HelperMethods.getPartesFilaO(fila, auxPlanillon);
+					//	List<ImagePlus> dniFila = HelperMethods.cropSection(partesFila.get(0), 8);
+					//	List<ImagePlus> firmaFila = HelperMethods.cropSection(partesFila.get(2), 1);
+					//	ImagePlus huellaFila = partesFila.get(3);
+					//	String dni = " ";
 						// DNI
 						// partesFila.get(0).show();
 
-						log = "Fila " + nFilas + ": Procesando Dni = ";
-
+					//	log = "Fila " + nFilas + ": Procesando Dni = ";
+						/*
 						for (ImagePlus numero : dniFila) {
 							// numero.show();
 							String number = OcrProy.ocrNumbers.reconocer(numero.getBufferedImage());
@@ -220,7 +227,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 						txtLog.update(txtLog.getGraphics());
 						
 						nFilas++;
-					}
+					}*/
 					numPadrones++;
 					pgBar.setValue(numPadrones * 100 / cantPadrones);
 					pgBar.update(pgBar.getGraphics());

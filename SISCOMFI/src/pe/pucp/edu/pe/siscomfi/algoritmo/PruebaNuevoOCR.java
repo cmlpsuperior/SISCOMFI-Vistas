@@ -1,5 +1,6 @@
 package pe.pucp.edu.pe.siscomfi.algoritmo;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,23 +19,42 @@ public class PruebaNuevoOCR {
 	static int hPrueba = 87;
 	static int colNumeracion = 27;
 	static int colDniUnDig = 14;
-
+	static int HhuellaYFirma=331;
+	static int hFirma = 144;
+	static int hHuella = 155;
+	
+	static int anchoHuellaFirma=0;
+	static int anchoFirma = 0;
+	static int anchoHuella=0;
+	
 	public static void main(String[] args) throws IOException {
+		ImagePlus img = IJ.openImage("Imagenes\\001.jpg");
+		procesarPlanillon(img, "001");
+	}
+	
+	
+	public static void procesarPlanillon(ImagePlus planillon, String codPlanillon) throws IOException {
 		int i;
-
-		ImagePlus img = IJ.openImage("Imagenes\\p1.jpg");
+		ArrayList<ImagePlus> firmaHuella = new ArrayList<ImagePlus> ();
+		String workingDir = System.getProperty("user.dir");
+		
 		// IJ.run(img, "Make Binary", "");
-		alinearPadron(img);
-		recortarCostadosProcesarPadron(img);
+		alinearPadron(planillon);
+		recortarCostadosProcesarPadron(planillon);
 
-		int alturaFila = Math.round((hPrueba * (img.getWidth() - 1)) / wPrueba);
-		int anchoNumeracion = Math.round((colNumeracion * (img.getWidth() - 1)) / wPrueba);
-		int anchoUnDigDni = Math.round((colDniUnDig * (img.getWidth() - 1)) / wPrueba);
+		int alturaFila = Math.round((hPrueba * (planillon.getWidth() - 1)) / wPrueba);
+		int anchoNumeracion = Math.round((colNumeracion * (planillon.getWidth() - 1)) / wPrueba);
+		int anchoUnDigDni = Math.round((colDniUnDig * (planillon.getWidth() - 1)) / wPrueba);
+		
+		anchoHuellaFirma = Math.round((HhuellaYFirma * (planillon.getWidth() - 1)) / wPrueba);
+		anchoFirma = Math.round((hFirma * (planillon.getWidth() - 1)) / wPrueba);
+		anchoHuella = Math.round((hHuella * (planillon.getWidth() - 1)) / wPrueba);
+		
 		int yFinal;
 
-		yFinal = img.getHeight();
+		yFinal = planillon.getHeight();
 		for (i = 0; i < 8; i++) {
-			ImagePlus imgCopia = new Duplicator().run(img);
+			ImagePlus imgCopia = new Duplicator().run(planillon);
 
 			imgCopia.setRoi(2, yFinal - alturaFila, imgCopia.getWidth(), alturaFila);
 			IJ.run(imgCopia, "Crop", "");
@@ -43,32 +63,58 @@ public class PruebaNuevoOCR {
 
 			quitarBordes(imgCopia, anchoNumeracion);
 
-			// IJ.saveAs(imgCopia, "Jpeg", "Imagenes\\001_salida_" + i +
-			// ".jpg");
-			// nos quedamos con el bloque de dni;
 			List<ImagePlus> digitos = extraerDigDni(imgCopia);
 			String dni = " ";
 			for (ImagePlus digit : digitos) {
 				String digitR = OcrProy.ocrNumbers.reconocer(digit.getBufferedImage());
 				dni += digitR;
-				digit.show();
+				//digit.show();
 			}
 			System.out.println("Fila " + (i + 1) + ": DNI -> " + dni);
-			// extraerHuella(imgCopia);
-			// extraerFirma(imgCopia);
-			// imgCopia.show();
-
+			firmaHuella = extraerHuellaYFirma(imgCopia);
+			
+			//creamos los nuevos direcctorios donde almacenaremos las imagenes:
+			String rutaAlmacenar = workingDir + "\\Proceso\\" +codPlanillon + "\\" + dni;
+			File file2 = new File(rutaAlmacenar);      file2.mkdirs();
+			IJ.saveAs(firmaHuella.get(0), "Jpeg", "Proceso\\"  +codPlanillon + "\\" + dni + "\\firma.jpg" );
+			IJ.saveAs(firmaHuella.get(1), "Jpeg", "Proceso\\"  +codPlanillon + "\\" + dni + "\\huella.jpg" );
 		}
 		// IJ.saveAs(img, "Jpeg", "Imagenes\\001_salida.jpg" );
 	}
 
-	// extraerHuella(imgCopia);
+	public static ArrayList<ImagePlus> extraerHuellaYFirma(ImagePlus img){
+		
+		ArrayList<ImagePlus> firmaHuella = new ArrayList<ImagePlus> ();
+		
+		//separamos la huella y la firma:
+		ImagePlus imgCopia = new Duplicator().run(img);
+		//imgCopia.show();
+		imgCopia.setRoi(imgCopia.getWidth()-anchoHuellaFirma, 1, anchoHuellaFirma-5, imgCopia.getHeight() - 5);
+		IJ.run(imgCopia, "Crop", "");
+		//imgCopia.show();
+		
+		//sacamos las Firmas:
+		ImagePlus imgFirma = new Duplicator().run(imgCopia);
+		imgFirma.setRoi(0, 0, anchoFirma, imgCopia.getHeight());
+		IJ.run(imgFirma, "Crop", "");
+		firmaHuella.add(imgFirma);
+		//imgFirma.show();
+		
+		//sacamos las Huella:
+		ImagePlus imgHuella = new Duplicator().run(imgCopia);
+		imgHuella.setRoi(imgHuella.getWidth()-anchoHuella, 0 , anchoFirma, imgHuella.getHeight());
+		IJ.run(imgHuella, "Crop", "");
+		firmaHuella.add(imgHuella);
+		//imgHuella.show();	
+		
+		return firmaHuella;
+	}
 
 	public static void quitarBordes(ImagePlus img, int anchoQuitar) {
 
 		img.setRoi(anchoQuitar, 10, img.getWidth() - 7, img.getHeight() - 10);
 		IJ.run(img, "Crop", "");
-		img.show();
+		//img.show();
 	}
 
 	public static List<ImagePlus> extraerDigDni(ImagePlus img) {
@@ -89,7 +135,7 @@ public class PruebaNuevoOCR {
 					break;
 				}
 			}
-			imgCopia.setRoi(0, 0, posicionFinal - 1, alturatotal);
+			imgCopia.setRoi(0, 0, posicionFinal - 1, alturatotal-1);
 			IJ.run(imgCopia, "Crop", "");
 			// imgCopia.show();
 

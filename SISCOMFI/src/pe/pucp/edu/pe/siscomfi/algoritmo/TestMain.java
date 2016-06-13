@@ -8,15 +8,17 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
 import ij.process.ImageProcessor;
+import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+import pe.pucp.edu.pe.siscomfi.model.Adherente;
 
 public class TestMain {
 
 	public static void main(String[] args) throws IOException {
-
-		ImagePlus img = IJ.openImage("Imagenes\\001.jpg");
-		ImageProcessor imp = img.getProcessor();
-		imp = imp.resize(3500);
-		img = new ImagePlus("aux", imp);
+		List<Adherente> lista = siscomfiManager.getPosiblesAdherentes("46136008");
+		for(Adherente adh : lista){
+			System.out.println(adh.getDni());
+		}
+		/*ImagePlus img = IJ.openImage("Imagenes\\001.jpg");
 		img = HelperMethods.procesarPlanillon(img);
 		ImagePlus auxImg = new Duplicator().run(img);
 		int[] tCampos = HelperMethods.cabeceraPlanillon(auxImg);
@@ -33,9 +35,8 @@ public class TestMain {
 					digit = OcrProy.ocrNumbers.reconocer(dNumb.getBufferedImage());
 					dni += digit;
 				}
-				//dNumb.show();
 			}
-			System.out.println(dni);
+			System.out.print(dni);
 			List<ImagePlus> digitosLetra = HelperMethods.getDatosParte(partes.get(1), 48);
 			String nombreAp = " ";
 			for (ImagePlus dLet : digitosLetra) {

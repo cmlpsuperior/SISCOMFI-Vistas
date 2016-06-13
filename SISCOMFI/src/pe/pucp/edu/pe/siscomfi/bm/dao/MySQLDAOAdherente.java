@@ -219,9 +219,9 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			// Paso 2: Obtener la conexión
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentenciad
-			String sql = "Query super especialxd";
+			String sql = "SELECT * FROM RegistroElector WHERE compararDNI(?,DNI) >= 5;";
 			pstmt = conn.prepareStatement(sql);
-
+			pstmt.setString(1,dni);
 			// Paso 4: Ejecutar la sentencia
 			rs = pstmt.executeQuery();
 
@@ -236,7 +236,8 @@ public class MySQLDAOAdherente implements DAOAdherente {
 				int huella = rs.getInt("Huella");
 				String pathHuella = (huella < 10) ? ("00" + huella) : (huella < 100) ? ("0" + huella) : ("" + huella);
 				String pathFirma = rs.getString("Firma");
-
+				Adherente adherente = new Adherente(id, 0, nombre, apPaterno, apMaterno, dniL, fechaNacimiento, pathHuella, pathFirma);
+				arr.add(adherente);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

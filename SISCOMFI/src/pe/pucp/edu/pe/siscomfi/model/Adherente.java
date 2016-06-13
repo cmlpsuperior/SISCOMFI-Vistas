@@ -13,6 +13,18 @@ public class Adherente {
 	String rHuella;
 	String rFirma;
 	
+	public Adherente(int idAdherente, int idDistrito, String nombre, String appPaterno, String appMaterno, String dni,
+			Date fechaNacimiento, String rHuella, String rFirma) {
+		this.idAdherente = idAdherente;
+		this.idDistrito = idDistrito;
+		this.nombre = nombre;
+		this.appPaterno = appPaterno;
+		this.appMaterno = appMaterno;
+		this.dni = dni;
+		this.fechaNacimiento = fechaNacimiento;
+		this.rHuella = rHuella;
+		this.rFirma = rFirma;
+	}
 	public String getrHuella() {
 		return rHuella;
 	}

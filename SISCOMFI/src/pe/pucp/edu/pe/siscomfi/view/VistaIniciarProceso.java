@@ -13,6 +13,7 @@ import pe.pucp.edu.pe.siscomfi.algoritmo.OcrProy;
 import pe.pucp.edu.pe.siscomfi.algoritmo.PruebaNuevoOCR;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
+import pe.pucp.edu.pe.siscomfi.model.Adherente;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 
 import javax.swing.UIManager;
@@ -185,53 +186,50 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		if (e.getSource() == btnProcesar) {
 			int numPadrones = 0;
 			String log = "";
-			// System.out.println(pathPadronProcesar);
 			if (pathPadronProcesar != null) {
-
 				int cantPadrones = padronPaths.length;
 				for (File padron : padronPaths) {
-					System.out.println("Padron: " + (numPadrones + 1));
 					txtLog.append("Padron: " + (numPadrones + 1) + "\n");
-
+					txtLog.update(txtLog.getGraphics());
+					// leemos el planillon
 					ImagePlus imgPlanillon = IJ.openImage(padron.getAbsolutePath());
-					try {
-						PruebaNuevoOCR.procesarPlanillon(imgPlanillon, padron.getName());
-					} catch (Exception a) {
-						// TODO Auto-generated catch block
-						a.printStackTrace();
+					// procesamos el planillon
+					imgPlanillon = HelperMethods.procesarPlanillon(imgPlanillon);
+					// sacamos el tamaño de los campos
+					ImagePlus auxImg = new Duplicator().run(imgPlanillon);
+					int[] tCampos = HelperMethods.cabeceraPlanillon(auxImg);
+					// sacamos las filas
+					List<ImagePlus> filas = HelperMethods.sacarFilasPlanillon(imgPlanillon);
+					int nFila = 8;
+					// procesamos cada fila
+					for (ImagePlus fila : filas) {
+						List<ImagePlus> partes = HelperMethods.sacarDatosFila(fila, tCampos);
+						txtLog.append("Fila " + nFila + ": Procesando Dni = ");
+						txtLog.update(txtLog.getGraphics());
+						// sacamoslos digitos del DNI (8)
+						List<ImagePlus> digitosNumero = HelperMethods.getDatosParte(partes.get(0), 8);
+						String dni = "", digit;
+						for (ImagePlus dNumb : digitosNumero) {
+							if (dNumb != null) {
+								digit = OcrProy.ocrNumbers.reconocer(dNumb.getBufferedImage());
+								dni += digit;
+							}
+						}
+						txtLog.append(dni + "\n");
+						txtLog.append("Obteniendo posibles adherentes:\n ");
+						txtLog.update(txtLog.getGraphics());
+						System.out.println(dni);
+						List<Adherente> lista = siscomfiManager.getPosiblesAdherentes(dni);
+						if (lista != null) {
+							txtLog.append("Se encontraron -> " + lista.size() + " posibles adherentes\n");
+							txtLog.update(txtLog.getGraphics());
+							
+						} else {
+							txtLog.append("No se encontraron adherentes\n");
+							txtLog.update(txtLog.getGraphics());
+						}
+						nFila--;
 					}
-					// ImagePlus planillonRecortado =
-					// HelperMethods.recortarPlanillonO(imgPlanillon,
-					// imgPlanillon);
-					// ImagePlus auxPlanillon = new
-					// Duplicator().run(planillonRecortado);
-					// List<ImagePlus> filasPlanillon =
-					// HelperMethods.getFilasPlanillonO(planillonRecortado);
-					// int nFilas = 1;
-					// for (ImagePlus fila : filasPlanillon) {
-					// List<ImagePlus> partesFila =
-					// HelperMethods.getPartesFilaO(fila, auxPlanillon);
-					// List<ImagePlus> dniFila =
-					// HelperMethods.cropSection(partesFila.get(0), 8);
-					// List<ImagePlus> firmaFila =
-					// HelperMethods.cropSection(partesFila.get(2), 1);
-					// ImagePlus huellaFila = partesFila.get(3);
-					// String dni = " ";
-					// DNI
-					// partesFila.get(0).show();
-
-					// log = "Fila " + nFilas + ": Procesando Dni = ";
-					/*
-					 * for (ImagePlus numero : dniFila) { // numero.show();
-					 * String number =
-					 * OcrProy.ocrNumbers.reconocer(numero.getBufferedImage( ));
-					 * // System.out.print(number); dni += number; //
-					 * System.out.println(dni); } log += dni;
-					 * System.out.println(); txtLog.append(log + "\n");
-					 * txtLog.update(txtLog.getGraphics());
-					 * 
-					 * nFilas++; }
-					 */
 					numPadrones++;
 					pgBar.setValue(numPadrones * 100 / cantPadrones);
 					pgBar.update(pgBar.getGraphics());

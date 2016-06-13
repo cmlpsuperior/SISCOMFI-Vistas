@@ -1,6 +1,7 @@
 package pe.pucp.edu.pe.siscomfi.bm.BD;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pe.pucp.edu.pe.siscomfi.bm.dao.DAOAdherente;
 import pe.pucp.edu.pe.siscomfi.bm.dao.DAOFactory;
@@ -27,5 +28,8 @@ public class AdherenteDB {
 	}
 	public Adherente queryById(int idAdherente){
 		return daoAdherente.queryById(idAdherente);
+	}
+	public List<Adherente> getAdherentesPosibles(String dni){
+		return daoAdherente.getPosibleAdherente(dni);
 	}
 }

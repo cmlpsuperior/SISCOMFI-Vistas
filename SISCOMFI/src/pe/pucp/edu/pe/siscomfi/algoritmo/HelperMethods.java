@@ -91,6 +91,9 @@ public class HelperMethods {
 
 	// para cortar el lado izquierdo del planillon
 	public static ImagePlus procesarPlanillon(ImagePlus planillon) {
+		ImageProcessor imp = planillon.getProcessor();
+		imp = imp.resize(3500);
+		planillon = new ImagePlus("aux", imp);
 		planillon = cortarIzquierdaPlanillon(planillon);
 		planillon = cortarDerechaPlanillon(planillon);
 		planillon = cortarAbajoPlanillon(planillon);

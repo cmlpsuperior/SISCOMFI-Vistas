@@ -1,6 +1,7 @@
 package pe.pucp.edu.pe.siscomfi.bm.BD;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pe.pucp.edu.pe.siscomfi.model.Adherente;
 import pe.pucp.edu.pe.siscomfi.model.Departamento;
@@ -120,6 +121,9 @@ public class siscomfiManager {
 	}
 	public static Adherente queryAdherenteById(int idAdherente){
 		return adherenteDB.queryById(idAdherente);
+	}
+	public static List<Adherente> getPosiblesAdherentes(String dni){
+		return adherenteDB.getAdherentesPosibles(dni);
 	}
 	
 }

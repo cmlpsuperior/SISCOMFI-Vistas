@@ -13,9 +13,14 @@ public class TestMain {
 
 	public static void main(String[] args) throws IOException {
 
+		ImagePlus img = IJ.openImage("Imagenes\\p1.jpg");
+		img = HelperMethods.cotarIzquierdaPlanillon(img);
+		//img.show();
+		//img = HelperMethods.cortarAbajoPlanillon(img);
+		img.show();
 		// PARTE PARA CORTAR PLANILLON
 
-		ImagePlus img = IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\padron\\padron2.jpg");
+		/*ImagePlus img = IJ.openImage("Imagenes\\001.jpg");
 		ImagePlus recortado = HelperMethods.recortarPlanillonO(img, img); //
 		// recortado.show(); //IJ.saveAs(recortado, "Jpeg",
 		// "C:\\Users\\samoel\\Desktop\\TestImage\\padron\\pp.jpg");
@@ -26,17 +31,14 @@ public class TestMain {
 		// for (ImagePlus mm : lista) { mm.show(); }
 		for(int i = 0; i < lista.size() ; i++){
 			List<ImagePlus> parteLista = HelperMethods.getPartesFilaO(lista.get(i), recortadoOriginal);
-			/*for (ImagePlus mm : parteLista) {
+			for (ImagePlus mm : parteLista) {
 				mm.show();
-			}*/
+			}
 			System.out.print("Fila " + (i+1) + ": ");
 			int len = 8;
 			List<ImagePlus> datos = HelperMethods.cropSection(parteLista.get(0), len);
 			String dni = " ";
 			for (ImagePlus mm : datos) {
-				//mm.show();
-				IJ.run(mm,"Make Binary","");
-				IJ.run(mm,"Skeletonize","");
 				String digito = OcrProy.ocrNumbers.reconocer(mm.getBufferedImage());
 				dni += digito;
 			}
@@ -50,7 +52,7 @@ public class TestMain {
 				nombreApellido += letra;
 			}
 			System.out.print(nombreApellido); System.out.println();
-		}
+		}*/
 		
 		// CARGAR OCR - COMPARAR
 

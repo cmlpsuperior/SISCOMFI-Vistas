@@ -22,7 +22,7 @@ public class PruebaNuevoOCR {
 	public static void main(String[] args) throws IOException {
 		int i;
 
-		ImagePlus img = IJ.openImage("Imagenes\\p1.jpg");
+		ImagePlus img = IJ.openImage("Imagenes\\p2.jpg");
 		// IJ.run(img, "Make Binary", "");
 		alinearPadron(img);
 		recortarCostadosProcesarPadron(img);

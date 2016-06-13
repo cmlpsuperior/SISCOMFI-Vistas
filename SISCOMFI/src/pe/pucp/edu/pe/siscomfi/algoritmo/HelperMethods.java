@@ -11,19 +11,29 @@ import java.util.List;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.gui.Line;
 import ij.plugin.Duplicator;
 import ij.process.ImageProcessor;
 import pe.pucp.edu.pe.siscomfi.model.Point;
 
 public class HelperMethods {
 
-	// Para moverse con pixeles
+	// Para moverse con pixeles ->
 	public static int negroDerecha(int r, int x, int y, ImagePlus planillon) {
 		while (r != 0) {
 			r = planillon.getPixel(x, y)[0];
 			x++;
-			System.out.println("Buscando x (negro derecha): " + x);
 		}
+		System.out.println("Buscando x (negro derecha): " + x);
+		return x;
+	}
+
+	public static int negroIzquierda(int r, int x, int y, ImagePlus planillon) {
+		while (r != 0) {
+			r = planillon.getPixel(x, y)[0];
+			x--;
+		}
+		System.out.println("Buscando x (negro izquierda): " + x);
 		return x;
 	}
 
@@ -40,6 +50,7 @@ public class HelperMethods {
 			r = planillon.getPixel(x, y)[0];
 			y++;
 		}
+		System.out.println("Buscando x (negro Abajo): " + y);
 		return y;
 	}
 
@@ -47,8 +58,17 @@ public class HelperMethods {
 		while (r == 0) {
 			r = planillon.getPixel(x, y)[0];
 			x++;
-			System.out.println("Buscando x (blanco derecha): " + x);
 		}
+		System.out.println("Buscando y (blanco derecha): " + x);
+		return x;
+	}
+
+	public static int blancoIzquierda(int r, int x, int y, ImagePlus planillon) {
+		while (r == 0) {
+			r = planillon.getPixel(x, y)[0];
+			x--;
+		}
+		System.out.println("Buscando x (blanco izquierda): " + x);
 		return x;
 	}
 
@@ -65,31 +85,143 @@ public class HelperMethods {
 			r = planillon.getPixel(x, y)[0];
 			y++;
 		}
+		System.out.println("Buscando y (blanco Abajo): " + y);
 		return y;
 	}
 
 	// para cortar el lado izquierdo del planillon
-	public static ImagePlus cotarIzquierdaPlanillon(ImagePlus planillon) {
+	public static ImagePlus cortarIzquierdaPlanillon(ImagePlus planillon) {
 		ImagePlus auxPlanillon = new Duplicator().run(planillon);
 		IJ.run(planillon, "Make Binary", "");
-		IJ.run(planillon, "Skeletonize", "");
-		int x = 0, y = planillon.getHeight() / 2;
+		// seteando coordenadas
+		int x = 0, y = (planillon.getHeight() - 1) / 2;
+		// ignorar si hay un borde negro en la izquierda
 		x = negroDerecha(1, x, y, planillon);
+		// seguir hasta encontrar la tabla
 		x = blancoDerecha(0, x + 1, y, planillon);
-		auxPlanillon.setRoi(x - 1, 0, planillon.getWidth() - (x - 1), planillon.getHeight());
+		// cortar el lado izquierdo de la imagen
+		auxPlanillon.setRoi(x, 0, planillon.getWidth(), planillon.getHeight());
 		IJ.run(auxPlanillon, "Crop", "");
 		return auxPlanillon;
+	}
+
+	public static ImagePlus cortarDerechaPlanillon(ImagePlus planillon) {
+		ImagePlus auxPlanillon = new Duplicator().run(planillon);
+		IJ.run(planillon, "Make Binary", "");
+		int x = 10, y = 0;
+		// vamos al inicio de la tabla
+		y = negroAbajo(1, x, y, planillon);
+		y = blancoAbajo(0, x, y + 1, planillon);
+		// Como puede estar girado aumento un offset al y
+		y += 10;
+		// recorro desde el lado derecho de la imagen hasta llegar ala tabla
+		x = negroIzquierda(1, planillon.getWidth() - 1, y, planillon);
+		x = blancoIzquierda(0, x - 1, y, planillon);
+		// cortamos el lado derecho de la imagen
+		auxPlanillon.setRoi(0, 0, x, planillon.getHeight());
+		IJ.run(auxPlanillon, "Crop", "");
+		return auxPlanillon;
+
 	}
 
 	public static ImagePlus cortarAbajoPlanillon(ImagePlus planillon) {
 		ImagePlus auxPlanillon = new Duplicator().run(planillon);
 		IJ.run(planillon, "Make Binary", "");
-		IJ.run(planillon, "Skeletonize", "");
-		int y = negroArriba(1, 0, planillon.getHeight(), planillon);
-		y = blancoArriba(0, 0, y, planillon);
+		int y = negroArriba(1, 10, planillon.getHeight(), planillon);
+		y = blancoArriba(0, 10, y, planillon);
 		auxPlanillon.setRoi(0, 0, planillon.getWidth(), y);
 		IJ.run(auxPlanillon, "Crop", "");
 		return auxPlanillon;
+	}
+
+	public static ImagePlus girarPlanillon(ImagePlus planillon) {
+		ImagePlus auxPlanillon = new Duplicator().run(planillon);
+		IJ.run(planillon, "Make Binary", "");
+		// Lado Izquierdo
+		int xI = 10, yI = 0;
+		// LadoDerecho
+		int xD = planillon.getWidth() - 10, yD = 0;
+		// bajamos al lado izquierdo de la tabla
+		yI = negroAbajo(1, xI, yI, planillon);
+		yI = blancoAbajo(0, xI, yI + 1, planillon);
+		// bajamos al lado derecho de la tabla
+		yD = negroAbajo(1, xD, yD, planillon);
+		yD = blancoAbajo(0, xD, yD + 1, planillon);
+		// hallamos el angulo
+		double angulo = new Line(1, 500, 18, 500).getAngle(xI, yI, xD, yD);
+		System.out.println("angulo: " + angulo);
+		ImageProcessor imp = auxPlanillon.getProcessor();
+		imp.setBackgroundValue(255);
+		imp.rotate(angulo);
+		auxPlanillon = new ImagePlus("girado", imp);
+		return auxPlanillon;
+	}
+
+	public static int[] cabeceraPlanillon(ImagePlus planillon) {
+		ImagePlus auxPlanillon = new Duplicator().run(planillon);
+		
+		IJ.run(planillon,"Make Binary","");
+		int x = 10, y = 0;
+		y = negroAbajo(1, x, y, planillon);
+		y = blancoAbajo(0, x, y + 1, planillon);
+		y = negroAbajo(1, x, y + 1, planillon);
+		y += 2;
+
+		int[] tCampos = new int[5];
+		for (int i = 0; i < 5; i++) {
+			x = negroDerecha(1, x, y, planillon);
+			int xLeft = x;
+			// System.out.print("Campo: " + i + " FilaLeft: " + xLeft);
+			x = blancoDerecha(0, x + 1, y, planillon);
+			int xRight = x;
+			// System.out.println(" FilaRight: " + xRight);
+			int espacioCampo = xRight - xLeft + 1;
+			tCampos[i] = espacioCampo;
+		}
+		// 0 N°,1 DNI, 2 Nombre y Apelido, 3 Firma, 4 Huella
+		planillon = new ImagePlus("",auxPlanillon.getProcessor());
+		return tCampos;
+	}
+
+	public static List<ImagePlus> sacarFilasPlanillon(ImagePlus planillon) {
+		ImagePlus auxPlanillonCrop = new Duplicator().run(planillon);
+		ImagePlus auxPlanillon = new Duplicator().run(planillon);
+		IJ.run(planillon, "Make Binary", "");
+		int x = 15, y = planillon.getHeight() - 1;
+		// int tamFila = getTamFila(planillon);
+		List<ImagePlus> filas = new ArrayList<ImagePlus>();
+
+		// System.out.println("tamFila: " + tamFila + " tamTabla: " + tamTabla);
+		for (int i = 0; i < 8; i++) {
+			y = negroArriba(1, x, y, planillon);
+			int yBotFila = y + 1;
+			y = blancoArriba(0, x, y + 1, planillon);
+			int yTopFila = y;
+			int tamFila = yBotFila - yTopFila;
+			auxPlanillonCrop.setRoi(0, yTopFila, planillon.getWidth(), tamFila + 2);
+			IJ.run(auxPlanillonCrop, "Crop", "");
+			filas.add(auxPlanillonCrop);
+			auxPlanillonCrop = new Duplicator().run(auxPlanillon);
+			y = yTopFila;
+		}
+		return filas;
+	}
+
+	public static List<ImagePlus> sacarDatosFila(ImagePlus fila, int[] tCampos) {
+		List<ImagePlus> partes = new ArrayList<ImagePlus>();
+		ImagePlus filaOriginal = new Duplicator().run(fila);
+		int dist_x = 15 + tCampos[0];
+		for (int w = 1; w < 5; w++) {
+			System.out.print("Antes: " + dist_x + " Tam: " + tCampos[w]);
+
+			System.out.println(" Despues:" + dist_x);
+			fila.setRoi(dist_x, 0, tCampos[w], fila.getHeight());
+			IJ.run(fila, "Crop", "");
+			partes.add(fila);
+			fila = new Duplicator().run(filaOriginal);
+			dist_x += tCampos[w];
+		}
+		return partes;
 	}
 
 	// cortar original

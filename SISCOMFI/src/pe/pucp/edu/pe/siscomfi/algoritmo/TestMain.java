@@ -14,10 +14,34 @@ public class TestMain {
 	public static void main(String[] args) throws IOException {
 
 		ImagePlus img = IJ.openImage("Imagenes\\p1.jpg");
-		img = HelperMethods.cotarIzquierdaPlanillon(img);
+		ImageProcessor imp = img.getProcessor();
+		imp = imp.resize(3500);
+		img = new ImagePlus("aux",imp);
+		img = HelperMethods.cortarIzquierdaPlanillon(img);
+		//System.out.println("width: " + img.getWidth());
 		//img.show();
+		img = HelperMethods.cortarDerechaPlanillon(img);
+		img = HelperMethods.cortarAbajoPlanillon(img);
+		
+		img = HelperMethods.girarPlanillon(img);
+		ImagePlus auxImg = new Duplicator().run(img);
+		int[] tCampos = HelperMethods.cabeceraPlanillon(auxImg);
+		System.out.println("Cabecera");
+		for(int i : tCampos){
+			System.out.println(i);
+		}
+		//img.show();
+		List<ImagePlus> filas = HelperMethods.sacarFilasPlanillon(img);
+		/*for(ImagePlus fila: filas){
+			fila.show();
+		}*/
+		
+		List<ImagePlus> partes = HelperMethods.sacarDatosFila(filas.get(0), tCampos);
+		for(ImagePlus fila: partes){
+			fila.show();
+		}
 		//img = HelperMethods.cortarAbajoPlanillon(img);
-		img.show();
+		
 		// PARTE PARA CORTAR PLANILLON
 
 		/*ImagePlus img = IJ.openImage("Imagenes\\001.jpg");

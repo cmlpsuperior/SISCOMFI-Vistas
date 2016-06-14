@@ -66,8 +66,9 @@ public class VistaLogin implements ActionListener {
 	 */
 	private void initialize() throws IOException {
 		frmSiscomfi = new JFrame();
-		BufferedImage imgMiniLogo = ImageIO.read(  new File("Imagenes\\minilogo.png"));
-		//BufferedImage imgMiniLogo = ImageIO.read(  getClass().getClassLoader().getResourceAsStream("minilogo.png"));
+		// BufferedImage imgMiniLogo = ImageIO.read( new
+		// File("Imagenes\\minilogo.png"));
+		BufferedImage imgMiniLogo = ImageIO.read(getClass().getClassLoader().getResource("resources/minilogo.png"));
 		frmSiscomfi.setIconImage(imgMiniLogo);
 		frmSiscomfi.setTitle("SISCOMFI");
 		frmSiscomfi.setBounds(100, 100, 498, 300);
@@ -101,7 +102,9 @@ public class VistaLogin implements ActionListener {
 
 		JLabel lblLogo = new JLabel("");
 		lblLogo.setBounds(10, 11, 177, 239);
-		BufferedImage logo = ImageIO.read(new File("Imagenes\\logofinal.png"));
+		// BufferedImage logo = ImageIO.read(new
+		// File("Imagenes\\logofinal.png"));
+		BufferedImage logo = ImageIO.read(getClass().getClassLoader().getResource("resources/logofinal.png"));
 		logo = HelperMethods.resizeImage(logo, lblLogo.getWidth(), lblLogo.getHeight(), logo.getType());
 		lblLogo.setIcon(new ImageIcon(logo));
 		frmSiscomfi.getContentPane().add(lblLogo);
@@ -125,7 +128,7 @@ public class VistaLogin implements ActionListener {
 			} else {
 				JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecto");
 			}
-		}else{
+		} else {
 			JOptionPane.showMessageDialog(null, "Ingrese un usuario o contraseña");
 		}
 	}

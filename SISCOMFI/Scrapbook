@@ -1,0 +1,41 @@
+DROP FUNCTION IF EXISTS compararDNI;
+CREATE FUNCTION compararDNI(dniOcr CHAR(8), dniRnv CHAR(8)) RETURNS INT
+BEGIN
+	DECLARE comp INT;
+	DECLARE charCount INT;
+	DECLARE digitOcr CHAR(1);
+	DECLARE digitRnv CHAR(1);
+	SET charCount = 1;
+	SET comp = 0;
+	WHILE charCount < 9 DO
+		SET digitOcr = SUBSTRING(dniOcr,charCount,1);
+		SET digitRnv = SUBSTRING(dniRnv,charCount,1);
+		IF STRCMP(digitOcr,digitRnv) = 0 THEN
+			SET comp = comp + 1;
+		END IF;
+		SET charCount = charCount + 1;
+	END WHILE;
+	RETURN comp;	
+END; 
+
+CREATE PROCEDURE getAdherentePosible(IN dni CHAR(8))
+BEGIN
+	DECLARE temP TABLE(
+		idElector INT NOT NULL,
+		Nombre VARCHAR(50) NOT NULL,
+		ApellidoPaterno VARCHAR(100) NOT NULL,
+		ApellidoMaterno VARCHAR(100) NOT NULL,
+		DNI CHAR(8) NOT NULL,
+		FechaNacimiento DATETIME NOT NULL,
+		Huella VARCHAR(100) NOT NULL,
+		Firma VARCHAR(100) NOT NULL,
+		idDistrito INT NOT NULL,
+		ubigeo VARCHAR(6) NOT NULL,
+	);
+	
+	INSERT INTO temP SELECT * FROM RegistroElector;	
+END
+CALL getAdherentePosible('72715841');
+
+SELECT compararDNI('72715841','72715841');
+SELECT * FROM RegistroElector WHERE compararDNI("34577732",DNI) >= 5;

@@ -113,14 +113,19 @@ public class TestMain {
 		 */
 
 		// FIRMAS
-
-		ImagePlus impOriginal = IJ.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\f058.jpg");
-		impOriginal.show();
-		/*ImagePlus impSuspect = IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\ff2.jpg");
+		ImagePlus impOriginal = IJ.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\f002.jpg");
 		impOriginal = Signatures.formatoFirma(impOriginal);
-		impSuspect = Signatures.formatoFirma(impSuspect);
-		impSuspect = Signatures.formatoFirmaSospechosa(impSuspect);
-		double res = Signatures.compareSignatures(impOriginal, impSuspect);
-		System.out.println(res);*/
+		impOriginal = Signatures.formatoFirmaSospechosa(impOriginal);
+		for(int i = 1; i < 59; i++){
+			String name = "f";
+			String number = (i < 10)?("00"+i):("0"+i);
+			name += number;
+			System.out.println(name);
+			ImagePlus impSuspect = IJ.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\"+name+".jpg");
+			impSuspect = Signatures.formatoFirma(impSuspect);
+			impSuspect = Signatures.formatoFirmaSospechosa(impSuspect);
+			double res = Signatures.compareSignatures(impOriginal, impSuspect);
+			System.out.println(res);
+		}		
 	}
 }

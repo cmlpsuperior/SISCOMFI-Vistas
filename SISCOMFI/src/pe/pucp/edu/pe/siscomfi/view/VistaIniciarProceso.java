@@ -236,13 +236,17 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 								txtLog.append("Procesando huella: ");
 								txtLog.update(txtLog.getGraphics());
 								ImagePlus huella = HelperMethods.quitarBorde(partes.get(3));
-								//int nHuella = Integer.parseInt(adh.getrHuella());
-								/*String nameHuella = (nHuella < 10) ? ("00" + nHuella)
-										: (nHuella < 100) ? ("0" + nHuella) : ("" + nHuella);
-								// sacamos la huella del adherente del rnv
-								System.out.println("name: " + nameHuella);*/
-								ImagePlus huellaRnv = IJ.openImage(
-										"C:\\Users\\samoel\\Desktop\\ImagenesRnv\\huellas\\" + adh.getrHuella() + ".jpg");
+								// int nHuella =
+								// Integer.parseInt(adh.getrHuella());
+								/*
+								 * String nameHuella = (nHuella < 10) ? ("00" +
+								 * nHuella) : (nHuella < 100) ? ("0" + nHuella)
+								 * : ("" + nHuella); // sacamos la huella del
+								 * adherente del rnv System.out.println("name: "
+								 * + nameHuella);
+								 */
+								ImagePlus huellaRnv = IJ.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\huellas\\"
+										+ adh.getrHuella() + ".jpg");
 								double[][] original = Fingerprint.imageGraph(huellaRnv);
 								double[][] sospechosa = Fingerprint.imageGraph(huella);
 								String resultado = Fingerprint.resultado(Fingerprint.comparition(original, sospechosa));
@@ -253,12 +257,15 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 								ImagePlus firma = HelperMethods.quitarBorde(partes.get(2));
 								ImagePlus firmaRnv = IJ.openImage(
 										"C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\" + adh.getrFirma() + ".jpg");
-								System.out.println("name firma: " + adh.getrFirma());
 								firmaRnv = Signatures.formatoFirma(firmaRnv);
 								firma = Signatures.formatoFirma(firma);
-								// firma =
-								// Signatures.formatoFirmaSospechosa(firma);
+								//firmaRnv = Signatures.formatoFirmaSospechosa(firmaRnv);
+								//firma = Signatures.formatoFirmaSospechosa(firma);
+								//System.out.println("Original:w-> " + firmaRnv.getWidth() + " h-> " + firmaRnv.getHeight());
+								//System.out.println("Sospechosa-> " + firma.getWidth() + " h-> " + firma.getHeight());
 								double res = Signatures.compareSignatures(firmaRnv, firma);
+								System.out.println("Fila " + nFila +" Res: " + res);
+								
 								txtLog.append(res + "\n");
 								txtLog.update(txtLog.getGraphics());
 							}

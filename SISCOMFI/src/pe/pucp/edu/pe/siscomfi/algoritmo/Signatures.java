@@ -187,7 +187,7 @@ public class Signatures {
 		Point pRot = Signatures.getAngleImage2(sospechosa.getBufferedImage());
 		//System.out.println("Angle: " + Math.toDegrees(pRot.getAngle()));
 		// rotamos la imagen
-		System.out.println("ANGLE: " + Math.toDegrees(pRot.getAngle()));
+		//System.out.println("ANGLE: " + Math.toDegrees(pRot.getAngle()));
 		if (Math.toDegrees(pRot.getAngle()) > 11){
 			ImageProcessor imp = sospechosa.getProcessor();
 			imp.rotate(Math.toDegrees(pRot.getAngle())-90);

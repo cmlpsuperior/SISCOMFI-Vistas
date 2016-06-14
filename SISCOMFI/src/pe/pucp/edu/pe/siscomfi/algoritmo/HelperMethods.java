@@ -160,7 +160,7 @@ public class HelperMethods {
 		yD = blancoAbajo(0, xD, yD + 1, planillon);
 		// hallamos el angulo
 		double angulo = new Line(1, 500, 18, 500).getAngle(xI, yI, xD, yD);
-		System.out.println("angulo: " + angulo);
+		//System.out.println("angulo: " + angulo);
 		ImageProcessor imp = auxPlanillon.getProcessor();
 		imp.setBackgroundValue(255);
 		imp.rotate(angulo);
@@ -312,7 +312,7 @@ public class HelperMethods {
 				y--;
 				r = img.getPixel(x, y)[0];
 			}
-			System.out.println("adnmaskldlasdmaslmdlksa -> y " + y );
+			//System.out.println("adnmaskldlasdmaslmdlksa -> y " + y );
 			
 
 			img.setRoi(0, 0, img.getWidth(), y);
@@ -389,15 +389,15 @@ public class HelperMethods {
 
 	public static ImagePlus quitarBorde(ImagePlus img) {
 		IJ.run(img, "Make Binary", "");
-		System.out.println("Original -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
+		//System.out.println("Original -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
 		img = borrarBordeArriba(img);
-		System.out.println("Arriba -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
+		//System.out.println("Arriba -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
 		img = borrarBordeIzquierda(img);
-		System.out.println("Izquierda -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
+		//System.out.println("Izquierda -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
 		img = borrarBordeDerecha(img);
-		System.out.println("Derecha -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
+		//System.out.println("Derecha -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
 		img = borrarBordeAbajo(img);
-		System.out.println("Abajo -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
+		//System.out.println("Abajo -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
 		return img;
 	}
 

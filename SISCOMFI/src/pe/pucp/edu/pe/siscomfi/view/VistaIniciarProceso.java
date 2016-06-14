@@ -8,9 +8,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+import pe.pucp.edu.pe.siscomfi.algoritmo.Fingerprint;
 import pe.pucp.edu.pe.siscomfi.algoritmo.HelperMethods;
 import pe.pucp.edu.pe.siscomfi.algoritmo.OcrProy;
 import pe.pucp.edu.pe.siscomfi.algoritmo.PruebaNuevoOCR;
+import pe.pucp.edu.pe.siscomfi.algoritmo.Signatures;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
 import pe.pucp.edu.pe.siscomfi.model.Adherente;
@@ -202,6 +204,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 					int[] tCampos = HelperMethods.cabeceraPlanillon(auxImg);
 					// sacamos las filas
 					List<ImagePlus> filas = HelperMethods.sacarFilasPlanillon(imgPlanillon);
+
 					int nFila = 8;
 					// procesamos cada fila
 					for (ImagePlus fila : filas) {
@@ -223,17 +226,41 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 						// System.out.println(dni);
 						List<Adherente> lista = siscomfiManager.getPosiblesAdherentes(dni);
 						if (lista != null) {
+
 							txtLog.append("Se encontraron -> " + lista.size() + " posibles adherentes\n");
 							txtLog.update(txtLog.getGraphics());
 							int contObservado = 0;
 							for (Adherente adh : lista) {
-								// C:\Users\samoel\Desktop\ImagenesRnv\huellas
-								// C:\Users\samoel\Desktop\ImagenesRnv\firmas
-								txtLog.append("Procesando huella: \n");
+								// C:\\Users\\samoel\\Desktop\\ImagenesRnv\\huellas
+								// C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas
+								txtLog.append("Procesando huella: ");
 								txtLog.update(txtLog.getGraphics());
-								List<ImagePlus> firma = HelperMethods.getDatosParte(partes.get(2), 1);
-								System.out.println("firma :" + (firma.get(0) == null));
-
+								ImagePlus huella = HelperMethods.quitarBorde(partes.get(3));
+								//int nHuella = Integer.parseInt(adh.getrHuella());
+								/*String nameHuella = (nHuella < 10) ? ("00" + nHuella)
+										: (nHuella < 100) ? ("0" + nHuella) : ("" + nHuella);
+								// sacamos la huella del adherente del rnv
+								System.out.println("name: " + nameHuella);*/
+								ImagePlus huellaRnv = IJ.openImage(
+										"C:\\Users\\samoel\\Desktop\\ImagenesRnv\\huellas\\" + adh.getrHuella() + ".jpg");
+								double[][] original = Fingerprint.imageGraph(huellaRnv);
+								double[][] sospechosa = Fingerprint.imageGraph(huella);
+								String resultado = Fingerprint.resultado(Fingerprint.comparition(original, sospechosa));
+								txtLog.append(" Resultado-> " + resultado + "\n");
+								txtLog.update(txtLog.getGraphics());
+								txtLog.append("Procesando Firma: ");
+								txtLog.update(txtLog.getGraphics());
+								ImagePlus firma = HelperMethods.quitarBorde(partes.get(2));
+								ImagePlus firmaRnv = IJ.openImage(
+										"C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\" + adh.getrFirma() + ".jpg");
+								System.out.println("name firma: " + adh.getrFirma());
+								firmaRnv = Signatures.formatoFirma(firmaRnv);
+								firma = Signatures.formatoFirma(firma);
+								// firma =
+								// Signatures.formatoFirmaSospechosa(firma);
+								double res = Signatures.compareSignatures(firmaRnv, firma);
+								txtLog.append(res + "\n");
+								txtLog.update(txtLog.getGraphics());
 							}
 						} else {
 							txtLog.append("No se encontraron adherentes\n");

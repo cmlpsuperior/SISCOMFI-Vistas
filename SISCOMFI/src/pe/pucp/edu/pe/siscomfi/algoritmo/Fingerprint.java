@@ -302,7 +302,6 @@ public class Fingerprint {
 		IJ.run(newFing, "Make Binary", "");
 		IJ.run(newFing, "Skeletonize", "");
 		BufferedImage bin = newFing.getBufferedImage();
-
 		int[][] ske = HelperMethods.imgToMat(bin);
 		List<Point> fMinutaes = Fingerprint.getMinutiaes(ske);
 		List<Point> tMinutaes = Fingerprint.removeFalseMinutae(ske, fMinutaes);

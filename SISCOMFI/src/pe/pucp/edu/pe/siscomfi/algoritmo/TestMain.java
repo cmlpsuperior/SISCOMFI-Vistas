@@ -96,36 +96,35 @@ public class TestMain {
 
 		// HUELLA
 
-		/*
-		 * double[][] graphOriginal = Fingerprint.imageGraph(
-		 * "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\002_1.jpg"); String
-		 * filename = ""; for (int i = 2; i < 50; i++) { for (int j = 1; j < 3;
-		 * j++) { if (i < 10) filename =
-		 * "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\00" + i + "_" + j +
-		 * ".jpg"; else filename =
-		 * "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\0" + i + "_" + j +
-		 * ".jpg";
-		 * 
-		 * double[][] graphSuspect = Fingerprint.imageGraph(filename); double
-		 * res = Fingerprint.comparition(graphOriginal, graphSuspect);
-		 * System.out.println(Fingerprint.resultado(res) + " Porcentaje: " +
-		 * res); } }
-		 */
+		double[][] graphOriginal = Fingerprint.imageGraph("C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\002_1.jpg");
+		String filename = "";
+		for (int i = 2; i < 50; i++) {
+			for (int j = 1; j < 3; j++) {
+				if (i < 10)
+					filename = "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\00" + i + "_" + j + ".jpg";
+				else
+					filename = "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\0" + i + "_" + j + ".jpg";
+
+				double[][] graphSuspect = Fingerprint.imageGraph(filename);
+				double res = Fingerprint.comparition(graphOriginal, graphSuspect);
+				System.out.println(Fingerprint.resultado(res) + " Porcentaje: " + res);
+			}
+		}
 
 		// FIRMAS
-		ImagePlus impOriginal = IJ.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\f002.jpg");
-		impOriginal = Signatures.formatoFirma(impOriginal);
-		impOriginal = Signatures.formatoFirmaSospechosa(impOriginal);
-		for(int i = 1; i < 59; i++){
-			String name = "f";
-			String number = (i < 10)?("00"+i):("0"+i);
-			name += number;
-			System.out.println(name);
-			ImagePlus impSuspect = IJ.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\"+name+".jpg");
-			impSuspect = Signatures.formatoFirma(impSuspect);
-			impSuspect = Signatures.formatoFirmaSospechosa(impSuspect);
-			double res = Signatures.compareSignatures(impOriginal, impSuspect);
-			System.out.println(res);
-		}		
+		/*
+		 * ImagePlus impOriginal = IJ.openImage(
+		 * "C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\f002.jpg");
+		 * impOriginal = Signatures.formatoFirma(impOriginal); impOriginal =
+		 * Signatures.formatoFirmaSospechosa(impOriginal); for(int i = 1; i <
+		 * 59; i++){ String name = "f"; String number = (i <
+		 * 10)?("00"+i):("0"+i); name += number; System.out.println(name);
+		 * ImagePlus impSuspect = IJ.openImage(
+		 * "C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\"+name+".jpg");
+		 * impSuspect = Signatures.formatoFirma(impSuspect); impSuspect =
+		 * Signatures.formatoFirmaSospechosa(impSuspect); double res =
+		 * Signatures.compareSignatures(impOriginal, impSuspect);
+		 * System.out.println(res); }
+		 */
 	}
 }

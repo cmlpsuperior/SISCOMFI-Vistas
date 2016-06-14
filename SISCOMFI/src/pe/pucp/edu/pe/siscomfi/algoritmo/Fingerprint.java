@@ -292,7 +292,7 @@ public class Fingerprint {
 		return grafoS;
 	}
 
-	// convertes an image to a graph given its directory
+	// convertes an image to a graph
 	public static double[][] imageGraph(ImagePlus filename1) {
 		ImageProcessor imp_fing = filename1.getProcessor();
 		imp_fing.setInterpolate(true);

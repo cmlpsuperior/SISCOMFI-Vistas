@@ -21,8 +21,8 @@ public class Proceso {
 	public String getDescripción() {
 		return descripcion;
 	}
-	public void setDescripción(String descripción) {
-		this.descripcion = descripción;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 	public Date getFechaProceso1Inicio() {
 		return fechaProceso1Inicio;

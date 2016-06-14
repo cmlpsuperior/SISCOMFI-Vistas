@@ -12,7 +12,14 @@ public class Adherente {
 	Date fechaNacimiento;
 	String rHuella;
 	String rFirma;
+	int estado;
 	
+	public int getEstado() {
+		return estado;
+	}
+	public void setEstado(int estado) {
+		this.estado = estado;
+	}
 	public Adherente(int idAdherente, int idDistrito, String nombre, String appPaterno, String appMaterno, String dni,
 			Date fechaNacimiento, String rHuella, String rFirma) {
 		this.idAdherente = idAdherente;

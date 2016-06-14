@@ -149,7 +149,7 @@ public class VistaRegistrarProceso extends JInternalFrame {
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Proceso p = new Proceso();
-				p.setDescripción(txtDescripcion.getText());
+				p.setDescripcion(txtDescripcion.getText());
 				//picker1
 				//Date selectedDate1 = (Date) picker1.getModel().getValue();
 			    //DateFormat df1 = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");

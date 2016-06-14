@@ -104,7 +104,7 @@ public class MySQLDAOProceso implements DAOProceso{
 				
 				Proceso p = new Proceso();
 				p.setCantidadMinAdherentes(cantMinAdh);
-				p.setDescripción(descripcion);
+				p.setDescripcion(descripcion);
 				p.setFechaProceso1Inicio(fp1Inicio);
 				p.setFechaProceso1Fin(fp1Fin);
 				p.setFechaProceso2Inicio(fp2Inicio);

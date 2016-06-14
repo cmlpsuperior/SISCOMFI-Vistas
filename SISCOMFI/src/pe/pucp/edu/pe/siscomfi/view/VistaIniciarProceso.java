@@ -223,7 +223,14 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 						if (lista != null) {
 							txtLog.append("Se encontraron -> " + lista.size() + " posibles adherentes\n");
 							txtLog.update(txtLog.getGraphics());
-							
+							int contObservado = 0;
+							for (Adherente adh : lista) {
+								// C:\Users\samoel\Desktop\ImagenesRnv\huellas
+								//C:\Users\samoel\Desktop\ImagenesRnv\firmas
+								txtLog.append("Procesando huella: ");
+								txtLog.update(txtLog.getGraphics());
+								
+							}
 						} else {
 							txtLog.append("No se encontraron adherentes\n");
 							txtLog.update(txtLog.getGraphics());

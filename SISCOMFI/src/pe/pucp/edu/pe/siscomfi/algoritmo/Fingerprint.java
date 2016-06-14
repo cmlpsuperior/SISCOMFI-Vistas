@@ -88,7 +88,7 @@ public class Fingerprint {
 		return minutaes;
 	}
 
-	//gives the K nearest point given a point x
+	// gives the K nearest point given a point x
 	private static Point[] getNearestNeighbourType(Point x, List<Point> lista) {
 		Point[] retur = new Point[k];
 		double fjernest = Double.MIN_VALUE;
@@ -122,14 +122,14 @@ public class Fingerprint {
 						}
 					}
 					fjernest = f;
-					index = ind; 
+					index = ind;
 				}
 			}
 		}
 		return retur;
 	}
 
-	//compares the edges of two neighbours
+	// compares the edges of two neighbours
 	private static boolean compareEdges(double[] aS, double[] aT) {
 		int cont_umb = 0;
 		for (int i = 0; i < aS.length; i++) {
@@ -151,7 +151,8 @@ public class Fingerprint {
 		return matchNeigh;
 	}
 
-	//converts a list of minutaes in a graph, each minutae has its K nearest neigbours
+	// converts a list of minutaes in a graph, each minutae has its K nearest
+	// neigbours
 	private static double[][] matToGraph(List<Point> minutaes) {
 		double[][] grafoS = new double[minutaes.size()][k];
 		for (int i = 0; i < minutaes.size(); i++) {
@@ -164,7 +165,7 @@ public class Fingerprint {
 		return grafoS;
 	}
 
-	//Removes false minutaes
+	// Removes false minutaes
 	private static List<Point> removeFalseMinutae(int[][] ske, List<Point> minutaes) {
 		int[][][] matM = new int[ske.length][ske[0].length][4];
 		for (Point p : minutaes) {
@@ -238,8 +239,8 @@ public class Fingerprint {
 		}
 		return nueva;
 	}
-	
-	//Gives the result according to the comparition percent
+
+	// Gives the result according to the comparition percent
 	public static String resultado(double res) {
 		if (res >= 0.9)
 			return "Iguales";
@@ -247,8 +248,8 @@ public class Fingerprint {
 			return "Observado";
 		return "Diferentes";
 	}
-	
-	//compares two graphs of fingerprints
+
+	// compares two graphs of fingerprints
 	public static double comparition(double[][] grafoS, double[][] grafoT) {
 		int match = 0;
 		for (int i = 0; i < grafoS.length; i++) {
@@ -272,7 +273,7 @@ public class Fingerprint {
 		return comparition * ratio;
 	}
 
-	//convertes an image to a graph given its directory
+	// convertes an image to a graph given its directory
 	public static double[][] imageGraph(String filename1) {
 		ImagePlus fingerprint = IJ.openImage(filename1);
 		ImageProcessor imp_fing = fingerprint.getProcessor();
@@ -290,5 +291,22 @@ public class Fingerprint {
 		double[][] grafoS = Fingerprint.matToGraph(tMinutaes);
 		return grafoS;
 	}
-	
+
+	// convertes an image to a graph given its directory
+	public static double[][] imageGraph(ImagePlus filename1) {
+		ImageProcessor imp_fing = filename1.getProcessor();
+		imp_fing.setInterpolate(true);
+		imp_fing = imp_fing.resize(600, 600);
+
+		ImagePlus newFing = new ImagePlus("small", imp_fing);
+		IJ.run(newFing, "Make Binary", "");
+		IJ.run(newFing, "Skeletonize", "");
+		BufferedImage bin = newFing.getBufferedImage();
+
+		int[][] ske = HelperMethods.imgToMat(bin);
+		List<Point> fMinutaes = Fingerprint.getMinutiaes(ske);
+		List<Point> tMinutaes = Fingerprint.removeFalseMinutae(ske, fMinutaes);
+		double[][] grafoS = Fingerprint.matToGraph(tMinutaes);
+		return grafoS;
+	}
 }

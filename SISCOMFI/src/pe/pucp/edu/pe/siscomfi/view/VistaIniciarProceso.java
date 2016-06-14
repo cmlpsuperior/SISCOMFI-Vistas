@@ -178,9 +178,11 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			jfcRuta.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			jfcRuta.showOpenDialog(this);
 			File fEscogido = jfcRuta.getSelectedFile();
-			pathPadronProcesar = fEscogido.getAbsolutePath();
-			txtRuta.setText(fEscogido.getPath());
-			padronPaths = fEscogido.listFiles();
+			if (fEscogido != null) {
+				pathPadronProcesar = fEscogido.getAbsolutePath();
+				txtRuta.setText(fEscogido.getPath());
+				padronPaths = fEscogido.listFiles();
+			}
 		}
 
 		if (e.getSource() == btnProcesar) {
@@ -218,7 +220,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 						txtLog.append(dni + "\n");
 						txtLog.append("Obteniendo posibles adherentes:\n ");
 						txtLog.update(txtLog.getGraphics());
-						System.out.println(dni);
+						// System.out.println(dni);
 						List<Adherente> lista = siscomfiManager.getPosiblesAdherentes(dni);
 						if (lista != null) {
 							txtLog.append("Se encontraron -> " + lista.size() + " posibles adherentes\n");
@@ -226,10 +228,12 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 							int contObservado = 0;
 							for (Adherente adh : lista) {
 								// C:\Users\samoel\Desktop\ImagenesRnv\huellas
-								//C:\Users\samoel\Desktop\ImagenesRnv\firmas
-								txtLog.append("Procesando huella: ");
+								// C:\Users\samoel\Desktop\ImagenesRnv\firmas
+								txtLog.append("Procesando huella: \n");
 								txtLog.update(txtLog.getGraphics());
-								
+								List<ImagePlus> firma = HelperMethods.getDatosParte(partes.get(2), 1);
+								System.out.println("firma :" + (firma.get(0) == null));
+
 							}
 						} else {
 							txtLog.append("No se encontraron adherentes\n");

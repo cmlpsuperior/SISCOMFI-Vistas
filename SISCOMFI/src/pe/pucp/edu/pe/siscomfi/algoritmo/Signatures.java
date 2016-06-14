@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.process.ImageProcessor;
 import pe.pucp.edu.pe.siscomfi.model.Point;
 
 public class Signatures {
@@ -105,7 +106,6 @@ public class Signatures {
 	}
 	
 	public static Point getAngleImage(BufferedImage img) {
-
 		double angleP = 0.0;
 		for (int w = 0; w < 5; w++) {
 			int y1 = 1 + 5 * w;
@@ -173,6 +173,54 @@ public class Signatures {
 		return comp;
 	}
 
+	public static ImagePlus formatoFirma(ImagePlus firma){
+		IJ.run(firma, "Make Binary", "");
+		Rectangle recOriginal = Signatures.getRectangularArea(firma.getBufferedImage());
+		firma.setRoi((int) recOriginal.getY(), (int) recOriginal.getX(), (int) recOriginal.getHeight(),
+				(int) recOriginal.getWidth());
+		IJ.run(firma, "Crop", "");
+		return firma;
+	}
+	
+	public static ImagePlus formatoFirmaSospechosa(ImagePlus sospechosa){
+		// saca el angulo de rotacion
+		Point pRot = Signatures.getAngleImage2(sospechosa.getBufferedImage());
+		//System.out.println("Angle: " + Math.toDegrees(pRot.getAngle()));
+		// rotamos la imagen
+		System.out.println("ANGLE: " + Math.toDegrees(pRot.getAngle()));
+		if (Math.toDegrees(pRot.getAngle()) > 11){
+			ImageProcessor imp = sospechosa.getProcessor();
+			imp.rotate(Math.toDegrees(pRot.getAngle())-90);
+			sospechosa = new ImagePlus("rotada",imp);
+		}
+		if (Math.toDegrees(pRot.getAngle()) < 0){
+			ImageProcessor imp = sospechosa.getProcessor();
+			imp.rotate(Math.toDegrees(pRot.getAngle())-90);
+			sospechosa = new ImagePlus("rotada",imp);
+		}
+		// formamos el rectangulo denuevo
+		Rectangle rec2 = Signatures.getRectangularArea(sospechosa.getBufferedImage());
+		//System.out.println("x: " + rec2.getX() + " y: " + rec2.getY() + " h: " + rec2.getHeight() + " w: " + rec2.getWidth());
+		sospechosa.setRoi((int) rec2.getY(), (int) rec2.getX(), (int) rec2.getHeight(), (int) rec2.getWidth());
+		IJ.run(sospechosa, "Crop", "");
+		return sospechosa;
+		//ccSuspectN = HelperMethods.resizeImage(ccSuspectN, ccOriginal.getWidth(), ccOriginal.getHeight(),ccOriginal.getType());
+	}
+	
+	private static ImagePlus estandarizarImagen(ImagePlus img){
+		ImageProcessor imp = img.getProcessor();
+		imp = imp.resize(600, 600);
+		img = new ImagePlus("estandarizada",imp);
+		return img;
+	}
+	
+	public static double compareSignatures(ImagePlus original, ImagePlus sospechosa){
+		//Resize 600x600
+		original = estandarizarImagen(original);
+		sospechosa = estandarizarImagen(sospechosa);
+		double res = compare(original.getBufferedImage(), sospechosa.getBufferedImage());
+		return res;
+	}
 	public static double compareSignatures(BufferedImage original, BufferedImage suspect) throws IOException {
 		// original
 		ImagePlus impOriginal = new ImagePlus("", original);

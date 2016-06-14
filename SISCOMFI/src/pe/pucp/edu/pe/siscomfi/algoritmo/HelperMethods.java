@@ -24,7 +24,7 @@ public class HelperMethods {
 			r = planillon.getPixel(x, y)[0];
 			x++;
 		}
-		//System.out.println("Buscando x (negro derecha): " + x);
+		// System.out.println("Buscando x (negro derecha): " + x);
 		return x;
 	}
 
@@ -33,7 +33,7 @@ public class HelperMethods {
 			r = planillon.getPixel(x, y)[0];
 			x--;
 		}
-		//System.out.println("Buscando x (negro izquierda): " + x);
+		// System.out.println("Buscando x (negro izquierda): " + x);
 		return x;
 	}
 
@@ -50,7 +50,7 @@ public class HelperMethods {
 			r = planillon.getPixel(x, y)[0];
 			y++;
 		}
-		//System.out.println("Buscando x (negro Abajo): " + y);
+		// System.out.println("Buscando x (negro Abajo): " + y);
 		return y;
 	}
 
@@ -59,7 +59,7 @@ public class HelperMethods {
 			r = planillon.getPixel(x, y)[0];
 			x++;
 		}
-		//System.out.println("Buscando y (blanco derecha): " + x);
+		// System.out.println("Buscando y (blanco derecha): " + x);
 		return x;
 	}
 
@@ -68,7 +68,7 @@ public class HelperMethods {
 			r = planillon.getPixel(x, y)[0];
 			x--;
 		}
-		//System.out.println("Buscando x (blanco izquierda): " + x);
+		// System.out.println("Buscando x (blanco izquierda): " + x);
 		return x;
 	}
 
@@ -85,7 +85,7 @@ public class HelperMethods {
 			r = planillon.getPixel(x, y)[0];
 			y++;
 		}
-		//System.out.println("Buscando y (blanco Abajo): " + y);
+		// System.out.println("Buscando y (blanco Abajo): " + y);
 		return y;
 	}
 
@@ -211,6 +211,12 @@ public class HelperMethods {
 			int tamFila = yBotFila - yTopFila;
 			auxPlanillonCrop.setRoi(0, yTopFila, planillon.getWidth(), tamFila + 2);
 			IJ.run(auxPlanillonCrop, "Crop", "");
+			// para asegurarme que la fila tenga almenos un borde negro
+			ImageProcessor imP = auxPlanillonCrop.getProcessor();
+			imP.setRoi(0, 0, auxPlanillonCrop.getWidth(), 5);
+			imP.setValue(0);
+			imP.fill();
+			//
 			filas.add(auxPlanillonCrop);
 			auxPlanillonCrop = new Duplicator().run(auxPlanillon);
 			y = yTopFila;
@@ -223,17 +229,17 @@ public class HelperMethods {
 		ImagePlus filaOriginal = new Duplicator().run(fila);
 		int dist_x = 12 + tCampos[0];
 		for (int w = 1; w < 5; w++) {
-			//System.out.print("Antes: " + dist_x + " Tam: " + tCampos[w]);
-			//System.out.println(" Despues:" + dist_x);
+			// System.out.print("Antes: " + dist_x + " Tam: " + tCampos[w]);
+			// System.out.println(" Despues:" + dist_x);
 			fila.setRoi(dist_x, 0, tCampos[w], fila.getHeight());
 			IJ.run(fila, "Crop", "");
 			// cortar el borde blanco que se puede generar por el girado
 			ImagePlus auxParte = new Duplicator().run(fila);
 			IJ.run(fila, "Make Binary", "");
 			int x = blancoDerecha(0, 0, (fila.getHeight() / 2) - 1, fila);
-			auxParte.setRoi(x-1, 0, auxParte.getWidth() - x, auxParte.getHeight());
+			auxParte.setRoi(x - 1, 0, auxParte.getWidth() - x, auxParte.getHeight());
 			IJ.run(auxParte, "Crop", "");
-			//---
+			// ---
 			partes.add(auxParte);
 			fila = new Duplicator().run(filaOriginal);
 			dist_x += tCampos[w];
@@ -277,7 +283,8 @@ public class HelperMethods {
 
 	private static ImagePlus borrarBordeArriba(ImagePlus img) {
 		int x, y;
-		x = derechaNegro(0, 30, img) + 5;
+		x = derechaBlanco(0,img);
+		x = derechaNegro(x+1, 30, img) + 5;
 		y = 0;
 		int r = img.getPixel(x, y)[0];
 		if (r == 255) {
@@ -285,8 +292,12 @@ public class HelperMethods {
 				y++;
 				r = img.getPixel(x, y)[0];
 			}
-			img.setRoi(0, y + 5, img.getWidth(), img.getHeight());
+			
+			//System.out.println("borrarBordeArriba y : " + y);
+			//System.out.println("borrarBordeArriba w:" + img.getWidth() + " h: " +img.getHeight());
+			img.setRoi(0, y, img.getWidth(), img.getHeight());
 			img = new Duplicator().run(img);
+			//System.out.println("borrarBordeArriba w:" + img.getWidth() + " h: " +img.getHeight());
 		}
 		return img;
 	}
@@ -301,6 +312,9 @@ public class HelperMethods {
 				y--;
 				r = img.getPixel(x, y)[0];
 			}
+			System.out.println("adnmaskldlasdmaslmdlksa -> y " + y );
+			
+
 			img.setRoi(0, 0, img.getWidth(), y);
 			img = new Duplicator().run(img);
 		}
@@ -370,6 +384,20 @@ public class HelperMethods {
 		if (img.getHeight() < 10 || img.getWidth() < 10) {
 			img = null;
 		}
+		return img;
+	}
+
+	public static ImagePlus quitarBorde(ImagePlus img) {
+		IJ.run(img, "Make Binary", "");
+		System.out.println("Original -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
+		img = borrarBordeArriba(img);
+		System.out.println("Arriba -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
+		img = borrarBordeIzquierda(img);
+		System.out.println("Izquierda -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
+		img = borrarBordeDerecha(img);
+		System.out.println("Derecha -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
+		img = borrarBordeAbajo(img);
+		System.out.println("Abajo -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
 		return img;
 	}
 

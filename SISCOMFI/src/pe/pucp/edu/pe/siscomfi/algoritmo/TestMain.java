@@ -14,40 +14,45 @@ import pe.pucp.edu.pe.siscomfi.model.Adherente;
 public class TestMain {
 
 	public static void main(String[] args) throws IOException {
-		List<Adherente> lista = siscomfiManager.getPosiblesAdherentes("46136008");
-		for(Adherente adh : lista){
-			System.out.println(adh.getDni());
-		}
-		/*ImagePlus img = IJ.openImage("Imagenes\\001.jpg");
-		img = HelperMethods.procesarPlanillon(img);
-		ImagePlus auxImg = new Duplicator().run(img);
-		int[] tCampos = HelperMethods.cabeceraPlanillon(auxImg);
-		List<ImagePlus> filas = HelperMethods.sacarFilasPlanillon(img);
-		int nFila = 0;
-		for (ImagePlus fila : filas) {
-			List<ImagePlus> partes = HelperMethods.sacarDatosFila(fila, tCampos);
-			// dni 8, n y ap 48
-			System.out.print("Fila " + (nFila + 1) + ": DNI-> ");
-			List<ImagePlus> digitosNumero = HelperMethods.getDatosParte(partes.get(0), 8);
-			String dni = " ", digit;
-			for (ImagePlus dNumb : digitosNumero) {
-				if (dNumb != null) {
-					digit = OcrProy.ocrNumbers.reconocer(dNumb.getBufferedImage());
-					dni += digit;
-				}
-			}
-			System.out.print(dni);
-			List<ImagePlus> digitosLetra = HelperMethods.getDatosParte(partes.get(1), 48);
-			String nombreAp = " ";
-			for (ImagePlus dLet : digitosLetra) {
-				if (dLet != null) {
-					digit = OcrProy.ocrLetters.reconocer(dLet.getBufferedImage());
-					nombreAp += digit;
-				}
-			}
-			System.out.println(nombreAp);
-			nFila++;
-		}
+		/*
+		 * List<Adherente> lista =
+		 * siscomfiManager.getPosiblesAdherentes("46136008"); for(Adherente adh
+		 * : lista){ System.out.println(adh.getDni()); }
+		 */
+
+		/*
+		 * ImagePlus img = IJ.openImage("Imagenes\\p1.jpg"); img =
+		 * HelperMethods.procesarPlanillon(img); ImagePlus auxImg = new
+		 * Duplicator().run(img); int[] tCampos =
+		 * HelperMethods.cabeceraPlanillon(auxImg); List<ImagePlus> filas =
+		 * HelperMethods.sacarFilasPlanillon(img); int nFila = 0; for (ImagePlus
+		 * fila : filas) { List<ImagePlus> partes =
+		 * HelperMethods.sacarDatosFila(fila, tCampos);
+		 * 
+		 * // dni 8, n y ap 48 //System.out.print("Fila " + (nFila + 1) +
+		 * ": DNI-> "); //List<ImagePlus> digitosNumero =
+		 * HelperMethods.getDatosParte(partes.get(0), 8); System.out.println(
+		 * "Fila " + (nFila +1)); System.out.println("Firma"); ImagePlus firma =
+		 * HelperMethods.quitarBorde(partes.get(2));
+		 * System.out.println("Huella"); ImagePlus huella =
+		 * HelperMethods.quitarBorde(partes.get(3)); IJ.saveAs(firma, "Jpeg",
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\auxiliar\\firma"+nFila+".jpg"
+		 * ); IJ.saveAs(huella, "Jpeg",
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\auxiliar\\huella"+nFila+
+		 * ".jpg"); System.out.println("Firma: w= " + firma.getWidth() + " h= "
+		 * + firma.getHeight()); System.out.println("Huella: w= " +
+		 * huella.getWidth() + " h= " + huella.getHeight()); /*String dni = " ",
+		 * digit; for (ImagePlus dNumb : digitosNumero) { if (dNumb != null) {
+		 * digit = OcrProy.ocrNumbers.reconocer(dNumb.getBufferedImage()); dni
+		 * += digit; } } System.out.print(dni); List<ImagePlus> digitosLetra =
+		 * HelperMethods.getDatosParte(partes.get(1), 48); String nombreAp = " "
+		 * ; for (ImagePlus dLet : digitosLetra) { if (dLet != null) { digit =
+		 * OcrProy.ocrLetters.reconocer(dLet.getBufferedImage()); nombreAp +=
+		 * digit; } } System.out.println(nombreAp);
+		 */
+		/*
+		 * nFila++; }
+		 */
 
 		// img = HelperMethods.cortarAbajoPlanillon(img);
 
@@ -109,14 +114,15 @@ public class TestMain {
 
 		// FIRMAS
 
-		/*
-		 * ImagePlus impOriginal =
-		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\f3.jpg");
-		 * ImagePlus impSuspect =
-		 * IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\f3.jpg"); double
-		 * res = Signatures.compareSignatures(impOriginal.getBufferedImage(),
-		 * impSuspect.getBufferedImage()); System.out.println(res);
-		 */
+		ImagePlus impOriginal = IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\f3.jpg");
+		ImagePlus impSuspect = IJ.openImage("C:\\Users\\samoel\\Desktop\\TestImage\\ff2.jpg");
+		impOriginal = Signatures.formatoFirma(impOriginal);
+		impSuspect = Signatures.formatoFirma(impSuspect);
+		impSuspect = Signatures.formatoFirmaSospechosa(impSuspect);
+		double res =Signatures.compareSignatures(impOriginal, impSuspect);
+		//impOriginal.show();
+		//impSuspect.show();
+		System.out.println(res);
 
 	}
 

@@ -31,17 +31,16 @@ public class MySQLDAOUsuario implements DAOUsuario {
 			
 			//Paso 3: Preparar la sentencia
 			String sql =  "INSERT INTO Usuario "
-					+ "(nombre, apellidoPaterno, apellidoMaterno,   correoElectronico, contrasenia, fechaRegistro,   dni, idRol)"
-					+ "VALUES (?,?,?,  ?,'12345',Now(),  ?,?)";
+					+ " (Nombre, ApellidoPaterno, ApellidoMaterno, CorreoElectronico, Contrasenia, fechaRegistro, DNI, idRol) "
+					+ " VALUES (?,?,?,?,'12345',Now(),?,?) ";
 			pstmt = conn.prepareStatement(sql);
 			
 			//pstmt.setInt(1, p.getId());
 			pstmt.setString(1, u.getNombre());
 			pstmt.setString(2, u.getApellidoPaterno());
-			pstmt.setString(3, u.getApellidoPaterno());
-			
+			pstmt.setString(3, u.getApellidoMaterno());			
 			pstmt.setString(4, u.getCorreoElectronico());
-						
+			/*contraseña ni fecha de registro se setean*/			
 			pstmt.setString(5, u.getDni());
 			pstmt.setInt(6, u.getIdRol());
 			

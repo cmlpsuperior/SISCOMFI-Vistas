@@ -13,7 +13,14 @@ public class Adherente {
 	String rHuella;
 	String rFirma;
 	int estado;
+	String rPlanillon;
 	
+	public String getrPlanillon() {
+		return rPlanillon;
+	}
+	public void setrPlanillon(String rPlanillon) {
+		this.rPlanillon = rPlanillon;
+	}
 	public int getEstado() {
 		return estado;
 	}
@@ -21,7 +28,7 @@ public class Adherente {
 		this.estado = estado;
 	}
 	public Adherente(int idAdherente, int idDistrito, String nombre, String appPaterno, String appMaterno, String dni,
-			Date fechaNacimiento, String rHuella, String rFirma) {
+			Date fechaNacimiento, String rHuella, String rFirma, String rPlanillon) {
 		this.idAdherente = idAdherente;
 		this.idDistrito = idDistrito;
 		this.nombre = nombre;
@@ -31,6 +38,7 @@ public class Adherente {
 		this.fechaNacimiento = fechaNacimiento;
 		this.rHuella = rHuella;
 		this.rFirma = rFirma;
+		this.rPlanillon = rPlanillon;
 	}
 	public String getrHuella() {
 		return rHuella;

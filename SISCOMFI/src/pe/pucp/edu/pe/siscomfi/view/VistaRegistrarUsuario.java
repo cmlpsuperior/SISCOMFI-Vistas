@@ -14,6 +14,7 @@ import pe.pucp.edu.pe.siscomfi.model.Usuario;
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
@@ -138,6 +139,7 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 				u.setIdRol( Integer.parseInt( cbRolUsuario.getSelectedItem().toString().substring(0, 1)));
 				
 				siscomfiManager.addUsuario(u);
+				JOptionPane.showMessageDialog(null, "Se registró al usuario con éxito.");
 			}
 		});
 		btnRegistrar.setBounds(71, 247, 113, 23);

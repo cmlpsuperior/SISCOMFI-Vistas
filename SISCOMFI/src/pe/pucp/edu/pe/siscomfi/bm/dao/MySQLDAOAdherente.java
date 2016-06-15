@@ -43,6 +43,13 @@ public class MySQLDAOAdherente implements DAOAdherente {
 
 			// Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
+			//*************************************************************************************
+			//otro query en el que se llena la tabla adherentexPlanillon
+			String sql2 = "INSERT INTO AdherentexPlanillon "
+					+ "(DNI, planillon, estado)"
+					+ "VALUES (?, ?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			//*************************************************************************************
 			// Paso 5(opc.): Procesar los resultados
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -236,7 +243,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 				int huella = rs.getInt("Huella");
 				String pathHuella = (huella < 10) ? ("00" + huella) : (huella < 100) ? ("0" + huella) : ("" + huella);
 				String pathFirma = rs.getString("Firma");
-				Adherente adherente = new Adherente(id, 0, nombre, apPaterno, apMaterno, dniL, fechaNacimiento, pathHuella, pathFirma);
+				Adherente adherente = new Adherente(id, 0, nombre, apPaterno, apMaterno, dniL, fechaNacimiento, pathHuella, pathFirma, "0");
 				arr.add(adherente);
 			}
 		} catch (SQLException e) {

@@ -251,6 +251,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 								txtLog.update(txtLog.getGraphics());
 								rFirma = adh.getrFirma();
 							}
+							Adherente adh = lista.get(nAdh);
 							if (contIguales == 1) {
 								txtLog.append("Procesando Firma: ");
 								txtLog.update(txtLog.getGraphics());
@@ -264,8 +265,8 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 								txtLog.append(res + "\n");
 								txtLog.append("Adherente: Aceptado\n");
 								txtLog.update(txtLog.getGraphics());
-								//
-								Adherente adh = lista.get(nAdh);//insertar adherente en la Base de datos
+								//aceptado
+								adh.setEstado(1);
 							} else {
 								// asignar estado de adherente a observado
 								String estadoFinal = "";
@@ -277,8 +278,13 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									txtLog.append("Adherente: Observado\n");
 								else
 									txtLog.append("Adherente: " + estadoFinal + "\n");
+								if (estadoFinal.compareTo("Rechazado")== 0) adh.setEstado(0);else adh.setEstado(2);
 								txtLog.update(txtLog.getGraphics());
 							}
+							//guardar
+							adh.setrPlanillon(padron.getName());
+							siscomfiManager.addAdherente(adh);
+							
 						} else {
 							txtLog.append("No se encontraron adherentes\n");
 							txtLog.update(txtLog.getGraphics());

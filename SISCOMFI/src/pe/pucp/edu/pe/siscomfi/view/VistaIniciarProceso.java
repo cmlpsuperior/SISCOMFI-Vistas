@@ -229,6 +229,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 							int contIguales = 0;
 							String resultado = "";
 							String rFirma = "";
+							int nAdh = 0;
 							for (Adherente adh : lista) {
 								txtLog.append("Procesando huella: ");
 								txtLog.update(txtLog.getGraphics());
@@ -241,8 +242,11 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 								double[][] original = Fingerprint.imageGraph(huellaRnv);
 								double[][] sospechosa = Fingerprint.imageGraph(huella);
 								resultado = Fingerprint.resultado(Fingerprint.comparition(original, sospechosa));
-								if (resultado.compareTo("Iguales") == 0)
+								if (resultado.compareTo("Iguales") == 0){
 									contIguales++;
+									nAdh++;
+								}
+									
 								txtLog.append(" Resultado-> " + resultado + "\n");
 								txtLog.update(txtLog.getGraphics());
 								rFirma = adh.getrFirma();
@@ -260,6 +264,8 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 								txtLog.append(res + "\n");
 								txtLog.append("Adherente: Aceptado\n");
 								txtLog.update(txtLog.getGraphics());
+								//
+								Adherente adh = lista.get(nAdh);//insertar adherente en la Base de datos
 							} else {
 								// asignar estado de adherente a observado
 								String estadoFinal = "";

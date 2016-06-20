@@ -146,7 +146,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 			// Paso 2: Obtener la conexión
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
-			String sql = "SELECT * FROM PartidoPolitico WHERE EstadoActivo <> 'E'";
+			String sql = "SELECT * FROM PartidoPolitico WHERE EstadoActivo <> 'E' ORDER BY 2";
 			pstmt = conn.prepareStatement(sql);
 			// Paso 4: Ejecutar la sentencia
 			rs = pstmt.executeQuery();

@@ -325,6 +325,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			for (int i = tableModelAdherentes.getRowCount() - 1; i >= 0; i--){
 				String dni = tableModelAdherentes.getValueAt(i, 0).toString();
 				String estado = tableModelAdherentes.getValueAt(i, 4).toString();
+				siscomfiManager.updateEstadoAdherente(dni, estado);
 			}
 			tableModelAdherentes.setRowCount(0);
 		}

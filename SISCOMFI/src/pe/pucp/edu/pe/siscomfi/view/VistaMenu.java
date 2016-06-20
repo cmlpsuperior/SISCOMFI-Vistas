@@ -34,6 +34,8 @@ public class VistaMenu extends JFrame {
 	private VistaMantPartido vMantPartido;
 	private VistaMenu me = this;
 	
+	private boolean loginPermisoResult = false;
+	
 	/*
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -157,6 +159,7 @@ public class VistaMenu extends JFrame {
 			public void actionPerformed(ActionEvent e) {				
 					vLoginPermiso = new VistaLoginPermiso();
 					desktop.add(vLoginPermiso);
+					vLoginPermiso.setDesktopFather(desktop);
 					vLoginPermiso.setVisible(true);
 				/*vRegistrarProceso =  new VistaRegistrarProceso ();
 				desktop.add(vRegistrarProceso);

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
@@ -22,6 +23,7 @@ public class VistaMenu extends JFrame {
 	private VistaModificarPartido vModificarPartido;
 	private VistaBorrarPartido vBorrarPartido;
 	private VistaBuscarPartido vBuscarPartido;
+	private VistaLoginPermiso vLoginPermiso; //nuevo
 	private VistaObservados vObservados;
 	
 	private VistaReporte vReportePartido;
@@ -152,10 +154,13 @@ public class VistaMenu extends JFrame {
 		
 		JMenuItem mntmRegistrarNuevoProceso = new JMenuItem("Registrar nuevo proceso");
 		mntmRegistrarNuevoProceso.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				vRegistrarProceso =  new VistaRegistrarProceso ();
+			public void actionPerformed(ActionEvent e) {				
+					vLoginPermiso = new VistaLoginPermiso();
+					desktop.add(vLoginPermiso);
+					vLoginPermiso.setVisible(true);
+				/*vRegistrarProceso =  new VistaRegistrarProceso ();
 				desktop.add(vRegistrarProceso);
-				vRegistrarProceso.setVisible(true);
+				vRegistrarProceso.setVisible(true); */
 			}
 		});
 		mnProceso.add(mntmRegistrarNuevoProceso);

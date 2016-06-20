@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class VistaRegistrarUsuario extends JInternalFrame {
-	private JTextField txtCodigo;
 	private JTextField txtNombre;
 	private JTextField txtApPaterno;
 	private JTextField txtApMaterno;
@@ -36,7 +35,7 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 	public VistaRegistrarUsuario() {
 		setClosable(true);
 		setTitle("Registrar usuario");
-		setBounds(100, 100, 456, 311);
+		setBounds(100, 100, 456, 281);
 		getContentPane().setLayout(null);
 		
 		JButton btnRegistrar = new JButton("Registrar");
@@ -48,28 +47,18 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 				dispose();
 			}
 		});
-		btnCancelar.setBounds(255, 247, 113, 23);
+		btnCancelar.setBounds(257, 210, 113, 23);
 		getContentPane().add(btnCancelar);
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "USUARIO", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel.setBounds(10, 11, 421, 223);
+		panel.setBounds(10, 11, 421, 186);
 		getContentPane().add(panel);
 		
 		JLabel label = new JLabel("Nombre (*)");
 		label.setBounds(10, 52, 125, 14);
 		panel.add(label);
-		
-		JLabel label_1 = new JLabel("Codigo");
-		label_1.setBounds(10, 27, 125, 14);
-		panel.add(label_1);
-		
-		txtCodigo = new JTextField();
-		txtCodigo.setEditable(false);
-		txtCodigo.setColumns(10);
-		txtCodigo.setBounds(145, 24, 102, 20);
-		panel.add(txtCodigo);
 		
 		txtNombre = new JTextField();
 		txtNombre.setColumns(10);
@@ -77,7 +66,7 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 		panel.add(txtNombre);
 		
 		JLabel lblRol = new JLabel("Rol (*)");
-		lblRol.setBounds(10, 180, 125, 14);
+		lblRol.setBounds(10, 22, 125, 14);
 		panel.add(lblRol);
 		
 		/*cbRol = new JComboBox();
@@ -122,7 +111,7 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 		txtDni.setColumns(10);
 		
 		cbRolUsuario = new JComboBox();
-		cbRolUsuario.setBounds(145, 177, 266, 20);
+		cbRolUsuario.setBounds(145, 19, 266, 20);
 		panel.add(cbRolUsuario);
 		fillCustomerCmb();	
 		
@@ -130,19 +119,40 @@ public class VistaRegistrarUsuario extends JInternalFrame {
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Usuario u = new Usuario ();
-				u.setNombre(txtNombre.getText());
-				u.setApellidoPaterno(txtApPaterno.getText());
-				u.setApellidoMaterno(txtApMaterno.getText());
-				u.setCorreoElectronico(txtCorreo.getText());
-				u.setDni(txtDni.getText());
+				try {
+					if (txtNombre.getText().equals("") || 
+							txtApPaterno.getText().equals("") ||
+							txtApMaterno.getText().equals("") ||
+							txtCorreo.getText().equals("") ||
+							txtDni.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "No se pudo registrar el usuario. Existen campos que no han sido llenados");
+					}
+					else {
+						u.setNombre(txtNombre.getText());
+						u.setApellidoPaterno(txtApPaterno.getText());
+						u.setApellidoMaterno(txtApMaterno.getText());
+						u.setCorreoElectronico(txtCorreo.getText());
+						u.setDni(txtDni.getText());
+						
+						u.setIdRol( Integer.parseInt( cbRolUsuario.getSelectedItem().toString().substring(0, 1)));
+						
+						siscomfiManager.addUsuario(u);
+						JOptionPane.showMessageDialog(null, "Se registró al usuario con éxito.");
+						txtApPaterno.setText("");
+						txtNombre.setText("");
+						txtApMaterno.setText("");
+						txtCorreo.setText("");
+						txtDni.setText("");						
+					}
+				}
+				catch (Exception a){
+					a.printStackTrace();
+				}
 				
-				u.setIdRol( Integer.parseInt( cbRolUsuario.getSelectedItem().toString().substring(0, 1)));
-				
-				siscomfiManager.addUsuario(u);
-				JOptionPane.showMessageDialog(null, "Se registró al usuario con éxito.");
 			}
+			
 		});
-		btnRegistrar.setBounds(71, 247, 113, 23);
+		btnRegistrar.setBounds(73, 210, 113, 23);
 		getContentPane().add(btnRegistrar);
 		
 		

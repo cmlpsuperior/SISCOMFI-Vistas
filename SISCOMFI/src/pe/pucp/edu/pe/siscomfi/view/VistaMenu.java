@@ -23,7 +23,8 @@ public class VistaMenu extends JFrame {
 	private VistaModificarPartido vModificarPartido;
 	private VistaBorrarPartido vBorrarPartido;
 	private VistaBuscarPartido vBuscarPartido;
-	private VistaLoginPermiso vLoginPermiso; //nuevo
+	private VistaLoginPermiso_regProceso vLoginPermiso; //nuevo
+	private VistaLoginPermiso_regUsuario vLoginPermiso_user;
 	private VistaObservados vObservados;
 	
 	private VistaReporte vReportePartido;
@@ -70,14 +71,14 @@ public class VistaMenu extends JFrame {
 	public VistaMenu() {
 		setTitle("SISCOMFI");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 864, 649);	
+		setBounds(100, 100, 1089, 649);	
 		
 		desktop = new JDesktopPane();
 		setContentPane(desktop);
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBorderPainted(false);
-		menuBar.setBounds(0, 0, 843, 21);
+		menuBar.setBounds(0, 0, 1089, 21);
 		desktop.add(menuBar);
 		
 		JMenu mnPartidoPolitico = new JMenu("Partido Politico");
@@ -109,10 +110,14 @@ public class VistaMenu extends JFrame {
 		JMenuItem mntmRegistrarUsuario = new JMenuItem("Registrar usuario");
 		mntmRegistrarUsuario.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				vRegistrarUsuario = new VistaRegistrarUsuario();
+				vLoginPermiso_user = new VistaLoginPermiso_regUsuario();
+				desktop.add(vLoginPermiso_user);
+				vLoginPermiso_user.setDesktopFather(desktop);
+				vLoginPermiso_user.setVisible(true);
+				/*vRegistrarUsuario = new VistaRegistrarUsuario();
 				desktop.add(vRegistrarUsuario);
 				vRegistrarUsuario.setVisible(true);
-				
+				*/
 			}
 		});
 		mnUsuario.add(mntmRegistrarUsuario);
@@ -157,7 +162,7 @@ public class VistaMenu extends JFrame {
 		JMenuItem mntmRegistrarNuevoProceso = new JMenuItem("Registrar nuevo proceso");
 		mntmRegistrarNuevoProceso.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
-					vLoginPermiso = new VistaLoginPermiso();
+					vLoginPermiso = new VistaLoginPermiso_regProceso();
 					desktop.add(vLoginPermiso);
 					vLoginPermiso.setDesktopFather(desktop);
 					vLoginPermiso.setVisible(true);

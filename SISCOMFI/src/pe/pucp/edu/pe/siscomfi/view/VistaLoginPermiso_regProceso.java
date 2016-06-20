@@ -27,7 +27,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 
-public class VistaLoginPermiso extends JInternalFrame implements ActionListener {
+public class VistaLoginPermiso_regProceso extends JInternalFrame implements ActionListener {
 
 	private JTextField txtUsuario;
 	private JPasswordField txtPassword;
@@ -36,6 +36,7 @@ public class VistaLoginPermiso extends JInternalFrame implements ActionListener 
 	private VistaMenu vMenu;
 	private VistaRegistrarProceso vProcesar;
 	private JDesktopPane desktopPadre;
+	private int auxVar = 0;
 
 	/**
 	 * Launch the application.
@@ -49,7 +50,7 @@ public class VistaLoginPermiso extends JInternalFrame implements ActionListener 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VistaLoginPermiso window = new VistaLoginPermiso();
+					VistaLoginPermiso_regProceso window = new VistaLoginPermiso_regProceso();
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,7 +64,8 @@ public class VistaLoginPermiso extends JInternalFrame implements ActionListener 
 	 * 
 	 * @throws IOException
 	 */
-	public VistaLoginPermiso() {
+	public VistaLoginPermiso_regProceso() { 
+		
 		setClosable(true);
 		setTitle("Verificación de Usuario");
 		setBounds(100, 100, 398, 264);

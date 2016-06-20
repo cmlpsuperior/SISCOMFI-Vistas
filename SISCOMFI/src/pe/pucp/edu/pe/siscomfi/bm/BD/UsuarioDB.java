@@ -29,8 +29,8 @@ public class UsuarioDB {
     	
     }
     
-    public Usuario queryById(int usuarioId) {
-    	return daoUsuario.queryById(usuarioId);
+    public Usuario queryByCorreo(String  usuarioId) {
+    	return daoUsuario.queryByCorreo(usuarioId);
     }
     
     public boolean queryByLogin(String nombreCorreo, String pass) {
@@ -42,8 +42,8 @@ public class UsuarioDB {
     	return daoUsuario.queryByLoginAdmin(nombreCorreo, pass);
     }
     
-    public String queryByUsuario(String usuario){
-    	return daoUsuario.queryByUsuario(usuario);
+    public String queryRecuperarContrasenia(String usuario){
+    	return daoUsuario.queryRecuperarContrasenia(usuario);
     }
     
 }

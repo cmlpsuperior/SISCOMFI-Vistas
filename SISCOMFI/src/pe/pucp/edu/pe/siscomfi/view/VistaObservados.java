@@ -32,6 +32,7 @@ import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.Adherente;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
+import pe.pucp.edu.pe.siscomfi.model.UsuarioLogeado;
 
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
@@ -62,7 +63,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private JTextField txtDni;
 	private JButton btnTerminar;
 	private int filaSeleccionada;
-	private String pathObservados = "C:\\Users\\samoel\\Desktop\\Real\\SISCOMFI-Vistas\\SISCOMFI\\Proceso\\Observados";
+	private String pathObservados = UsuarioLogeado.pathObservadosPlanilon;
 	private Proceso fase;
 	private File pObservadosPartido;
 	

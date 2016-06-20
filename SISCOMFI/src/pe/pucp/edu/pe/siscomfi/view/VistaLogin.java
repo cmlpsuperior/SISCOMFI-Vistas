@@ -12,6 +12,8 @@ import javax.swing.JTextField;
 
 import pe.pucp.edu.pe.siscomfi.algoritmo.HelperMethods;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+import pe.pucp.edu.pe.siscomfi.model.Usuario;
+import pe.pucp.edu.pe.siscomfi.model.UsuarioLogeado;
 
 import javax.swing.JPasswordField;
 import java.awt.Toolkit;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 
 public class VistaLogin implements ActionListener {
 
@@ -101,11 +104,11 @@ public class VistaLogin implements ActionListener {
 		JLabel lblRecuperar = new JLabel("\u00BFOlvid\u00F3 su contrase\u00F1a?");
 		lblRecuperar.setBounds(294, 236, 178, 14);
 		frmSiscomfi.getContentPane().add(lblRecuperar);
-		
-		lblRecuperar.addMouseListener(new MouseAdapter(){
+
+		lblRecuperar.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				String correo = JOptionPane.showInputDialog("Ingrese su usuario");
-				String password = siscomfiManager.queryByUsuario(correo);
+				String password = siscomfiManager.queryRecuperarContrasenia(correo);
 				JOptionPane.showMessageDialog(null, "Su contraseña es: " + password);
 			}
 		});
@@ -131,9 +134,35 @@ public class VistaLogin implements ActionListener {
 		if (!nombreCorreo.isEmpty() && !pass.isEmpty()) {
 			boolean valor = siscomfiManager.queryByLogin(nombreCorreo, pass);
 			if (valor) {
-				frmSiscomfi.dispose();
-				vMenu = new VistaMenu();
-				vMenu.setVisible(true);
+				Usuario usr = siscomfiManager.queryByCorreo(nombreCorreo);
+				JFileChooser jfcRnv = new JFileChooser();
+				jfcRnv.setDialogTitle("Seleccione el directorio de las imagenes del RNV");
+				jfcRnv.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				File pathRnv = null;
+				jfcRnv.showOpenDialog(frmSiscomfi);
+				pathRnv = jfcRnv.getSelectedFile();
+				// rnv
+				if (pathRnv != null)
+					UsuarioLogeado.pathImagenesRnv = pathRnv.getAbsolutePath();
+				// usuario logueado
+				UsuarioLogeado.usuario = usr;
+				// observados
+				JFileChooser jfcObservado = new JFileChooser();
+				jfcObservado.setDialogTitle("Seleccione el directorio donde se guardaran los padrones observados");
+				jfcObservado.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				File pathObvs = null;
+				jfcObservado.showOpenDialog(frmSiscomfi);
+				pathObvs = jfcObservado.getSelectedFile();
+				if (pathObvs != null)
+					UsuarioLogeado.pathObservadosPlanilon = pathObvs.getAbsolutePath();
+				if (pathRnv != null && pathObvs != null){
+					frmSiscomfi.dispose();
+					vMenu = new VistaMenu();
+					vMenu.setVisible(true);
+				}else{
+					JOptionPane.showMessageDialog(null, "Debe seleccionar las carpetas de los padrones y la de sus observados");
+				}
+				
 			} else {
 				JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecto");
 			}

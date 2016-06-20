@@ -12,7 +12,22 @@ public class Usuario {
 	private Date fechaRegistro; //debe tener el formato YYYY-MM-DD
 	private String dni;
 	
+	public Usuario(){
+		
+	}
 	
+	public Usuario(int idUsuario, String nombre, String apellidoPaterno, String apellidoMaterno,
+			String correoElectronico, String contrasenia, Date fechaRegistro, String dni, int idRol) {
+		this.idUsuario = idUsuario;
+		this.nombre = nombre;
+		this.apellidoPaterno = apellidoPaterno;
+		this.apellidoMaterno = apellidoMaterno;
+		this.correoElectronico = correoElectronico;
+		this.contrasenia = contrasenia;
+		this.fechaRegistro = fechaRegistro;
+		this.dni = dni;
+		this.idRol = idRol;
+	}
 	public String getDni() {
 		return dni;
 	}

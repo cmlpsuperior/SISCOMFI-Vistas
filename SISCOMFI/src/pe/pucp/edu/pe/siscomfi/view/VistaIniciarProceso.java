@@ -14,6 +14,7 @@ import pe.pucp.edu.pe.siscomfi.algoritmo.OcrProy;
 import pe.pucp.edu.pe.siscomfi.algoritmo.Signatures;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
+import pe.pucp.edu.pe.siscomfi.model.UsuarioLogeado;
 import pe.pucp.edu.pe.siscomfi.model.Adherente;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 import pe.pucp.edu.pe.siscomfi.model.Planillon;
@@ -52,7 +53,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JProgressBar pgBar;
 	private JPanel pnLog;
 	private Proceso fase = null;
-	private String pathObservados = "C:\\Users\\samoel\\Desktop\\Real\\SISCOMFI-Vistas\\SISCOMFI\\Proceso\\Observados";
+	private String pathObservados = UsuarioLogeado.pathObservadosPlanilon;
 
 	public VistaIniciarProceso() {
 		setClosable(true);
@@ -266,7 +267,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									ImagePlus huella = HelperMethods.quitarBorde(partes.get(3));
 									imgHuella = new Duplicator().run(huella);
 									ImagePlus huellaRnv = IJ
-											.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\huellas\\"
+											.openImage(UsuarioLogeado.pathImagenesRnv + "\\huellas\\"
 													+ adh.getrHuella() + ".jpg");
 									imgHuellaOriginal = new Duplicator().run(huellaRnv);
 									double[][] original = Fingerprint.imageGraph(huellaRnv);
@@ -290,7 +291,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									ImagePlus firma = HelperMethods.quitarBorde(partes.get(2));
 									imgFirma = new Duplicator().run(firma);
 									ImagePlus firmaRnv = IJ
-											.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\"
+											.openImage(UsuarioLogeado.pathImagenesRnv + "\\firmas\\"
 													+ adherente.getrFirma() + ".jpg");
 									imgFirmaOriginal = new Duplicator().run(firmaRnv);
 									firmaRnv = Signatures.formatoFirma(firmaRnv);

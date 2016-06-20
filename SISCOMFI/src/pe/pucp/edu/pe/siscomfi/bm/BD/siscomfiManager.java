@@ -36,14 +36,17 @@ public class siscomfiManager {
 		return usuarioDB.queryByLogin(nombreCorreo, pass);
 	}
 
-	public static String queryByUsuario(String correo){
-		return usuarioDB.queryByUsuario(correo);
+	public static String queryRecuperarContrasenia(String correo){
+		return usuarioDB.queryRecuperarContrasenia(correo);
 	}
 	// devuelve true si el usuario y pass ingresado pertenece a un administrador
 	public static boolean queryByLoginAdmin(String nombreCorreo, String pass) {
 		return usuarioDB.queryByLoginAdmin(nombreCorreo, pass);
 	}
 
+	public static Usuario queryByCorreo(String correo){
+		return usuarioDB.queryByCorreo(correo);
+	}
 	// PartidosPoliticos:
 	public static ArrayList<PartidoPolitico> queryAllPartidosConObservados() {
 		return partidoPoliticoDB.queryAllObservados();

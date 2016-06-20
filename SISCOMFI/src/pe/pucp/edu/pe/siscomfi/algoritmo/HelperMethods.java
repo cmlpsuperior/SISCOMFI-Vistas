@@ -160,7 +160,7 @@ public class HelperMethods {
 		yD = blancoAbajo(0, xD, yD + 1, planillon);
 		// hallamos el angulo
 		double angulo = new Line(1, 500, 18, 500).getAngle(xI, yI, xD, yD);
-		//System.out.println("angulo: " + angulo);
+		// System.out.println("angulo: " + angulo);
 		ImageProcessor imp = auxPlanillon.getProcessor();
 		imp.setBackgroundValue(255);
 		imp.rotate(angulo);
@@ -283,8 +283,8 @@ public class HelperMethods {
 
 	private static ImagePlus borrarBordeArriba(ImagePlus img) {
 		int x, y;
-		x = derechaBlanco(0,img);
-		x = derechaNegro(x+1, 30, img) + 5;
+		x = derechaBlanco(0, img);
+		x = derechaNegro(x + 1, 30, img) + 5;
 		y = 0;
 		int r = img.getPixel(x, y)[0];
 		if (r == 255) {
@@ -292,12 +292,14 @@ public class HelperMethods {
 				y++;
 				r = img.getPixel(x, y)[0];
 			}
-			
-			//System.out.println("borrarBordeArriba y : " + y);
-			//System.out.println("borrarBordeArriba w:" + img.getWidth() + " h: " +img.getHeight());
+
+			// System.out.println("borrarBordeArriba y : " + y);
+			// System.out.println("borrarBordeArriba w:" + img.getWidth() + " h:
+			// " +img.getHeight());
 			img.setRoi(0, y, img.getWidth(), img.getHeight());
 			img = new Duplicator().run(img);
-			//System.out.println("borrarBordeArriba w:" + img.getWidth() + " h: " +img.getHeight());
+			// System.out.println("borrarBordeArriba w:" + img.getWidth() + " h:
+			// " +img.getHeight());
 		}
 		return img;
 	}
@@ -312,8 +314,7 @@ public class HelperMethods {
 				y--;
 				r = img.getPixel(x, y)[0];
 			}
-			//System.out.println("adnmaskldlasdmaslmdlksa -> y " + y );
-			
+			// System.out.println("adnmaskldlasdmaslmdlksa -> y " + y );
 
 			img.setRoi(0, 0, img.getWidth(), y);
 			img = new Duplicator().run(img);
@@ -388,16 +389,15 @@ public class HelperMethods {
 	}
 
 	public static ImagePlus quitarBorde(ImagePlus img) {
+		ImagePlus auxImg = new Duplicator().run(img);
 		IJ.run(img, "Make Binary", "");
-		//System.out.println("Original -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
 		img = borrarBordeArriba(img);
-		//System.out.println("Arriba -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
 		img = borrarBordeIzquierda(img);
-		//System.out.println("Izquierda -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
 		img = borrarBordeDerecha(img);
-		//System.out.println("Derecha -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
 		img = borrarBordeAbajo(img);
-		//System.out.println("Abajo -> Firma: w= " + img.getWidth() + " h= " + img.getHeight());
+		auxImg.setRoi(auxImg.getWidth() - img.getWidth(), auxImg.getHeight() - img.getHeight(), img.getWidth(),
+				img.getHeight());
+		IJ.run(auxImg, "Crop", "");
 		return img;
 	}
 

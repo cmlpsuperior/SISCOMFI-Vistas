@@ -6,6 +6,7 @@ import pe.pucp.edu.pe.siscomfi.bm.dao.DAOFactory;
 import pe.pucp.edu.pe.siscomfi.bm.dao.DAOProceso;
 import pe.pucp.edu.pe.siscomfi.bm.dao.DBConnection;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
+import pe.pucp.edu.pe.siscomfi.model.Planillon;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
 
 public class ProcesoDB {
@@ -39,5 +40,24 @@ public class ProcesoDB {
 	 {
 		listaProceso = daoProceso.queryAll();
 	    return listaProceso;
+	 }
+	 
+	 public Proceso getFase1Proceso(){
+		 return daoProceso.getFase1Actual();
+	 }
+	 
+	 public Proceso getFase2Proceso(){
+		 return daoProceso.getFase2Actual();
+	 }
+	 
+	 public int addPlanillon(Planillon p){
+		 return daoProceso.addPlanillon(p);
+	 }
+	 
+	 public void addAdherentexPlanillon(int idAdherente, int adPlanillon, int estado, double tProcesado, double pHuella, double pFirma, String huella,String firma){
+		 daoProceso.addAdherentexPlanillon(idAdherente, adPlanillon, estado, tProcesado, pHuella, pFirma, huella, firma);
+	 }
+	 public void addPartidoxProceso(int idPartido, int idProceso, int idUsuario, double tiempoProcesado,int estado){
+		 daoProceso.addPartidoxProceso(idPartido, idProceso, idUsuario, tiempoProcesado, estado);
 	 }
 }

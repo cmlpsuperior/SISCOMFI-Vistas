@@ -6,7 +6,7 @@ import java.util.List;
 import pe.pucp.edu.pe.siscomfi.model.Adherente;
 
 public interface DAOAdherente {
-	void add(Adherente a);
+	int add(Adherente a);
 	void update(Adherente u);
 	void delete (int idAdherente);
 	ArrayList<Adherente> queryAll();
@@ -14,5 +14,6 @@ public interface DAOAdherente {
 	void delete_OBS(int idAdherente);
 	List<Adherente> getPosibleAdherente(String dni);
 	Adherente queryByDNI(String dni);
-	void updateEstadoAdherente(String dni,String estado);
+	void updateEstadoAdherente(int idAdherente,String estado);
+	int verificarAdherenteRepetido(int idProceso, String dni);
 }

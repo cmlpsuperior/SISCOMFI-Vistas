@@ -14,7 +14,21 @@ public class Adherente {
 	String rFirma;
 	int estado;
 	String rPlanillon;
+	double pHuella;
+	double pFirma;
 	
+	public double getpHuella() {
+		return pHuella;
+	}
+	public void setpHuella(double pHuella) {
+		this.pHuella = pHuella;
+	}
+	public double getpFirma() {
+		return pFirma;
+	}
+	public void setpFirma(double pFirma) {
+		this.pFirma = pFirma;
+	}
 	public String getrPlanillon() {
 		return rPlanillon;
 	}

@@ -18,9 +18,11 @@ import pe.pucp.edu.pe.siscomfi.model.Rol;
 public class MySQLDAOAdherente implements DAOAdherente {
 
 	@Override
-	public void add(Adherente a) {
+	public int add(Adherente a) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int id = 0;
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
@@ -32,7 +34,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			String sql = "INSERT INTO Adherente "
 					+ "(Nombre, ApellidoPaterno, ApellidoMaterno, DNI, FechaNacimiento, idDistrito)"
 					+ "VALUES (?,?,?,?,?,?)";
-			pstmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
 			// pstmt.setInt(1, p.getId());
 			pstmt.setString(1, a.getNombre());
@@ -44,12 +46,10 @@ public class MySQLDAOAdherente implements DAOAdherente {
 
 			// Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
-			// *************************************************************************************
-			// otro query en el que se llena la tabla adherentexPlanillon
-			String sql2 = "INSERT INTO AdherentexPlanillon " + "(DNI, planillon, estado)" + "VALUES (?, ?, ?)";
-			pstmt = conn.prepareStatement(sql);
-			// *************************************************************************************
-			// Paso 5(opc.): Procesar los resultados
+			rs = pstmt.getGeneratedKeys();
+			if (rs.next()) {
+				id = rs.getInt(1);
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,15 +61,14 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			;
 			try {
 				if (conn != null)
 					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			;
 		}
+		return id;
 	}
 
 	@Override
@@ -108,14 +107,12 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			;
 			try {
 				if (conn != null)
 					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			;
 		}
 	}
 
@@ -190,14 +187,12 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			;
 			try {
 				if (conn != null)
 					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			;
 		}
 	}
 
@@ -238,11 +233,12 @@ public class MySQLDAOAdherente implements DAOAdherente {
 				String apPaterno = rs.getString("ApellidoPaterno");
 				String apMaterno = rs.getString("ApellidoMaterno");
 				String dniL = rs.getString("DNI");
+				int idDistrito = rs.getInt("idDistrito");
 				Date fechaNacimiento = new Date(rs.getDate("FechaNacimiento").getTime());
 				int huella = rs.getInt("Huella");
 				String pathHuella = (huella < 10) ? ("00" + huella) : (huella < 100) ? ("0" + huella) : ("" + huella);
 				String pathFirma = rs.getString("Firma");
-				Adherente adherente = new Adherente(id, 0, nombre, apPaterno, apMaterno, dniL, fechaNacimiento,
+				Adherente adherente = new Adherente(id, idDistrito, nombre, apPaterno, apMaterno, dniL, fechaNacimiento,
 						pathHuella, pathFirma, "0");
 				arr.add(adherente);
 			}
@@ -317,21 +313,20 @@ public class MySQLDAOAdherente implements DAOAdherente {
 	}
 
 	@Override
-	public void updateEstadoAdherente(String dni, String estado) {
+	public void updateEstadoAdherente(int idAdherente, String estado) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
 			// Paso 2: Obtener la conexión
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
-			// Paso 3: Preparar la sentencia (1=ACEPTADO, 0=RECHAZADO,
-			// 2=OBSERVADO)
-			String sql = "";
+			// Paso 3: Preparar la sentencia
+			// (1=ACEPTADO,0=RECHAZADO,2=OBSERVADO)
+			String sql = "UPDATE AdherentexPlanillon SET EstadoValidez=? WHERE idAdherente = ?";
 			pstmt = conn.prepareStatement(sql);
-			//
-			pstmt.setString(1, dni);
+			pstmt.setString(1, estado);
+			pstmt.setInt(2, idAdherente);
 			// Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -344,15 +339,59 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			try {
 				if (conn != null)
 					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
 		}
-		
 	}
+
+	@Override
+	public int verificarAdherenteRepetido(int idProceso, String dni) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			// (1=ACEPTADO,0=RECHAZADO,2=OBSERVADO)
+			String sql = "SELECT * FROM Planillon A, AdherentexPlanillon B, Adherente C"
+					+ "WHERE (A.idProceso = ?) AND (A.idPlanillon = B.idPlanillon) AND (C.DNI = ?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idProceso);
+			pstmt.setString(2, dni);
+			// Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				int idAdherente = rs.getInt("idAdherente");
+				return idAdherente;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexión
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return -1;
+	}
+
+	
 }

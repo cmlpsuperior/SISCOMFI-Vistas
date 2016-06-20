@@ -18,7 +18,7 @@ public class Proceso {
 	public void setIdProceso(int idProceso) {
 		this.idProceso = idProceso;
 	}
-	public String getDescripción() {
+	public String getDescripcion() {
 		return descripcion;
 	}
 	public void setDescripcion(String descripcion) {

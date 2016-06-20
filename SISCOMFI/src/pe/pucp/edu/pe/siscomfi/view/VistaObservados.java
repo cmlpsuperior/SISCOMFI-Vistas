@@ -200,8 +200,12 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 										lblFirmaOriginal.getBounds().y, iFirmaOriginal.getWidth(),
 										iFirmaOriginal.getHeight());
 								lblFirmaOriginal.setIcon(new ImageIcon(iFirmaOriginal.getBufferedImage()));
-								/*pnOriginalF.setBounds(pnOriginalF.getBounds().x, pnOriginalF.getBounds().y,
-										iFirmaOriginal.getWidth(), iFirmaOriginal.getHeight());*/
+								/*
+								 * pnOriginalF.setBounds(pnOriginalF.getBounds()
+								 * .x, pnOriginalF.getBounds().y,
+								 * iFirmaOriginal.getWidth(),
+								 * iFirmaOriginal.getHeight());
+								 */
 							} else {
 								ImagePlus iFirmaObservado = IJ.openImage(firma.getAbsolutePath());
 								int width = lblFirmaObservado.getWidth();
@@ -212,8 +216,12 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 										lblFirmaObservado.getBounds().y, iFirmaObservado.getWidth(),
 										iFirmaObservado.getHeight());
 								lblFirmaObservado.setIcon(new ImageIcon(iFirmaObservado.getBufferedImage()));
-								/*pnObservadoF.setBounds(pnObservadoF.getBounds().x, pnObservadoF.getBounds().y,
-										iFirmaObservado.getWidth(), iFirmaObservado.getHeight());*/
+								/*
+								 * pnObservadoF.setBounds(pnObservadoF.getBounds
+								 * ().x, pnObservadoF.getBounds().y,
+								 * iFirmaObservado.getWidth(),
+								 * iFirmaObservado.getHeight());
+								 */
 							}
 							pnOriginalF.setVisible(true);
 							pnObservadoF.setVisible(true);
@@ -425,8 +433,9 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		if (e.getSource() == btnTerminar) {
 			for (int i = tableModelAdherentes.getRowCount() - 1; i >= 0; i--) {
 				String dni = tableModelAdherentes.getValueAt(i, 0).toString();
+				Adherente adh = siscomfiManager.queryAdherenteByDni(dni);
 				String estado = tableModelAdherentes.getValueAt(i, 4).toString();
-				siscomfiManager.updateEstadoAdherente(dni, estado);
+				siscomfiManager.updateEstadoAdherente(adh.getIdAdherente(), estado);
 			}
 			tableModelAdherentes.setRowCount(0);
 		}

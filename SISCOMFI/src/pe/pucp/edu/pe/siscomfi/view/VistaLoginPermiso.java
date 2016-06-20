@@ -34,7 +34,7 @@ public class VistaLoginPermiso extends JInternalFrame implements ActionListener 
 	private JButton btnIngresar;
 
 	private VistaMenu vMenu;
-	private VistaIniciarProceso vProcesar;
+	private VistaRegistrarProceso vProcesar;
 	private JDesktopPane desktopPadre;
 
 	/**
@@ -67,7 +67,6 @@ public class VistaLoginPermiso extends JInternalFrame implements ActionListener 
 		setClosable(true);
 		setTitle("Verificación de Usuario");
 		setBounds(100, 100, 398, 264);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
 
 		JLabel lblUsuario = new JLabel("Correo:");
@@ -89,7 +88,7 @@ public class VistaLoginPermiso extends JInternalFrame implements ActionListener 
 
 		btnIngresar = new JButton("INGRESAR");
 
-		btnIngresar.setBounds(141, 158, 108, 23);
+		btnIngresar.setBounds(65, 160, 108, 24);
 		getContentPane().add(btnIngresar);
 
 		JLabel lblMensaje = new JLabel("Est\u00E1 a punto de ingresar a una funcionalidad restringida. \r\n");
@@ -99,6 +98,15 @@ public class VistaLoginPermiso extends JInternalFrame implements ActionListener 
 		JLabel lblNewLabel = new JLabel("Se requiere el permiso del administrador del sistema.");
 		lblNewLabel.setBounds(23, 46, 425, 16);
 		getContentPane().add(lblNewLabel);
+		
+		JButton btnCancelar = new JButton("CANCELAR");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		btnCancelar.setBounds(215, 160, 108, 25);
+		getContentPane().add(btnCancelar);
 
 		btnIngresar.addActionListener(this);
 		txtUsuario.addActionListener(this);
@@ -110,14 +118,16 @@ public class VistaLoginPermiso extends JInternalFrame implements ActionListener 
 		char[] pass1 = txtPassword.getPassword();
 		String pass = new String(pass1);
 		if (!nombreCorreo.isEmpty() && !pass.isEmpty()) {
-			boolean valor = siscomfiManager.queryByLogin(nombreCorreo, pass);
+			boolean valor = siscomfiManager.queryByLoginAdmin(nombreCorreo, pass);
 			if (valor) {
-				vProcesar = new VistaIniciarProceso();
+				vProcesar = new VistaRegistrarProceso();
 				desktopPadre.add(vProcesar);
 				vProcesar.setVisible(true);
 				this.dispose();
 			} else {
-				JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecto");
+				JOptionPane.showMessageDialog(null, "Permiso Denegado");
+				txtUsuario.setText("");
+				txtPassword.setText("");
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Ingrese un usuario o contraseña");
@@ -135,5 +145,4 @@ public class VistaLoginPermiso extends JInternalFrame implements ActionListener 
 			}
 		}
 	}
-
 }

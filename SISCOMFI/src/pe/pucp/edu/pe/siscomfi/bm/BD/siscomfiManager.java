@@ -75,6 +75,11 @@ public class siscomfiManager {
 		return usuarioDB.queryByLogin(nombreCorreo, pass);
 	}
 	
+	//devuelve true si el usuario y pass ingresado pertenece a un administrador
+	public static boolean queryByLoginAdmin(String nombreCorreo, String pass){
+		return usuarioDB.queryByLoginAdmin(nombreCorreo, pass);
+	}
+	
 	public static void addProceso(Proceso p)
     {
 		procesoDB.add(p);

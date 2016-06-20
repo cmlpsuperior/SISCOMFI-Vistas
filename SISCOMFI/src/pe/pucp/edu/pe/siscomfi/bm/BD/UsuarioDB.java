@@ -36,4 +36,11 @@ public class UsuarioDB {
     public boolean queryByLogin(String nombreCorreo, String pass) {
     	return daoUsuario.queryByLogin(nombreCorreo, pass);
     }
+    
+    
+    public boolean queryByLoginAdmin(String nombreCorreo, String pass) {
+    	return daoUsuario.queryByLoginAdmin(nombreCorreo, pass);
+    }
+    
+    
 }

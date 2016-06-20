@@ -102,6 +102,48 @@ public class MySQLDAOUsuario implements DAOUsuario {
 		}
 		return false;
 	}
+	
+	public boolean queryByLoginAdmin(String nombreCorreo, String pass) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;		
+		ResultSet rs = null;
+		try {
+			//Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			
+			//Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+								DBConnection.user,
+								DBConnection.password);
+			
+			//Paso 3: Preparar la sentencia
+			String sql =  "SELECT * FROM Usuario WHERE correoElectronico = ? AND contrasenia = ? AND idRol = 1";
+			pstmt = conn.prepareStatement(sql);
+			
+			//pstmt.setInt(1, p.getId());
+			pstmt.setString(1, nombreCorreo);
+			pstmt.setString(2, pass);
+			
+			//Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			//Paso 5(opc.): Procesar los resultados		
+			if (rs.next() == true)   
+				return true;
+			else 
+				return false;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			//Paso 6(OJO): Cerrar la conexión
+			try { if (pstmt!= null) pstmt.close();} 
+				catch (Exception e){e.printStackTrace();};
+			try { if (conn!= null) conn.close();} 
+				catch (Exception e){e.printStackTrace();};						
+		}
+		return false;
+	}
 
 	@Override
 	public void update(Usuario u) {

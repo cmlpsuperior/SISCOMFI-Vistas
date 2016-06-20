@@ -10,6 +10,7 @@ public interface DAOUsuario {
 	//ArrayList<Usuario> queryAll();
 	Usuario queryById(int idUsuario);
 	boolean queryByLogin(String nombreCorreo, String pass);
+	boolean queryByLoginAdmin(String nombreCorreo, String pass);
 	//ArrayList<Usuario> queryByFilter(String name);
 
 }

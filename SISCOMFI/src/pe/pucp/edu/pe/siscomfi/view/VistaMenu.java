@@ -138,7 +138,7 @@ public class VistaMenu extends JFrame {
 		JMenu mnProceso = new JMenu("Proceso");
 		menuBar.add(mnProceso);
 		
-		JMenuItem mntmProcesarPlanillones = new JMenuItem("Procesar planillones");
+		JMenuItem mntmProcesarPlanillones = new JMenuItem("Iniciar Proceso");
 		mntmProcesarPlanillones.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				vProcesar = new VistaIniciarProceso ();
@@ -149,7 +149,7 @@ public class VistaMenu extends JFrame {
 		});
 		mnProceso.add(mntmProcesarPlanillones);
 		
-		JMenuItem mntmObservados = new JMenuItem("Observados");
+		JMenuItem mntmObservados = new JMenuItem("Procesar Observados");
 		mntmObservados.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				vObservados = new VistaObservados();

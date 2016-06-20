@@ -84,7 +84,7 @@ public class VistaMenu extends JFrame {
 		JMenu mnPartidoPolitico = new JMenu("Partido Politico");
 		menuBar.add(mnPartidoPolitico);
 		
-		JMenuItem mntmPartido = new JMenuItem("Partido Politico");
+		JMenuItem mntmPartido = new JMenuItem("Hacer Mantenimiento");
 		mntmPartido.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				vMantPartido = new VistaMantPartido();

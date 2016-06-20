@@ -31,6 +31,8 @@ import ij.process.ImageProcessor;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.Adherente;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
+import pe.pucp.edu.pe.siscomfi.model.Proceso;
+
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -46,7 +48,6 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private JButton btnAceptado;
 	private JButton btnRechazado;
 	private JButton btnSalir;
-	private String[] observados = { "06114817", "08237514", "16705778", "46136008" };
 	private JTextField txtAceptados;
 	private JPanel pnOriginalH;
 	private JPanel pnObservadoH;
@@ -62,12 +63,24 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private JButton btnTerminar;
 	private int filaSeleccionada;
 	private String pathObservados = "C:\\Users\\samoel\\Desktop\\Real\\SISCOMFI-Vistas\\SISCOMFI\\Proceso\\Observados";
-
+	private Proceso fase;
+	private File pObservadosPartido;
+	
 	public VistaObservados() {
 		setClosable(true);
 		setTitle("Adherentes observados");
 		setBounds(100, 100, 900, 456);
 		getContentPane().setLayout(null);
+
+		// Fase del Proceso
+		fase = siscomfiManager.getFase1Proceso();
+		if (fase == null) {
+			fase = siscomfiManager.getFase2Proceso();
+			if (fase == null) {
+				JOptionPane.showMessageDialog(this, "No hay procesos electorales activos");
+				this.dispose();
+			}
+		}
 
 		btnSalir = new JButton("Salir");
 		btnSalir.setBounds(289, 393, 113, 23);
@@ -138,8 +151,8 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 				txtAdherente.setText(nCompleto);
 
 				// Cargamos las imagenes en los panel
-				File pathDni = new File(pathObservados);
-				File[] dniObservados = pathDni.listFiles();
+				
+				File[] dniObservados = pObservadosPartido.listFiles();
 				File dniEncontrado = null;
 				for (File obs : dniObservados) {
 					if (obs.getName().compareTo(dni) == 0) {
@@ -357,6 +370,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		btnAceptado.addActionListener(this);
 		btnSalir.addActionListener(this);
 		cmbPartido.addActionListener(this);
+		btnTerminar.addActionListener(this);
 	}
 
 	class MyTableModel extends DefaultTableModel {
@@ -421,13 +435,21 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			tableModelAdherentes.setRowCount(0);
 			// clearTable();
 			String partido = cmbPartido.getSelectedItem().toString();
-			// buscar observados del partido
-			List<Adherente> adhObservados = new ArrayList<Adherente>();
-			for (String dni : observados) {
-				Adherente adh = siscomfiManager.queryAdherenteByDni(dni);
-				adhObservados.add(adh);
+			int idPartido = partido.charAt(0);
+			pObservadosPartido = new File(pathObservados + "\\" + partido);
+			if (pObservadosPartido.exists()){
+				// buscar observados del partido
+				File[] pAdhObservados = pObservadosPartido.listFiles();
+				List<Adherente> adhObservados = new ArrayList<Adherente>();
+				for (File pDni : pAdhObservados) {
+					String dni = pDni.getName(); 
+					Adherente adh = siscomfiManager.queryAdherenteByDni(dni);
+					adhObservados.add(adh);
+				}
+				fillTable(adhObservados);
+			}else{
+				JOptionPane.showMessageDialog(this, "Partido no cuenta con adherentes observados");
 			}
-			fillTable(adhObservados);
 		}
 
 		if (e.getSource() == btnTerminar) {

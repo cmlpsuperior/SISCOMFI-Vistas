@@ -42,5 +42,8 @@ public class UsuarioDB {
     	return daoUsuario.queryByLoginAdmin(nombreCorreo, pass);
     }
     
+    public String queryByUsuario(String usuario){
+    	return daoUsuario.queryByUsuario(usuario);
+    }
     
 }

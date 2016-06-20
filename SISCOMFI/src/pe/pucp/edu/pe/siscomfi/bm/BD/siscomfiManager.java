@@ -36,6 +36,9 @@ public class siscomfiManager {
 		return usuarioDB.queryByLogin(nombreCorreo, pass);
 	}
 
+	public static String queryByUsuario(String correo){
+		return usuarioDB.queryByUsuario(correo);
+	}
 	// devuelve true si el usuario y pass ingresado pertenece a un administrador
 	public static boolean queryByLoginAdmin(String nombreCorreo, String pass) {
 		return usuarioDB.queryByLoginAdmin(nombreCorreo, pass);
@@ -157,5 +160,13 @@ public class siscomfiManager {
 	public static void addPartidoxProceso(int idPartido, int idProceso, int idUsuario, double tiempoProcesado,
 			int estado) {
 		procesoDB.addPartidoxProceso(idPartido, idProceso, idUsuario, tiempoProcesado, estado);
+	}
+	
+	public static int verificarPartidoProceso(int idPartido, int idProceso){
+		return procesoDB.verificarPartidoProcesado(idPartido, idProceso);
+	}
+	
+	public static void updateEstadoPartidoProceso(int idPartido,int idProceso, int estado){
+		procesoDB.updateEstadoPartidoxProceso(idPartido, idProceso, estado);
 	}
 }

@@ -386,7 +386,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 					+ " from PartidoPoliticoxProceso pp join Proceso p on pp.idProceso =  p.idProceso  									"
 					+ " 								  join PartidoPolitico pa on pa.idPartidoPolitico = pp.idPartidoPolitico			"
 					+ " where (Now() between p.FechaProceso1Inicio and p.FechaProceso1Fin) or 											"
-					+ "		(Now() between p.FechaProceso2Inicio and p.FechaProceso2Fin)   			 									";
+					+ "		(Now() between p.FechaProceso2Inicio and p.FechaProceso2Fin)  and (pp.EstadoPartido = '3') 			 									";
 
 			pstmt = conn.prepareStatement(sql);
 			// Paso 4: Ejecutar la sentencia

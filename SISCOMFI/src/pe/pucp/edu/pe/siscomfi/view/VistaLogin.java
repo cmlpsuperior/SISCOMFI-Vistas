@@ -17,6 +17,8 @@ import javax.swing.JPasswordField;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -99,7 +101,14 @@ public class VistaLogin implements ActionListener {
 		JLabel lblRecuperar = new JLabel("\u00BFOlvid\u00F3 su contrase\u00F1a?");
 		lblRecuperar.setBounds(294, 236, 178, 14);
 		frmSiscomfi.getContentPane().add(lblRecuperar);
-
+		
+		lblRecuperar.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e) {
+				String correo = JOptionPane.showInputDialog("Ingrese su usuario");
+				String password = siscomfiManager.queryByUsuario(correo);
+				JOptionPane.showMessageDialog(null, "Su contraseña es: " + password);
+			}
+		});
 		JLabel lblLogo = new JLabel("");
 		lblLogo.setBounds(10, 11, 177, 239);
 		// BufferedImage logo = ImageIO.read(new

@@ -317,7 +317,7 @@ public class MySQLDAOProceso implements DAOProceso {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idPlanillon);
 			pstmt.setInt(2, idAdherente);
-			pstmt.setString(3, ""+estado);
+			pstmt.setString(3, "" + estado);
 			pstmt.setDouble(4, tProcesado);
 			pstmt.setDouble(5, pHuella);
 			pstmt.setDouble(6, pFirma);
@@ -363,7 +363,7 @@ public class MySQLDAOProceso implements DAOProceso {
 			pstmt.setInt(2, idProceso);
 			pstmt.setInt(3, idUsuario);
 			pstmt.setDouble(4, tiempoProcesado);
-			pstmt.setString(5, ""+estado);
+			pstmt.setString(5, "" + estado);
 			// Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
 			// Paso 5(opc.): Procesar los resultados
@@ -384,6 +384,88 @@ public class MySQLDAOProceso implements DAOProceso {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public int verificarPartidoProcesado(int idPartido, int idProceso) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int id = 0;
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			String sql = "SELECT * FROM PartidoPoliticoxProceso WHERE (idPartidoPolitico = ?) AND (idProceso = ?) AND (EstadoPartido = '1')";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idPartido);
+			pstmt.setInt(2, idProceso);
+			// Paso 4: Ejecutar la sentencia
+			rs =  pstmt.executeQuery();
+			//si hay resultados es que se esta procesado o esta en proceso
+			if (rs.next()) {
+				return -1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexión
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public void updateEstadoPartidoxProceso(int idPartido, int idProceso, int estado) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			String sql = "UPDATE PartidoPoliticoxProceso "
+					+ "SET EstadoPartido = ? "
+					+ "WHERE idPartidoPolitico = ? AND idProceso = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, ""+estado);
+			pstmt.setInt(2, idPartido);
+			pstmt.setInt(3, idProceso);
+			// Paso 4: Ejecutar la sentencia
+			pstmt.executeUpdate();
+			// Paso 5(opc.): Procesar los resultados
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexión
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 }

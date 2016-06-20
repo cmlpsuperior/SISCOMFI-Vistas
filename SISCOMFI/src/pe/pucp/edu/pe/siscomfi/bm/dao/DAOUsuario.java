@@ -12,5 +12,5 @@ public interface DAOUsuario {
 	boolean queryByLogin(String nombreCorreo, String pass);
 	boolean queryByLoginAdmin(String nombreCorreo, String pass);
 	//ArrayList<Usuario> queryByFilter(String name);
-
+	String queryByUsuario(String correo);
 }

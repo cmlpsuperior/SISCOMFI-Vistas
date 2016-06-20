@@ -18,4 +18,6 @@ public interface DAOProceso {
 	int addPlanillon(Planillon p);
 	void addAdherentexPlanillon(int idAdherente, int idPlanillon, int estado, double tProcesado, double pHuella, double pFirma,String huella, String firma);
 	void addPartidoxProceso(int idPartido,int idProceso, int idUsuario, double TiempoProcesado,  int estado);
+	int verificarPartidoProcesado(int idPartido, int idProceso);
+	void updateEstadoPartidoxProceso(int idPartido, int idProceso,int estado);
 }

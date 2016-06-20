@@ -277,7 +277,8 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			// Paso 2: Obtener la conexión
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
-			String sql = "SELECT * FROM Adherente " + "WHERE DNI=?";
+			String sql = "SELECT * FROM Adherente A, AdherentexPlanillon B "
+					+ "WHERE A.DNI=? AND (A.idAdherente = B.idAdherente)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dni);
 			// Paso 4: Ejecutar la sentencia
@@ -290,6 +291,8 @@ public class MySQLDAOAdherente implements DAOAdherente {
 				String apMat = rs.getString("ApellidoMaterno");
 				String dniA = rs.getString("DNI");
 				int distrito = rs.getInt("idDistrito");
+				String rHuella = rs.getString("Huella");
+				String rFirma = rs.getString("Firma");
 				p = new Adherente(id, distrito, nombre, apPat, apMat, dniA, new Date(), "", "", "");
 			}
 		} catch (SQLException e) {
@@ -325,7 +328,8 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			// (1=ACEPTADO,0=RECHAZADO,2=OBSERVADO)
 			String sql = "UPDATE AdherentexPlanillon SET EstadoValidez=? WHERE idAdherente = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, estado);
+			int nEstado = (estado.compareTo("ACEPTADO") == 0) ? 1 : 0;
+			pstmt.setString(1, "" + nEstado);
 			pstmt.setInt(2, idAdherente);
 			// Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
@@ -361,7 +365,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			// (1=ACEPTADO,0=RECHAZADO,2=OBSERVADO)
-			String sql = "SELECT * FROM Planillon A, AdherentexPlanillon B, Adherente C"
+			String sql = "SELECT * FROM Planillon A, AdherentexPlanillon B, Adherente C "
 					+ "WHERE (A.idProceso = ?) AND (A.idPlanillon = B.idPlanillon) AND (C.DNI = ?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idProceso);
@@ -393,5 +397,4 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		return -1;
 	}
 
-	
 }

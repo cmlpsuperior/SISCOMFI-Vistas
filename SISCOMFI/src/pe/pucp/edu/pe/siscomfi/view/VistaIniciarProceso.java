@@ -199,147 +199,182 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		if (e.getSource() == btnProcesar) {
 			int numPadrones = 0;
 			int idPlanillon = 0;
-			int idPartido = Integer.parseInt(cbPartido.getSelectedItem().toString().charAt(0) + "");
-			// agergar partidoxproceso
-			siscomfiManager.addPartidoxProceso(idPartido, fase.getIdProceso(), 2, 0, 1);
-			if (pathPadronProcesar != null) {
-				int cantPadrones = padronPaths.length;
-				for (File padron : padronPaths) {
-					txtLog.append("Padron: " + (numPadrones + 1) + "\n");
-					txtLog.update(txtLog.getGraphics());
-					// agregamos el planillon a la bd
-					idPlanillon = siscomfiManager.addPlanillon(new Planillon(0, 0, idPartido, fase.getIdProceso()));
-					// leemos el planillon
-					ImagePlus imgPlanillon = IJ.openImage(padron.getAbsolutePath());
-					// procesamos el planillon
-					imgPlanillon = HelperMethods.procesarPlanillon(imgPlanillon);
-					// sacamos el tamaño de los campos
-					ImagePlus auxImg = new Duplicator().run(imgPlanillon);
-					int[] tCampos = HelperMethods.cabeceraPlanillon(auxImg);
-					// sacamos las filas
-					List<ImagePlus> filas = HelperMethods.sacarFilasPlanillon(imgPlanillon);
-					int nFila = 8;
-					// procesamos cada fila
-					for (ImagePlus fila : filas) {
-						List<ImagePlus> partes = HelperMethods.sacarDatosFila(fila, tCampos);
-						txtLog.append("Fila " + nFila + ": Procesando Dni = ");
+			String partido = cbPartido.getSelectedItem().toString();
+			int idPartido = Integer.parseInt(partido.charAt(0) + "");
+			// tener que ver si el partidoxProceso no ha sido ya procesado
+			// 1 procesado, 0 no procesado, 2 en proceso, 3 con observados
+			// retorna 0 si no ha sido procesado y retorna -1 si fue procesado
+			if (siscomfiManager.verificarPartidoProceso(idPartido, fase.getIdProceso()) == 0) {
+				// agergar partidoxproceso
+				siscomfiManager.addPartidoxProceso(idPartido, fase.getIdProceso(), 2, 0, 2);
+				File pPartido = new File(pathObservados + "\\" + partido);
+				if (!pPartido.exists())
+					pPartido.mkdir();
+				if (pathPadronProcesar != null) {
+					int cantPadrones = padronPaths.length;
+					int nObservados = 0;
+					for (File padron : padronPaths) {
+						txtLog.append("Padron: " + (numPadrones + 1) + "\n");
 						txtLog.update(txtLog.getGraphics());
-						// sacamoslos digitos del DNI (8)
-						List<ImagePlus> digitosNumero = HelperMethods.getDatosParte(partes.get(0), 8);
-						String dni = "", digit;
-						for (ImagePlus dNumb : digitosNumero) {
-							if (dNumb != null) {
-								digit = OcrProy.ocrNumbers.reconocer(dNumb.getBufferedImage());
-								dni += digit;
-							}
-						}
-						txtLog.append(dni + "\n");
-						txtLog.append("Obteniendo posibles adherentes:\n ");
-						txtLog.update(txtLog.getGraphics());
-						List<Adherente> lista = siscomfiManager.getPosiblesAdherentes(dni);
-						if (lista != null && lista.size() != 0) {
-							txtLog.append("Se encontraron -> " + lista.size() + " posibles adherentes\n");
+						// agregamos el planillon a la bd
+						idPlanillon = siscomfiManager.addPlanillon(new Planillon(0, 0, idPartido, fase.getIdProceso()));
+						// leemos el planillon
+						ImagePlus imgPlanillon = IJ.openImage(padron.getAbsolutePath());
+						// procesamos el planillon
+						imgPlanillon = HelperMethods.procesarPlanillon(imgPlanillon);
+						// sacamos el tamaño de los campos
+						ImagePlus auxImg = new Duplicator().run(imgPlanillon);
+						int[] tCampos = HelperMethods.cabeceraPlanillon(auxImg);
+						// sacamos las filas
+						List<ImagePlus> filas = HelperMethods.sacarFilasPlanillon(imgPlanillon);
+						int nFila = 8;
+						// procesamos cada fila
+						for (ImagePlus fila : filas) {
+							List<ImagePlus> partes = HelperMethods.sacarDatosFila(fila, tCampos);
+							txtLog.append("Fila " + nFila + ": Procesando Dni = ");
 							txtLog.update(txtLog.getGraphics());
-							int contIguales = 0;
-							String resultado = "";
-							ImagePlus imgHuella = null;
-							ImagePlus imgFirma = null;
-							int nAdh = 0;
-							double pFirma = 0, pHuella = 0;
-							Adherente adherente = null;
-							for (Adherente adh : lista) {
-								txtLog.append("Procesando huella: ");
-								txtLog.update(txtLog.getGraphics());
-								ImagePlus huella = HelperMethods.quitarBorde(partes.get(3));
-								imgHuella = new Duplicator().run(huella);
-								ImagePlus huellaRnv = IJ.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\huellas\\"
-										+ adh.getrHuella() + ".jpg");
-								double[][] original = Fingerprint.imageGraph(huellaRnv);
-								double[][] sospechosa = Fingerprint.imageGraph(huella);
-								double porcentaje = Fingerprint.comparition(original, sospechosa);
-								resultado = Fingerprint.resultado(porcentaje);
-								if (resultado.compareTo("Iguales") == 0) {
-									contIguales++;
-									nAdh++;
+							// sacamoslos digitos del DNI (8)
+							List<ImagePlus> digitosNumero = HelperMethods.getDatosParte(partes.get(0), 8);
+							String dni = "", digit;
+							for (ImagePlus dNumb : digitosNumero) {
+								if (dNumb != null) {
+									digit = OcrProy.ocrNumbers.reconocer(dNumb.getBufferedImage());
+									dni += digit;
 								}
-								pHuella = porcentaje;
-								adherente = adh;
-								txtLog.append(" Resultado-> " + resultado + "\n");
-								txtLog.update(txtLog.getGraphics());
 							}
-							int idAdherente = 0;
-							if (contIguales == 1) {
-								txtLog.append("Procesando Firma: ");
+							txtLog.append(dni + "\n");
+							txtLog.append("Obteniendo posibles adherentes:\n ");
+							txtLog.update(txtLog.getGraphics());
+							List<Adherente> lista = siscomfiManager.getPosiblesAdherentes(dni);
+							if (lista != null && lista.size() != 0) {
+								txtLog.append("Se encontraron -> " + lista.size() + " posibles adherentes\n");
 								txtLog.update(txtLog.getGraphics());
-								ImagePlus firma = HelperMethods.quitarBorde(partes.get(2));
-								imgFirma = new Duplicator().run(firma);
-								ImagePlus firmaRnv = IJ.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\"
-										+ adherente.getrFirma() + ".jpg");
-								firmaRnv = Signatures.formatoFirma(firmaRnv);
-								firma = Signatures.formatoFirma(firma);
-								double res = Signatures.compareSignatures(firmaRnv, firma);
-								pFirma = res;
-								System.out.println("Fila " + nFila + " Res: " + res);
-								txtLog.append(res + "\n");
-								txtLog.append("Adherente: Aceptado\n");
-								txtLog.update(txtLog.getGraphics());
-								// aceptado
-								adherente.setEstado(1);
-							} else {
-								// asignar estado de adherente a observado
-								String estadoFinal = "";
-								if (contIguales > 1) {
-									estadoFinal = "Rechazado";
-									adherente.setEstado(0);
-								} else {
-									estadoFinal = "Observado";
-									txtLog.append("Adherente: " + estadoFinal + "\n");
-									adherente.setEstado(2);
-									// guardar las imagenes en la carpeta de
-									// observados
-									File fAdherente = new File(pathObservados + "\\" + adherente.getDni());
-									fAdherente.mkdir();
-									// carpeta de huellas
-									File fHuella = new File(fAdherente.getAbsolutePath() + "\\huella");
-									fHuella.mkdir();
-									if (imgHuella != null)
-										IJ.saveAs(imgHuella, "Jpeg", fHuella.getAbsolutePath() + "\\observado.jpg");
-									// carpeta de firmas
-									File fFirma = new File(fAdherente.getAbsolutePath() + "\\firma");
-									fFirma.mkdir();
-									if (imgFirma != null)
-										IJ.saveAs(imgFirma, "Jpeg", fFirma.getAbsolutePath() + "\\observado.jpg");
+								int contIguales = 0;
+								String resultado = "";
+								// las leidas del planillon
+								ImagePlus imgHuella = null;
+								ImagePlus imgFirma = null;
+								// las originales del rnv
+								ImagePlus imgHuellaOriginal = null;
+								ImagePlus imgFirmaOriginal = null;
+								int nAdh = 0;
+								double pFirma = 0, pHuella = 0;
+								Adherente adherente = null;
+								for (Adherente adh : lista) {
+									txtLog.append("Procesando huella: ");
+									txtLog.update(txtLog.getGraphics());
+									ImagePlus huella = HelperMethods.quitarBorde(partes.get(3));
+									imgHuella = new Duplicator().run(huella);
+									ImagePlus huellaRnv = IJ
+											.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\huellas\\"
+													+ adh.getrHuella() + ".jpg");
+									imgHuellaOriginal = new Duplicator().run(huellaRnv);
+									double[][] original = Fingerprint.imageGraph(huellaRnv);
+									double[][] sospechosa = Fingerprint.imageGraph(huella);
+									double porcentaje = Fingerprint.comparition(original, sospechosa);
+									resultado = Fingerprint.resultado(porcentaje);
+									if (resultado.compareTo("Iguales") == 0) {
+										contIguales++;
+										nAdh++;
+									}
+									pHuella = porcentaje;
+									adherente = adh;
+									txtLog.append(" Resultado-> " + resultado + "\n");
+									txtLog.update(txtLog.getGraphics());
 								}
-								txtLog.update(txtLog.getGraphics());
-							}
-							adherente.setrPlanillon(padron.getName());
-							adherente.setpFirma(pFirma);
-							adherente.setpHuella(pHuella);
-							// verificar que adherente no se repita
-							if (siscomfiManager.verificarAdherenteRepetido(fase.getIdProceso(),
-									adherente.getDni()) == -1) {
-								// guardar adherente
-								idAdherente = siscomfiManager.addAdherente(adherente);
-								// guardamos el adherentexplanillon
-								siscomfiManager.addAdherentexPlanillon(idAdherente, idPlanillon, adherente.getEstado(),
-										0, adherente.getpHuella(), adherente.getpFirma(), adherente.getrHuella(),
-										adherente.getrFirma());
-							} else {
-								siscomfiManager.updateEstadoAdherente(idAdherente, "" + adherente.getEstado());
-							}
+								int idAdherente = 0;
 
-						} else {
-							txtLog.append("No se encontraron adherentes\n");
-							txtLog.update(txtLog.getGraphics());
+								if (contIguales == 1) {
+									txtLog.append("Procesando Firma: ");
+									txtLog.update(txtLog.getGraphics());
+									ImagePlus firma = HelperMethods.quitarBorde(partes.get(2));
+									imgFirma = new Duplicator().run(firma);
+									ImagePlus firmaRnv = IJ
+											.openImage("C:\\Users\\samoel\\Desktop\\ImagenesRnv\\firmas\\"
+													+ adherente.getrFirma() + ".jpg");
+									imgFirmaOriginal = new Duplicator().run(firmaRnv);
+									firmaRnv = Signatures.formatoFirma(firmaRnv);
+									firma = Signatures.formatoFirma(firma);
+									double res = Signatures.compareSignatures(firmaRnv, firma);
+									pFirma = res;
+									System.out.println("Fila " + nFila + " Res: " + res);
+									txtLog.append(res + "\n");
+									txtLog.append("Adherente: Aceptado\n");
+									txtLog.update(txtLog.getGraphics());
+									// aceptado
+									adherente.setEstado(1);
+								} else {
+									// asignar estado de adherente a observado
+									String estadoFinal = "";
+									if (contIguales > 1) {
+										estadoFinal = "Rechazado";
+										adherente.setEstado(0);
+									} else {
+										estadoFinal = "Observado";
+										nObservados++;
+
+										txtLog.append("Adherente: " + estadoFinal + "\n");
+										adherente.setEstado(2);
+										// guardar las imagenes en la carpeta de
+										// observados
+										File fAdherente = new File(
+												pPartido.getAbsoluteFile() + "\\" + adherente.getDni());
+										fAdherente.mkdir();
+										// carpeta de huellas
+										File fHuella = new File(fAdherente.getAbsolutePath() + "\\huella");
+										fHuella.mkdir();
+										if (imgHuella != null) {
+											IJ.saveAs(imgHuella, "Jpeg", fHuella.getAbsolutePath() + "\\observado.jpg");
+											IJ.saveAs(imgHuellaOriginal, "Jpeg",
+													fHuella.getAbsolutePath() + "\\original.jpg");
+										}
+
+										// carpeta de firmas
+										File fFirma = new File(fAdherente.getAbsolutePath() + "\\firma");
+										fFirma.mkdir();
+										if (imgFirma != null) {
+											IJ.saveAs(imgFirma, "Jpeg", fFirma.getAbsolutePath() + "\\observado.jpg");
+											IJ.saveAs(imgFirmaOriginal, "Jpeg",
+													fFirma.getAbsolutePath() + "\\original.jpg");
+										}
+									}
+									txtLog.update(txtLog.getGraphics());
+								}
+								adherente.setrPlanillon(padron.getName());
+								adherente.setpFirma(pFirma);
+								adherente.setpHuella(pHuella);
+								// verificar que adherente no se repita
+								if (siscomfiManager.verificarAdherenteRepetido(fase.getIdProceso(),
+										adherente.getDni()) == -1) {
+									// guardar adherente
+									idAdherente = siscomfiManager.addAdherente(adherente);
+									// guardamos el adherentexplanillon
+									siscomfiManager.addAdherentexPlanillon(idAdherente, idPlanillon,
+											adherente.getEstado(), 0, adherente.getpHuella(), adherente.getpFirma(),
+											adherente.getrHuella(), adherente.getrFirma());
+								} else {
+									siscomfiManager.updateEstadoAdherente(idAdherente, "" + adherente.getEstado());
+								}
+
+							} else {
+								txtLog.append("No se encontraron adherentes\n");
+								txtLog.update(txtLog.getGraphics());
+							}
+							nFila--;
 						}
-						nFila--;
+						numPadrones++;
+						pgBar.setValue(numPadrones * 100 / cantPadrones);
+						pgBar.update(pgBar.getGraphics());
 					}
-					numPadrones++;
-					pgBar.setValue(numPadrones * 100 / cantPadrones);
-					pgBar.update(pgBar.getGraphics());
+					if (nObservados == 0)
+						siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(), 1);
+					else 
+						siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(), 3);
+				} else {
+					JOptionPane.showMessageDialog(this, "Escojan un directorio.");
 				}
 			} else {
-				JOptionPane.showMessageDialog(this, "Escojan un directorio.");
+				JOptionPane.showMessageDialog(this, "Partido en Proceso o ya procesado");
 			}
 		}
 	}

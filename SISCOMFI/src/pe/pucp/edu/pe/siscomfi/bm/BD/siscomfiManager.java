@@ -22,6 +22,7 @@ public class siscomfiManager {
 	private static UbicacionDB ubicacionDB = new UbicacionDB();
 	private static AdherenteDB adherenteDB = new AdherenteDB();
 	
+	//Usuario
 	public static void addUsuario(Usuario u)
     {
 		usuarioDB.add(u);
@@ -124,6 +125,12 @@ public class siscomfiManager {
 	}
 	public static List<Adherente> getPosiblesAdherentes(String dni){
 		return adherenteDB.getAdherentesPosibles(dni);
+	}
+	public static Adherente queryAdherenteByDni(String dni){
+		return adherenteDB.queryByDni(dni);
+	}
+	public static void updateEstadoAdherente(String dni,String estado){
+		adherenteDB.updateEstadoAdherente(dni, estado);
 	}
 	
 }

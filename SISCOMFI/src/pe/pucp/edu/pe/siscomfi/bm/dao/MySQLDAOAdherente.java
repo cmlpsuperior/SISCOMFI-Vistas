@@ -12,6 +12,7 @@ import java.util.List;
 import com.mysql.jdbc.Driver;
 
 import pe.pucp.edu.pe.siscomfi.model.Adherente;
+import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 import pe.pucp.edu.pe.siscomfi.model.Rol;
 
 public class MySQLDAOAdherente implements DAOAdherente {
@@ -43,13 +44,11 @@ public class MySQLDAOAdherente implements DAOAdherente {
 
 			// Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
-			//*************************************************************************************
-			//otro query en el que se llena la tabla adherentexPlanillon
-			String sql2 = "INSERT INTO AdherentexPlanillon "
-					+ "(DNI, planillon, estado)"
-					+ "VALUES (?, ?, ?)";
+			// *************************************************************************************
+			// otro query en el que se llena la tabla adherentexPlanillon
+			String sql2 = "INSERT INTO AdherentexPlanillon " + "(DNI, planillon, estado)" + "VALUES (?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
-			//*************************************************************************************
+			// *************************************************************************************
 			// Paso 5(opc.): Procesar los resultados
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -228,7 +227,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			// Paso 3: Preparar la sentenciad
 			String sql = "SELECT * FROM RegistroElector WHERE compararDNI(?,DNI) >= 5;";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,dni);
+			pstmt.setString(1, dni);
 			// Paso 4: Ejecutar la sentencia
 			rs = pstmt.executeQuery();
 
@@ -243,7 +242,8 @@ public class MySQLDAOAdherente implements DAOAdherente {
 				int huella = rs.getInt("Huella");
 				String pathHuella = (huella < 10) ? ("00" + huella) : (huella < 100) ? ("0" + huella) : ("" + huella);
 				String pathFirma = rs.getString("Firma");
-				Adherente adherente = new Adherente(id, 0, nombre, apPaterno, apMaterno, dniL, fechaNacimiento, pathHuella, pathFirma, "0");
+				Adherente adherente = new Adherente(id, 0, nombre, apPaterno, apMaterno, dniL, fechaNacimiento,
+						pathHuella, pathFirma, "0");
 				arr.add(adherente);
 			}
 		} catch (SQLException e) {
@@ -267,5 +267,92 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			;
 		}
 		return arr;
+	}
+
+	@Override
+	public Adherente queryByDNI(String dni) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Adherente p = null;
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			String sql = "SELECT * FROM Adherente " + "WHERE DNI=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dni);
+			// Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			// Paso 5(opc.): Procesar los resultados
+			if (rs.next()) {
+				int id = rs.getInt("idAdherente");
+				String nombre = rs.getString("Nombre");
+				String apPat = rs.getString("ApellidoPaterno");
+				String apMat = rs.getString("ApellidoMaterno");
+				String dniA = rs.getString("DNI");
+				int distrito = rs.getInt("idDistrito");
+				p = new Adherente(id, distrito, nombre, apPat, apMat, dniA, new Date(), "", "", "");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexión
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return p;
+	}
+
+	@Override
+	public void updateEstadoAdherente(String dni, String estado) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia (1=ACEPTADO, 0=RECHAZADO,
+			// 2=OBSERVADO)
+			String sql = "";
+			pstmt = conn.prepareStatement(sql);
+			//
+			pstmt.setString(1, dni);
+			// Paso 4: Ejecutar la sentencia
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexión
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
 	}
 }

@@ -32,4 +32,10 @@ public class AdherenteDB {
 	public List<Adherente> getAdherentesPosibles(String dni){
 		return daoAdherente.getPosibleAdherente(dni);
 	}
+	public Adherente queryByDni(String dni){
+		return daoAdherente.queryByDNI(dni);
+	}
+	public void updateEstadoAdherente(String dni, String estado){
+		daoAdherente.updateEstadoAdherente(dni, estado);
+	}
 }

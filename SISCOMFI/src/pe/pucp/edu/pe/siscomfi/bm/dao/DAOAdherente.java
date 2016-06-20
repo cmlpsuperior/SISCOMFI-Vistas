@@ -13,4 +13,6 @@ public interface DAOAdherente {
 	Adherente queryById(int idAdherente);
 	void delete_OBS(int idAdherente);
 	List<Adherente> getPosibleAdherente(String dni);
+	Adherente queryByDNI(String dni);
+	void updateEstadoAdherente(String dni,String estado);
 }

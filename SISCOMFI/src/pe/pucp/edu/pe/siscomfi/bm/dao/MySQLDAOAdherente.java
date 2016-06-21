@@ -18,7 +18,7 @@ import pe.pucp.edu.pe.siscomfi.model.Rol;
 public class MySQLDAOAdherente implements DAOAdherente {
 
 	@Override
-	public int add(Adherente a) {
+	public int add(Adherente a) { //Henry: le agrege una condicional para que no inserte adherentes que ya existan en la BD
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -26,23 +26,21 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		try {
 			//verifico que el adherente que se quiere insertar no exista:
 			int idAdherenteExiste =  existeAdherente (a); //0: no existe, >0: ya habia un adeherente con ese DNI
-			if (idAdherenteExiste >0){
+			if (idAdherenteExiste >0){ // ya existe
 				id = idAdherenteExiste;
 			}
-			else {
-				// Paso 1: Registrar el Driver
-				DriverManager.registerDriver(new Driver());
-	
-				// Paso 2: Obtener la conexión
-				conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			else { //no existe, entonces lo inserto
 				
+				// Paso 1: Registrar el Driver
+				DriverManager.registerDriver(new Driver());	
+				// Paso 2: Obtener la conexión
+				conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);				
 				// Paso 3: Preparar la sentencia
 				String sql = "INSERT INTO Adherente "
 						+ "(Nombre, ApellidoPaterno, ApellidoMaterno, DNI, FechaNacimiento, idDistrito)"
 						+ "VALUES (?,?,?,?,?,?)";
 				pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-	
-				// pstmt.setInt(1, p.getId());
+				
 				pstmt.setString(1, a.getNombre());
 				pstmt.setString(2, a.getAppPaterno());
 				pstmt.setString(3, a.getAppMaterno());

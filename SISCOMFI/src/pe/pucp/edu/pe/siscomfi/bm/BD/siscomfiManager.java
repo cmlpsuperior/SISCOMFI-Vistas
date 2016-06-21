@@ -156,8 +156,8 @@ public class siscomfiManager {
 	}
 
 	public static void addAdherentexPlanillon(int idAdherente, int adPlanillon, int estado, double tProcesado,
-			double pHuella, double pFirma, String huella, String firma) {
-		procesoDB.addAdherentexPlanillon(idAdherente, adPlanillon, estado, tProcesado, pHuella, pFirma, huella, firma);
+			double pHuella, double pFirma, String huella, String firma,int numFase) {
+		procesoDB.addAdherentexPlanillon(idAdherente, adPlanillon, estado, tProcesado, pHuella, pFirma, huella, firma,numFase);
 	}
 
 	public static void addProceso(Proceso p) {

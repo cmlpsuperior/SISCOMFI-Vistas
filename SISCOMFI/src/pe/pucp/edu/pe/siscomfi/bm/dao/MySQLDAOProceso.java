@@ -302,7 +302,7 @@ public class MySQLDAOProceso implements DAOProceso {
 
 	@Override
 	public void addAdherentexPlanillon(int idAdherente, int idPlanillon, int estado, double tProcesado, double pHuella,
-			double pFirma, String huella, String firma) {
+			double pFirma, String huella, String firma, int numFase) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -312,8 +312,8 @@ public class MySQLDAOProceso implements DAOProceso {
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "INSERT INTO AdherentexPlanillon "
-					+ "(idPlanillon, idAdherente, EstadoValidez, TiempoProcesado, PorcentajeHuella, PorcentajeFirma, Huella,Firma)"
-					+ "VALUES (?,?,?,?,?,?,?,?)";
+					+ "(idPlanillon, idAdherente, EstadoValidez, TiempoProcesado, PorcentajeHuella, PorcentajeFirma, Huella,Firma,idfase)"
+					+ "VALUES (?,?,?,?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idPlanillon);
 			pstmt.setInt(2, idAdherente);
@@ -323,6 +323,7 @@ public class MySQLDAOProceso implements DAOProceso {
 			pstmt.setDouble(6, pFirma);
 			pstmt.setString(7, huella);
 			pstmt.setString(8, firma);
+			pstmt.setInt(9, numFase);
 			// Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
 			// Paso 5(opc.): Procesar los resultados

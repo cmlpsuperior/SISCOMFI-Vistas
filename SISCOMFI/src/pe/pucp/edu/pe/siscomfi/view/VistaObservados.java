@@ -70,16 +70,10 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	public VistaObservados() {
 		boolean indicador = true;
 		if (!UsuarioLogeado.verificarPaths()) {
-			String result = UsuarioLogeado.setearPathsRnv(this);
+			String result = UsuarioLogeado.setearPathsObservado(this);
 			if (result.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Escojan un directorio de las imagenes del RNV");
+				JOptionPane.showMessageDialog(this, "Escojan el directorio donde estan los adherentes observados");
 				indicador = false;
-			} else {
-				result = UsuarioLogeado.setearPathsObservado(this);
-				if (result.isEmpty()) {
-					JOptionPane.showMessageDialog(this, "Escojan un directorio para guardar los adherentes observados");
-					indicador = false;
-				}
 			}
 		}
 		if (!indicador)

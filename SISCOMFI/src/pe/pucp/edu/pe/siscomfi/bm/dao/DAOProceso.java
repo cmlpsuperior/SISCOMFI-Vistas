@@ -16,7 +16,7 @@ public interface DAOProceso {
 	Proceso getFase1Actual();
 	Proceso getFase2Actual();
 	int addPlanillon(Planillon p);
-	void addAdherentexPlanillon(int idAdherente, int idPlanillon, int estado, double tProcesado, double pHuella, double pFirma,String huella, String firma);
+	void addAdherentexPlanillon(int idAdherente, int idPlanillon, int estado, double tProcesado, double pHuella, double pFirma,String huella, String firma,int numFase);
 	void addPartidoxProceso(int idPartido,int idProceso, int idUsuario, double TiempoProcesado,  int estado);
 	int verificarPartidoProcesado(int idPartido, int idProceso);
 	void updateEstadoPartidoxProceso(int idPartido, int idProceso,int estado);

@@ -45,7 +45,6 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JButton btnCancelar;
 	private JButton btnProcesar;
 	private JFileChooser jfcRuta;
-	private JFileChooser jfcRnv;
 	private JComboBox<String> cbDescProceso;
 	private JTextArea txtLog;
 	private String pathPadronProcesar = null;
@@ -54,19 +53,47 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JProgressBar pgBar;
 	private JPanel pnLog;
 	private Proceso fase = null;
-	private String pathObservados;
+	private int numFase = 0;
 
 	public VistaIniciarProceso() {
 		boolean indicador = true;
 		if (!UsuarioLogeado.verificarPaths()) {
-			String result = UsuarioLogeado.setearPathsObservado(this);
+			String result = UsuarioLogeado.setearPathsRnv(this);
 			if (result.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Escojan un directorio para guardar los adherentes observados");
+				JOptionPane.showMessageDialog(this, "Escojan un directorio de las imagenes del RNV");
 				indicador = false;
+			} else {
+				result = UsuarioLogeado.setearPathsObservado(this);
+				if (result.isEmpty()) {
+					JOptionPane.showMessageDialog(this, "Escojan un directorio para guardar los adherentes observados");
+					indicador = false;
+				}
 			}
 		}
 		if (!indicador)
 			return;
+
+		txtFase = new JTextField();
+		txtFase.setEditable(false);
+		txtFase.setBounds(168, 70, 235, 22);
+		getContentPane().add(txtFase);
+		txtFase.setColumns(10);
+
+		// Fase del Proceso
+		fase = siscomfiManager.getFase1Proceso();
+		if (fase == null) {
+			fase = siscomfiManager.getFase2Proceso();
+			if (fase == null) {
+				JOptionPane.showMessageDialog(this, "No hay procesos electorales activos");
+				return;
+			}
+			numFase = 2;
+			txtFase.setText("Fase 2");
+		} else {
+			numFase = 1;
+			txtFase.setText("Fase 1");
+		}
+
 		setClosable(true);
 		setTitle("Iniciar Proceso");
 		setBounds(100, 100, 436, 463);
@@ -103,23 +130,6 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		btnProcesar = new JButton("Procesar");
 		btnProcesar.setBounds(85, 180, 97, 25);
 		getContentPane().add(btnProcesar);
-
-		txtFase = new JTextField();
-		txtFase.setEditable(false);
-		// Fase del Proceso
-		fase = siscomfiManager.getFase1Proceso();
-		if (fase == null) {
-			fase = siscomfiManager.getFase2Proceso();
-			if (fase == null) {
-				JOptionPane.showMessageDialog(this, "No hay procesos electorales activos");
-				this.dispose();
-			}
-			txtFase.setText("Fase 2");
-		}
-		txtFase.setText("Fase 1");
-		txtFase.setBounds(168, 70, 235, 22);
-		getContentPane().add(txtFase);
-		txtFase.setColumns(10);
 
 		JLabel lblFaseDelProceso = new JLabel("Fase del proceso:");
 		lblFaseDelProceso.setBounds(12, 73, 108, 16);
@@ -268,7 +278,6 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 								// las originales del rnv
 								ImagePlus imgHuellaOriginal = null;
 								ImagePlus imgFirmaOriginal = null;
-								int nAdh = 0;
 								double pFirma = 0, pHuella = 0;
 								Adherente adherente = null;
 								for (Adherente adh : lista) {
@@ -285,7 +294,6 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									resultado = Fingerprint.resultado(porcentaje);
 									if (resultado.compareTo("Iguales") == 0) {
 										contIguales++;
-										nAdh++;
 									}
 									pHuella = porcentaje;
 									adherente = adh;
@@ -358,9 +366,10 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									// guardar adherente
 									idAdherente = siscomfiManager.addAdherente(adherente);
 									// guardamos el adherentexplanillon
+
 									siscomfiManager.addAdherentexPlanillon(idAdherente, idPlanillon,
 											adherente.getEstado(), 0, adherente.getpHuella(), adherente.getpFirma(),
-											adherente.getrHuella(), adherente.getrFirma());
+											adherente.getrHuella(), adherente.getrFirma(), numFase);
 								} else {
 									siscomfiManager.updateEstadoAdherente(idAdherente, "" + adherente.getEstado());
 								}

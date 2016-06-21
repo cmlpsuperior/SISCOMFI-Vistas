@@ -11,6 +11,7 @@ import java.util.Date;
 import com.mysql.jdbc.Driver;
 
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
+import pe.pucp.edu.pe.siscomfi.model.Reporte;
 
 public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 
@@ -194,6 +195,86 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		}
 		return arr;
 	}
+	
+	@Override
+	public ArrayList<Reporte> queryReporte(int idTipoProceso, int anio, int idfase, int estadoPartido_enProceso) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<Reporte> arr = new ArrayList<Reporte>();
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			String sql = "SELECT DISTINCT P.Nombre, P.Representante, PXP.EstadoPartido, ROUND(avg(AxP.PorcentajeFirma + AxP.PorcentajeHuella),3)"
+					+ "FROM PartidoPolitico P, PartidoPoliticoxProceso PXP, Planillon Pn, AdherentexPlanillon AxP, Proceso Pro"
+					+ "WHERE P.idPartidoPolitico=PXP.idPartidoPolitico AND PXP.EstadoPartido=? AND"
+					+ "Pn.idProceso=PXP.idProceso AND Pro.idProceso=PXP.idProceso AND Pro.idTipoProceso=? AND"
+					+ "AxP.idPlanillon=Pn.idPlanillon and AxP.idfase=?;";
+			pstmt = conn.prepareStatement(sql);
+			// Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			pstmt.setInt(1, estadoPartido_enProceso);
+			pstmt.setInt(2, idTipoProceso);
+			pstmt.setInt(3, idfase);
+			//pstmt.setInt(4, anio);
+			// Paso 5(opc.): Procesar los resultados
+			while (rs.next()) {
+				//int id = rs.getInt("idPartidoPolitico");
+				String nombre = rs.getString("Nombre");
+				String rep = rs.getString("Representante");
+				int est =rs.getInt("estadoPartido_enProceso");
+				float porc = rs.getFloat("porcentaje");
+				
+				Reporte repor = new Reporte();
+				repor.setEstadoPartido_enProceso(est);
+				repor.setIdReporte(1);
+				repor.setNombre(nombre);
+				repor.setPorcentaje(porc);
+				repor.setRepresentante(rep);
+				
+				arr.add(repor);
+				
+				/*String correo = rs.getString("CorreoRepresentante");
+				String direccion = rs.getString("Direccion");
+				String telefono = rs.getString("Telefono");
+				int idDistrito = rs.getInt("idDistrito");
+				Date fechaRegistro = rs.getTimestamp("FechaRegistro");
+				String estadoActivo = rs.getString("EstadoActivo");*/
+				/*PartidoPolitico p = new PartidoPolitico();
+				p.setIdPartidoPolitco(id);
+				p.setNombrePartido(nombre);
+				p.setRepresentante(rep);
+				p.setCorreo(correo);
+				p.setDireccion(direccion);
+				p.setTelefono(telefono);
+				p.setIdDistrito(idDistrito);
+				p.setFechaRegistro(fechaRegistro);
+				p.setEstadoActivo(estadoActivo);
+				arr.add(p);*/ 
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexión
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return arr;
+	}
+
 
 	@Override
 	public PartidoPolitico queryById(int idPartido) {

@@ -71,7 +71,8 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 				}
 			}
 		}
-		if (!indicador) return;
+		if (!indicador)
+			return;
 		setClosable(true);
 		setTitle("Iniciar Proceso");
 		setBounds(100, 100, 436, 463);

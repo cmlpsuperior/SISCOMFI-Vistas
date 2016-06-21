@@ -66,8 +66,24 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private String pathObservados = UsuarioLogeado.pathObservadosPlanilon;
 	private Proceso fase;
 	private File pObservadosPartido;
-	
+
 	public VistaObservados() {
+		boolean indicador = true;
+		if (!UsuarioLogeado.verificarPaths()) {
+			String result = UsuarioLogeado.setearPathsRnv(this);
+			if (result.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Escojan un directorio de las imagenes del RNV");
+				indicador = false;
+			} else {
+				result = UsuarioLogeado.setearPathsObservado(this);
+				if (result.isEmpty()) {
+					JOptionPane.showMessageDialog(this, "Escojan un directorio para guardar los adherentes observados");
+					indicador = false;
+				}
+			}
+		}
+		if (!indicador)
+			return;
 		setClosable(true);
 		setTitle("Adherentes observados");
 		setBounds(100, 100, 900, 456);
@@ -152,7 +168,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 				txtAdherente.setText(nCompleto);
 
 				// Cargamos las imagenes en los panel
-				
+
 				File[] dniObservados = pObservadosPartido.listFiles();
 				File dniEncontrado = null;
 				for (File obs : dniObservados) {
@@ -438,17 +454,17 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			String partido = cmbPartido.getSelectedItem().toString();
 			int idPartido = partido.charAt(0);
 			pObservadosPartido = new File(pathObservados + "\\" + partido);
-			if (pObservadosPartido.exists()){
+			if (pObservadosPartido.exists()) {
 				// buscar observados del partido
 				File[] pAdhObservados = pObservadosPartido.listFiles();
 				List<Adherente> adhObservados = new ArrayList<Adherente>();
 				for (File pDni : pAdhObservados) {
-					String dni = pDni.getName(); 
+					String dni = pDni.getName();
 					Adherente adh = siscomfiManager.queryAdherenteByDni(dni);
 					adhObservados.add(adh);
 				}
 				fillTable(adhObservados);
-			}else{
+			} else {
 				JOptionPane.showMessageDialog(this, "Partido no cuenta con adherentes observados");
 			}
 		}

@@ -6,6 +6,7 @@ import pe.pucp.edu.pe.siscomfi.bm.dao.DAOFactory;
 import pe.pucp.edu.pe.siscomfi.bm.dao.DAOPartidoPolitico;
 import pe.pucp.edu.pe.siscomfi.bm.dao.DBConnection;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
+import pe.pucp.edu.pe.siscomfi.model.Reporte;
 
 
 public class PartidoPoliticoDB {
@@ -57,5 +58,11 @@ public class PartidoPoliticoDB {
     {
     	return daoPartidoPolitico.queryAllObservados();
     	
+    }
+    
+    //REPORTE:
+    public ArrayList<Reporte> queryReporte(int idTipoProceso, int anio, int idfase, int estadoPartido)
+    {
+    	return daoPartidoPolitico.queryReporte(idTipoProceso, anio, idfase, estadoPartido);
     }
 }

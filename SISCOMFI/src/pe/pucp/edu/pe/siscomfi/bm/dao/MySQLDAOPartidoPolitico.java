@@ -197,7 +197,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 	}
 	
 	@Override
-	public ArrayList<Reporte> queryReporte(int idTipoProceso, int anio, int idfase, int estadoPartido_enProceso) {
+	public ArrayList<Reporte> queryReporte(int idTipoProceso, int anio, int idFase, int estadoPartido) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -207,59 +207,127 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 			DriverManager.registerDriver(new Driver());
 			// Paso 2: Obtener la conexión
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			
 			// Paso 3: Preparar la sentencia
-			String sql = "select distinct P.Nombre, P.Representante, PXP.EstadoPartido, ROUND(avg(AxP.PorcentajeFirma + AxP.PorcentajeHuella),3),"
-					+ "(case AxP.idfase "
-					+ "when 1 then ? between Pro.FechaProceso1Inicio and Pro.FechaProceso1Fin "
-					+ "when 2 then ? between Pro.FechaProceso2Inicio and Pro.FechaProceso2Fin"
-					+ "end) as columnaAuxiliar"
-					+ "from PartidoPolitico P, PartidoPoliticoxProceso PXP, Planillon Pn, AdherentexPlanillon AxP, Proceso Pro"
-					+ "WHERE P.idPartidoPolitico=PXP.idPartidoPolitico and PXP.EstadoPartido= ? and"
-					+ "Pn.idProceso=PXP.idProceso AND Pro.idProceso=PXP.idProceso AND Pro.idTipoProceso= ? AND"
-					+ "AxP.idPlanillon=Pn.idPlanillon and AxP.idfase= ?;";
-			pstmt = conn.prepareStatement(sql);
+			
+			// 1: si todos los campos fueron genericos: -1, -1, -1, -1
+			if (idTipoProceso == -1 && anio == -1 && idFase == -1 && estadoPartido == -1){
+				String sql = 
+						" select 	CONCAT(CAST(ppxp.idPartidoPolitico as char(5)), ' - ', pp.Nombre) as Partido, 	" +
+						"			year(p.FechaProceso1Inicio) as Anio, ppxp.idProceso, tp.Nombre as TipoProceso,	" +
+						"       	'SI' as Fase1,																	" +
+						"        	case when FechaFase2 is null then 'NO'											" +
+						"				else 'SI'																	" +
+						"			end Fase2,																		" +
+						"        	count(axp.idAdherente) AdherentesAceptados, 									" +
+						"        	case when ppxp.EstadoPartido = '1' then 'ACEPTADO'								" +
+						"				when ppxp.EstadoPartido = '0' then 'RECHAZADO'								" +
+						"                else 'EN PROCESO'															" +
+						"			END EstadoFinal																	" +
+						" from 		PartidoPoliticoxProceso ppxp, PartidoPolitico pp, 								" +
+						"			Proceso p, TipoProceso tp,														" +
+						"        																					" +
+						"        	Planillon pl, AdherentexPlanillon axp											" +
+						"        																					" +
+						" where 	ppxp.idPartidoPolitico = pp.idPartidoPolitico and								" +
+						"			ppxp.idProceso= p.idProceso	and													" +
+						"        	p.idTipoProceso = tp.idTipoProceso and											" +		
+						"        																					" +	
+						"       	pl.idPartidoPolitico = ppxp.idPartidoPolitico and								" +	
+						"        	pl.idProceso = ppxp.idProceso and												" +
+						"        	pl.idPlanillon = axp.idPlanillon and        									" +
+						"        	axp.EstadoValidez <> '0'														" ;
+				pstmt = conn.prepareStatement(sql);
+			}
+			// 2: si idTipoProceso si existe y los demas no: num, -1, -1, -1
+			else if (idTipoProceso > 0 && anio == -1 && idFase == -1 && estadoPartido == -1){
+				String sql = 
+						" select 	CONCAT(CAST(ppxp.idPartidoPolitico as char(5)), ' - ', pp.Nombre) as Partido, 	" +
+						"			year(p.FechaProceso1Inicio) as Anio, ppxp.idProceso, tp.Nombre as TipoProceso,	" +
+						"       	'SI' as Fase1,																	" +
+						"        	case when FechaFase2 is null then 'NO'											" +
+						"				else 'SI'																	" +
+						"			end Fase2,																		" +
+						"        	count(axp.idAdherente) AdherentesAceptados, 									" +
+						"        	case when ppxp.EstadoPartido = '1' then 'ACEPTADO'								" +
+						"				when ppxp.EstadoPartido = '0' then 'RECHAZADO'								" +
+						"                else 'EN PROCESO'															" +
+						"			END EstadoFinal																	" +
+						" from 		PartidoPoliticoxProceso ppxp, PartidoPolitico pp, 								" +
+						"			Proceso p, TipoProceso tp,														" +
+						"        																					" +
+						"        	Planillon pl, AdherentexPlanillon axp											" +
+						"        																					" +
+						" where 	ppxp.idPartidoPolitico = pp.idPartidoPolitico and								" +
+						"			ppxp.idProceso= p.idProceso	and													" +
+						"        	p.idTipoProceso = tp.idTipoProceso and											" +		
+						"        																					" +	
+						"       	pl.idPartidoPolitico = ppxp.idPartidoPolitico and								" +	
+						"        	pl.idProceso = ppxp.idProceso and												" +
+						"        	pl.idPlanillon = axp.idPlanillon and        									" +
+						"        	axp.EstadoValidez <> '0'														" +
+						"  																					      	" + 
+						"			tp.idProceso = ?																" ;
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, idTipoProceso);
+			}
+			//seguir poniendo todas las condiciones
+			else {
+				String sql = 
+						" select 	CONCAT(CAST(ppxp.idPartidoPolitico as char(5)), ' - ', pp.Nombre) as Partido, 	" +
+						"			year(p.FechaProceso1Inicio) as Anio, ppxp.idProceso, tp.Nombre as TipoProceso,	" +
+						"       	'SI' as Fase1,																	" +
+						"        	case when FechaFase2 is null then 'NO'											" +
+						"				else 'SI'																	" +
+						"			end Fase2,																		" +
+						"        	count(axp.idAdherente) AdherentesAceptados, 									" +
+						"        	case when ppxp.EstadoPartido = '1' then 'ACEPTADO'								" +
+						"				when ppxp.EstadoPartido = '0' then 'RECHAZADO'								" +
+						"                else 'EN PROCESO'															" +
+						"			END EstadoFinal																	" +
+						" from 		PartidoPoliticoxProceso ppxp, PartidoPolitico pp, 								" +
+						"			Proceso p, TipoProceso tp,														" +
+						"        																					" +
+						"        	Planillon pl, AdherentexPlanillon axp											" +
+						"        																					" +
+						" where 	ppxp.idPartidoPolitico = pp.idPartidoPolitico and								" +
+						"			ppxp.idProceso= p.idProceso	and													" +
+						"        	p.idTipoProceso = tp.idTipoProceso and											" +		
+						"        																					" +	
+						"       	pl.idPartidoPolitico = ppxp.idPartidoPolitico and								" +	
+						"        	pl.idProceso = ppxp.idProceso and												" +
+						"        	pl.idPlanillon = axp.idPlanillon and        									" +
+						"        	axp.EstadoValidez <> '0'														" ;
+				pstmt = conn.prepareStatement(sql);
+			}
+			
 			// Paso 4: Ejecutar la sentencia
 			rs = pstmt.executeQuery();
-			pstmt.setInt(1, anio);
-			pstmt.setInt(2, anio);
-			pstmt.setInt(3, estadoPartido_enProceso);
-			pstmt.setInt(4, idTipoProceso);
-			pstmt.setInt(5, idfase);
-			//pstmt.setInt(4, anio);
+			
 			// Paso 5(opc.): Procesar los resultados
 			while (rs.next()) {
-				//int id = rs.getInt("idPartidoPolitico");
-				String nombre = rs.getString("Nombre");
-				String rep = rs.getString("Representante");
-				int est =rs.getInt("estadoPartido_enProceso");
-				float porc = rs.getFloat("porcentaje");
 				
-				Reporte repor = new Reporte();
-				repor.setEstadoPartido_enProceso(est);
-				repor.setIdReporte(1);
-				repor.setNombre(nombre);
-				repor.setPorcentaje(porc);
-				repor.setRepresentante(rep);
+				String partidoR = rs.getString("Partido");
+				int anioR = rs.getInt("Anio");
+				int idProcesoR =rs.getInt("idProceso");
+				String tipoProcesoR = rs.getString("TipoProceso");
+				String fase1R = rs.getString("Fase1");
+				String fase2R = rs.getString("Fase2");
+				int numAdheretesR = rs.getInt("AdherentesAceptados");
+				String estadoPartidoR = rs.getString("EstadoFinal");
+								
+				Reporte r = new Reporte();
+				r.setAnio(anioR);
+				r.setEstadoFinal(estadoPartidoR);
+				r.setFase1(fase1R);
+				r.setFase2(fase2R);
+				r.setIdProceso(idProcesoR);
+				r.setNumeroAdherentes(numAdheretesR);
+				r.setPartido(partidoR);
+				r.setTipoProceso(tipoProcesoR);
 				
-				arr.add(repor);
+				arr.add(r);
 				
-				/*String correo = rs.getString("CorreoRepresentante");
-				String direccion = rs.getString("Direccion");
-				String telefono = rs.getString("Telefono");
-				int idDistrito = rs.getInt("idDistrito");
-				Date fechaRegistro = rs.getTimestamp("FechaRegistro");
-				String estadoActivo = rs.getString("EstadoActivo");*/
-				/*PartidoPolitico p = new PartidoPolitico();
-				p.setIdPartidoPolitco(id);
-				p.setNombrePartido(nombre);
-				p.setRepresentante(rep);
-				p.setCorreo(correo);
-				p.setDireccion(direccion);
-				p.setTelefono(telefono);
-				p.setIdDistrito(idDistrito);
-				p.setFechaRegistro(fechaRegistro);
-				p.setEstadoActivo(estadoActivo);
-				arr.add(p);*/ 
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

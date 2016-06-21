@@ -154,7 +154,9 @@ CREATE TABLE PartidoPoliticoxProceso (
        idProceso            int NOT NULL,
        idUsuario            int NOT NULL,
        TiempoProcesado      float NOT NULL,
-       EstadoPartido        char(1) NOT NULL       
+       EstadoPartido        char(1) NOT NULL,
+       FechaFase1			datetime null,
+       FechaFase2			datetime null
 );
 
 alter table PartidoPoliticoxProceso  add primary key  (idPartidoPolitico,idProceso);

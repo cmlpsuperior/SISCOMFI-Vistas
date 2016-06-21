@@ -208,17 +208,23 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 			// Paso 2: Obtener la conexión
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
-			String sql = "SELECT DISTINCT P.Nombre, P.Representante, PXP.EstadoPartido, ROUND(avg(AxP.PorcentajeFirma + AxP.PorcentajeHuella),3)"
-					+ "FROM PartidoPolitico P, PartidoPoliticoxProceso PXP, Planillon Pn, AdherentexPlanillon AxP, Proceso Pro"
-					+ "WHERE P.idPartidoPolitico=PXP.idPartidoPolitico AND PXP.EstadoPartido=? AND"
-					+ "Pn.idProceso=PXP.idProceso AND Pro.idProceso=PXP.idProceso AND Pro.idTipoProceso=? AND"
-					+ "AxP.idPlanillon=Pn.idPlanillon and AxP.idfase=?;";
+			String sql = "select distinct P.Nombre, P.Representante, PXP.EstadoPartido, ROUND(avg(AxP.PorcentajeFirma + AxP.PorcentajeHuella),3),"
+					+ "(case AxP.idfase "
+					+ "when 1 then ? between Pro.FechaProceso1Inicio and Pro.FechaProceso1Fin "
+					+ "when 2 then ? between Pro.FechaProceso2Inicio and Pro.FechaProceso2Fin"
+					+ "end) as columnaAuxiliar"
+					+ "from PartidoPolitico P, PartidoPoliticoxProceso PXP, Planillon Pn, AdherentexPlanillon AxP, Proceso Pro"
+					+ "WHERE P.idPartidoPolitico=PXP.idPartidoPolitico and PXP.EstadoPartido= ? and"
+					+ "Pn.idProceso=PXP.idProceso AND Pro.idProceso=PXP.idProceso AND Pro.idTipoProceso= ? AND"
+					+ "AxP.idPlanillon=Pn.idPlanillon and AxP.idfase= ?;";
 			pstmt = conn.prepareStatement(sql);
 			// Paso 4: Ejecutar la sentencia
 			rs = pstmt.executeQuery();
-			pstmt.setInt(1, estadoPartido_enProceso);
-			pstmt.setInt(2, idTipoProceso);
-			pstmt.setInt(3, idfase);
+			pstmt.setInt(1, anio);
+			pstmt.setInt(2, anio);
+			pstmt.setInt(3, estadoPartido_enProceso);
+			pstmt.setInt(4, idTipoProceso);
+			pstmt.setInt(5, idfase);
 			//pstmt.setInt(4, anio);
 			// Paso 5(opc.): Procesar los resultados
 			while (rs.next()) {

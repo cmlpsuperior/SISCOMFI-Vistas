@@ -17,6 +17,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 import pe.pucp.edu.pe.siscomfi.model.TipoProceso;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -39,12 +40,12 @@ public class VistaReporte extends JInternalFrame implements ActionListener{
 	
 	public VistaReporte() {
 		setTitle("Reportes - Partido Pol\u00EDtico");
-		setBounds(100, 100, 566, 328);
+		setBounds(100, 100, 673, 328);
 		setClosable(true);
 		getContentPane().setLayout(null);
 		
 		JLabel lblFase = new JLabel("Fase:");
-		lblFase.setBounds(264, 11, 113, 14);
+		lblFase.setBounds(340, 11, 113, 14);
 		getContentPane().add(lblFase);
 		
 		JLabel lblTipo = new JLabel("Tipo:");
@@ -56,11 +57,11 @@ public class VistaReporte extends JInternalFrame implements ActionListener{
 		getContentPane().add(lblAo);
 		
 		JLabel lblEstadoDelPartido = new JLabel("Estado del Partido:");
-		lblEstadoDelPartido.setBounds(264, 37, 113, 14);
+		lblEstadoDelPartido.setBounds(340, 40, 113, 14);
 		getContentPane().add(lblEstadoDelPartido);
 		
 		cmbTipo = new JComboBox();		
-		cmbTipo.setBounds(81, 8, 154, 20);
+		cmbTipo.setBounds(81, 8, 184, 20);
 		getContentPane().add(cmbTipo);
 		
 		cmbAnio = new JComboBox();
@@ -69,36 +70,36 @@ public class VistaReporte extends JInternalFrame implements ActionListener{
 		for(int i = anio - 10; i <= anio ;i++){
 			cmbAnio.addItem(""+i);
 		}
-		cmbAnio.setBounds(81, 37, 154, 20);
+		cmbAnio.setBounds(81, 37, 184, 20);
 		getContentPane().add(cmbAnio);
 		
 		cmbEstadoP = new JComboBox();
 		cmbEstadoP.addItem("0 - Rechazados");
 		cmbEstadoP.addItem("1 - Aceptados");
-		cmbEstadoP.setBounds(387, 34, 154, 20);
+		cmbEstadoP.setBounds(463, 37, 184, 20);
 		getContentPane().add(cmbEstadoP);
 		
 		cmbFase = new JComboBox();
 		cmbFase.addItem("Fase 1");
 		cmbFase.addItem("Fase 2");
-		cmbFase.setBounds(387, 8, 154, 20);
+		cmbFase.setBounds(463, 8, 184, 20);
 		getContentPane().add(cmbFase);
 		
 		btnGenerar = new JButton("Generar");
-		btnGenerar.setBounds(70, 253, 89, 23);
+		btnGenerar.setBounds(97, 253, 89, 23);
 		getContentPane().add(btnGenerar);
 		reporteModel = new MyTableModel();
 				
 		btnExportar = new JButton("Exportar");
-		btnExportar.setBounds(229, 253, 89, 23);
+		btnExportar.setBounds(283, 253, 89, 23);
 		getContentPane().add(btnExportar);
 		
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(388, 253, 89, 23);
+		btnCancelar.setBounds(469, 253, 89, 23);
 		getContentPane().add(btnCancelar);
 		
 		JScrollPane spnTabla = new JScrollPane();
-		spnTabla.setBounds(10, 68, 531, 163);
+		spnTabla.setBounds(10, 68, 637, 163);
 		getContentPane().add(spnTabla);
 		
 		tblReporte = new JTable();
@@ -127,8 +128,17 @@ public class VistaReporte extends JInternalFrame implements ActionListener{
 	}
 	
 	class MyTableModel extends DefaultTableModel{
+		ArrayList<PartidoPolitico> listaPartido = null;
+		String titles[] = {"PARTIDO","ANIO","PROCESO","TIPO", "FASE 1", "FASE 2", "#ADHERE.", "ESTADO FINAL"};
 		
-		String titles[] = {"NOMBRE","REPRESENTANTE","ESTADO","PORC."};
+		public MyTableModel (){
+			try {
+				//this.listaPartido =  siscomfiManager.;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		@Override
 		public int getColumnCount() {
 			// TODO Auto-generated method stub

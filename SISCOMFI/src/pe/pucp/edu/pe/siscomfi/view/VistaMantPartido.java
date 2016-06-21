@@ -394,7 +394,7 @@ public class VistaMantPartido extends JInternalFrame {
 	
 	class MyTableModel extends AbstractTableModel{		
 		ArrayList<PartidoPolitico> listaPartido = null;
-		String [] titles = {"CÓDIGO", "NOMBRE",  "REPRESENTANTE", "TELÉFONO", "ESTADO ACTIVO"};
+		String [] titles = {"CODIGO", "NOMBRE",  "REPRESENTANTE", "TELEFONO", "ESTADO ACTIVO"};
 		
 		public MyTableModel (){
 			try {

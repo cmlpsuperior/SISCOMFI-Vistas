@@ -358,6 +358,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		int valor = -1;
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
@@ -374,7 +375,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				int idAdherente = rs.getInt("idAdherente");
-				return idAdherente;
+				valor = idAdherente;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -394,7 +395,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 				e.printStackTrace();
 			}
 		}
-		return -1;
+		return valor;
 	}
 
 }

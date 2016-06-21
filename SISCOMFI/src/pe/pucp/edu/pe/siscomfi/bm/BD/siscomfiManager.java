@@ -12,6 +12,7 @@ import pe.pucp.edu.pe.siscomfi.model.Rol;
 import pe.pucp.edu.pe.siscomfi.model.Usuario;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
 import pe.pucp.edu.pe.siscomfi.model.Provincia;
+import pe.pucp.edu.pe.siscomfi.model.Reporte;
 import pe.pucp.edu.pe.siscomfi.model.TipoProceso;
 
 public class siscomfiManager {
@@ -87,6 +88,12 @@ public class siscomfiManager {
 	public static PartidoPolitico queryPartido_byNombre(String nombre) {
 		return partidoPoliticoDB.queryByNombre(nombre);
 	}
+	
+	//Reporte:
+	public static ArrayList<Reporte> queryReportePartidos (int idTipoProceso, int anio, int idfase, int estadoPartido)
+    {
+    	return partidoPoliticoDB.queryReporte(idTipoProceso, anio, idfase, estadoPartido);
+    }
 
 	// Ubicacion
 	public static ArrayList<Distrito> queryDistritosByIdProvincia(int idProvincia) {
@@ -180,4 +187,5 @@ public class siscomfiManager {
 	public static void updateEstadoPartidoProceso(int idPartido,int idProceso, int estado){
 		procesoDB.updateEstadoPartidoxProceso(idPartido, idProceso, estado);
 	}
+	
 }

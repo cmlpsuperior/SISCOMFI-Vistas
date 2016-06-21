@@ -138,7 +138,8 @@ CREATE TABLE Planillon (
        idPlanillon          int NOT NULL primary key AUTO_INCREMENT,
        TiempoProcesado      float NOT NULL,
        idPartidoPolitico    int NOT NULL,
-       idProceso            int NOT NULL
+       idProceso            int NOT NULL,
+       FechaProceso			Datetime null
 ); 
 
 alter table AdherentexPlanillon add primary key  (idPlanillon, idAdherente);
@@ -153,7 +154,9 @@ CREATE TABLE PartidoPoliticoxProceso (
        idProceso            int NOT NULL,
        idUsuario            int NOT NULL,
        TiempoProcesado      float NOT NULL,
-       EstadoPartido        char(1) NOT NULL       
+       EstadoPartido        char(1) NOT NULL,
+       FechaFase1			datetime null,
+       FechaFase2			datetime null
 );
 
 alter table PartidoPoliticoxProceso  add primary key  (idPartidoPolitico,idProceso);

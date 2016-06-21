@@ -29,18 +29,31 @@ public class UsuarioDB {
     	
     }
     
+    public Usuario queryById(int usuarioId) {
+    	return daoUsuario.queryById(usuarioId);
+    }   
+    
     public Usuario queryByCorreo(String  usuarioId) {
     	return daoUsuario.queryByCorreo(usuarioId);
     }
     
     public boolean queryByLogin(String nombreCorreo, String pass) {
     	return daoUsuario.queryByLogin(nombreCorreo, pass);
-    }
-    
+    }    
     
     public boolean queryByLoginAdmin(String nombreCorreo, String pass) {
     	return daoUsuario.queryByLoginAdmin(nombreCorreo, pass);
     }
+    
+    public String queryByUsuario(String usuario){
+    	return daoUsuario.queryByUsuario(usuario);
+    }
+    
+  //AGREGADO 
+    public String queryByCorreo_RptaSecreta(String correo, String rptaSecreta){
+    	return daoUsuario.queryByCorreo_RptaSecreta(correo, rptaSecreta);
+    }
+    
     
     public String queryRecuperarContrasenia(String usuario){
     	return daoUsuario.queryRecuperarContrasenia(usuario);

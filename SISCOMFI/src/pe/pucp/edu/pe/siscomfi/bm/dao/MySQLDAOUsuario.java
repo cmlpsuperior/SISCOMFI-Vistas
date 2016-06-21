@@ -19,7 +19,7 @@ public class MySQLDAOUsuario implements DAOUsuario {
 
 	@Override
 	public void add(Usuario u) {
-					
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;		
 		try {
@@ -33,8 +33,9 @@ public class MySQLDAOUsuario implements DAOUsuario {
 			
 			//Paso 3: Preparar la sentencia
 			String sql =  "INSERT INTO Usuario "
-					+ " (Nombre, ApellidoPaterno, ApellidoMaterno, CorreoElectronico, Contrasenia, fechaRegistro, DNI, idRol) "
-					+ " VALUES (?,?,?,?,'12345',Now(),?,?) ";
+					+ " (Nombre, ApellidoPaterno, ApellidoMaterno, CorreoElectronico, Contrasenia, fechaRegistro, DNI, idRol, "
+					+ "PreguntaSecreta, RptaSecreta) "
+					+ " VALUES (?,?,?,?,'12345',Now(), ?, ?, 'Pregunta por defecto', '12345') ";
 			pstmt = conn.prepareStatement(sql);
 			
 			//pstmt.setInt(1, p.getId());
@@ -45,6 +46,8 @@ public class MySQLDAOUsuario implements DAOUsuario {
 			/*contraseña ni fecha de registro se setean*/			
 			pstmt.setString(5, u.getDni());
 			pstmt.setInt(6, u.getIdRol());
+			//pstmt.setString(7, u.getPreguntaSecreta());//nuevo
+			//pstmt.setString(8, u.getRptaSecreta());//nuevo
 			
 			//Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
@@ -63,89 +66,89 @@ public class MySQLDAOUsuario implements DAOUsuario {
 	}
 	
 	//@Override
-	public boolean queryByLogin(String nombreCorreo, String pass) {
-					
-		Connection conn = null;
-		PreparedStatement pstmt = null;		
-		ResultSet rs = null;
-		try {
-			//Paso 1: Registrar el Driver
-			DriverManager.registerDriver(new Driver());
-			
-			//Paso 2: Obtener la conexión
-			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
-								DBConnection.user,
-								DBConnection.password);
-			
-			//Paso 3: Preparar la sentencia
-			String sql =  "SELECT * FROM Usuario WHERE correoElectronico = ? AND contrasenia = ? ";
-			pstmt = conn.prepareStatement(sql);
-			
-			//pstmt.setInt(1, p.getId());
-			pstmt.setString(1, nombreCorreo);
-			pstmt.setString(2, pass);
-			
-			//Paso 4: Ejecutar la sentencia
-			rs = pstmt.executeQuery();
-			//Paso 5(opc.): Procesar los resultados		
-			if (rs.next() == true)   
-				return true;
-			else 
-				return false;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			//Paso 6(OJO): Cerrar la conexión
-			try { if (pstmt!= null) pstmt.close();} 
-				catch (Exception e){e.printStackTrace();};
-			try { if (conn!= null) conn.close();} 
-				catch (Exception e){e.printStackTrace();};						
+		public boolean queryByLogin(String nombreCorreo, String pass) {
+						
+			Connection conn = null;
+			PreparedStatement pstmt = null;		
+			ResultSet rs = null;
+			try {
+				//Paso 1: Registrar el Driver
+				DriverManager.registerDriver(new Driver());
+				
+				//Paso 2: Obtener la conexión
+				conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+									DBConnection.user,
+									DBConnection.password);
+				
+				//Paso 3: Preparar la sentencia
+				String sql =  "SELECT * FROM Usuario WHERE correoElectronico = ? AND contrasenia = ? ";
+				pstmt = conn.prepareStatement(sql);
+				
+				//pstmt.setInt(1, p.getId());
+				pstmt.setString(1, nombreCorreo);
+				pstmt.setString(2, pass);
+				
+				//Paso 4: Ejecutar la sentencia
+				rs = pstmt.executeQuery();
+				//Paso 5(opc.): Procesar los resultados		
+				if (rs.next() == true)   
+					return true;
+				else 
+					return false;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				//Paso 6(OJO): Cerrar la conexión
+				try { if (pstmt!= null) pstmt.close();} 
+					catch (Exception e){e.printStackTrace();};
+				try { if (conn!= null) conn.close();} 
+					catch (Exception e){e.printStackTrace();};						
+			}
+			return false;
 		}
-		return false;
-	}
 	
-	public boolean queryByLoginAdmin(String nombreCorreo, String pass) {
-		
-		Connection conn = null;
-		PreparedStatement pstmt = null;		
-		ResultSet rs = null;
-		try {
-			//Paso 1: Registrar el Driver
-			DriverManager.registerDriver(new Driver());
+		public boolean queryByLoginAdmin(String nombreCorreo, String pass) {
 			
-			//Paso 2: Obtener la conexión
-			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
-								DBConnection.user,
-								DBConnection.password);
-			
-			//Paso 3: Preparar la sentencia
-			String sql =  "SELECT * FROM Usuario WHERE correoElectronico = ? AND contrasenia = ? AND idRol = 1";
-			pstmt = conn.prepareStatement(sql);
-			
-			//pstmt.setInt(1, p.getId());
-			pstmt.setString(1, nombreCorreo);
-			pstmt.setString(2, pass);
-			
-			//Paso 4: Ejecutar la sentencia
-			rs = pstmt.executeQuery();
-			//Paso 5(opc.): Procesar los resultados		
-			if (rs.next() == true)   
-				return true;
-			else 
-				return false;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			//Paso 6(OJO): Cerrar la conexión
-			try { if (pstmt!= null) pstmt.close();} 
-				catch (Exception e){e.printStackTrace();};
-			try { if (conn!= null) conn.close();} 
-				catch (Exception e){e.printStackTrace();};						
+			Connection conn = null;
+			PreparedStatement pstmt = null;		
+			ResultSet rs = null;
+			try {
+				//Paso 1: Registrar el Driver
+				DriverManager.registerDriver(new Driver());
+				
+				//Paso 2: Obtener la conexión
+				conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+									DBConnection.user,
+									DBConnection.password);
+				
+				//Paso 3: Preparar la sentencia
+				String sql =  "SELECT * FROM Usuario WHERE correoElectronico = ? AND contrasenia = ? AND idRol = 1";
+				pstmt = conn.prepareStatement(sql);
+				
+				//pstmt.setInt(1, p.getId());
+				pstmt.setString(1, nombreCorreo);
+				pstmt.setString(2, pass);
+				
+				//Paso 4: Ejecutar la sentencia
+				rs = pstmt.executeQuery();
+				//Paso 5(opc.): Procesar los resultados		
+				if (rs.next() == true)   
+					return true;
+				else 
+					return false;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				//Paso 6(OJO): Cerrar la conexión
+				try { if (pstmt!= null) pstmt.close();} 
+					catch (Exception e){e.printStackTrace();};
+				try { if (conn!= null) conn.close();} 
+					catch (Exception e){e.printStackTrace();};						
+			}
+			return false;
 		}
-		return false;
-	}
 
 	@Override
 	public void update(Usuario u) {
@@ -157,6 +160,97 @@ public class MySQLDAOUsuario implements DAOUsuario {
 	public void delete(int idUsuario) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public Usuario queryById(int idUsuario) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public String queryByUsuario(String correo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;		
+		ResultSet rs = null;
+		String pass = "";
+		try {
+			//Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			
+			//Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+								DBConnection.user,
+								DBConnection.password);
+			
+			//Paso 3: Preparar la sentencia
+			String sql =  "SELECT * FROM Usuario WHERE correoElectronico = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			//pstmt.setInt(1, p.getId());
+			pstmt.setString(1, correo);			
+			//Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			//Paso 5(opc.): Procesar los resultados		
+			if (rs.next() == true)  {
+				pass = rs.getString("contrasenia");
+				return pass;
+			}
+				
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			//Paso 6(OJO): Cerrar la conexión
+			try { if (pstmt!= null) pstmt.close();} 
+				catch (Exception e){e.printStackTrace();};
+			try { if (conn!= null) conn.close();} 
+				catch (Exception e){e.printStackTrace();};						
+		}
+		return pass;
+	}
+	
+	@Override
+	public String queryByCorreo_RptaSecreta(String correo, String rptaSecreta) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;		
+		ResultSet rs = null;
+		String pass = "";
+		try {
+			//Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			
+			//Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL,
+								DBConnection.user,
+								DBConnection.password);
+			
+			//Paso 3: Preparar la sentencia
+			String sql =  "SELECT * FROM Usuario WHERE correoElectronico = ? AND rptaSecreta= ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			//pstmt.setInt(1, p.getId());
+			pstmt.setString(1, correo);
+			pstmt.setString(2, rptaSecreta);			
+			//Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			//Paso 5(opc.): Procesar los resultados		
+			if (rs.next() == true)  {
+				pass = rs.getString("contrasenia");
+				return pass;
+			}
+				
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			//Paso 6(OJO): Cerrar la conexión
+			try { if (pstmt!= null) pstmt.close();} 
+				catch (Exception e){e.printStackTrace();};
+			try { if (conn!= null) conn.close();} 
+				catch (Exception e){e.printStackTrace();};						
+		}
+		return pass;
 	}
 
 	@Override
@@ -247,5 +341,6 @@ public class MySQLDAOUsuario implements DAOUsuario {
 		}
 		return pass;
 	}
+	
 
 }

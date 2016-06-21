@@ -11,6 +11,8 @@ public class Usuario {
 	private String contrasenia;
 	private Date fechaRegistro; //debe tener el formato YYYY-MM-DD
 	private String dni;
+	private String PreguntaSecreta; //nuevo
+	private String RptaSecreta; //nuevo
 	
 	public Usuario(){
 		
@@ -27,7 +29,21 @@ public class Usuario {
 		this.fechaRegistro = fechaRegistro;
 		this.dni = dni;
 		this.idRol = idRol;
+		this.PreguntaSecreta=PreguntaSecreta;
+		this.RptaSecreta=RptaSecreta;
 	}
+	public String getPreguntaSecreta() {
+		return PreguntaSecreta;
+	}
+	public void setPreguntaSecreta(String preguntaSecreta) {
+		PreguntaSecreta = preguntaSecreta;
+	}
+	public String getRptaSecreta() {
+		return RptaSecreta;
+	}
+	public void setRptaSecreta(String rptaSecreta) {
+		RptaSecreta = rptaSecreta;
+	}	
 	public String getDni() {
 		return dni;
 	}

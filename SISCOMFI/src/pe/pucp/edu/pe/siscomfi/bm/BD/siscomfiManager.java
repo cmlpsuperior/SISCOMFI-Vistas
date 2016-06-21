@@ -39,6 +39,14 @@ public class siscomfiManager {
 	public static String queryRecuperarContrasenia(String correo){
 		return usuarioDB.queryRecuperarContrasenia(correo);
 	}
+	
+	public static String queryByUsuario(String correo){
+		return usuarioDB.queryByUsuario(correo);
+	}	
+	
+	public static String queryByCorreo_RptaSecreta(String correo, String rptaSecreta){
+		return usuarioDB.queryByCorreo_RptaSecreta(correo, rptaSecreta);
+	}
 	// devuelve true si el usuario y pass ingresado pertenece a un administrador
 	public static boolean queryByLoginAdmin(String nombreCorreo, String pass) {
 		return usuarioDB.queryByLoginAdmin(nombreCorreo, pass);

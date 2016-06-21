@@ -107,9 +107,20 @@ public class VistaLogin implements ActionListener {
 
 		lblRecuperar.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				String correo = JOptionPane.showInputDialog("Ingrese su usuario");
+				String rptaSecreta = JOptionPane.showInputDialog("Ingrese su respuesta secreta");
+				if (txtUsuario.getText().equals("")) 
+					JOptionPane.showMessageDialog(null, "Por favor ingrese su dirección de correo");
+				else {
+					String password = siscomfiManager.queryByCorreo_RptaSecreta(txtUsuario.getText(), rptaSecreta);
+					System.out.println(txtUsuario.getText()+ " " + rptaSecreta + " " + password);
+					if (password!="")	
+						JOptionPane.showMessageDialog(null, "Su contraseña es: " + password);
+					else
+						JOptionPane.showMessageDialog(null, "No se encontraron coincidencias entre el correo y la respuesta ingresada");
+				}
+				/*String correo = JOptionPane.showInputDialog("Ingrese su usuario");
 				String password = siscomfiManager.queryRecuperarContrasenia(correo);
-				JOptionPane.showMessageDialog(null, "Su contraseña es: " + password);
+				JOptionPane.showMessageDialog(null, "Su contraseña es: " + password);*/
 			}
 		});
 		JLabel lblLogo = new JLabel("");

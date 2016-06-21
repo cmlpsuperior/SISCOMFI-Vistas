@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
+import pe.pucp.edu.pe.siscomfi.model.Reporte;
 import pe.pucp.edu.pe.siscomfi.model.TipoProceso;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -25,10 +26,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.awt.GridLayout;
 
 
 public class VistaReporte extends JInternalFrame implements ActionListener{
-	private JTable tblReporte;
 	private JComboBox cmbTipo;
 	private JComboBox cmbFase;
 	private JComboBox cmbAnio;
@@ -37,6 +38,7 @@ public class VistaReporte extends JInternalFrame implements ActionListener{
 	private JButton btnExportar;
 	private JButton btnCancelar;
 	private MyTableModel reporteModel;
+	private JTable tblReporte;
 	
 	public VistaReporte() {
 		setTitle("Reportes - Partido Pol\u00EDtico");
@@ -86,9 +88,22 @@ public class VistaReporte extends JInternalFrame implements ActionListener{
 		getContentPane().add(cmbFase);
 		
 		btnGenerar = new JButton("Generar");
+		btnGenerar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Primero vemos si tiene idTipoProceso:
+				int idTipoProceso = -1;
+				String[] tokens = cmbTipo.getSelectedItem().toString().split(" ");
+				if (tokens[0].equals("Todos")) 
+					idTipoProceso = -1;
+				else 
+					idTipoProceso = Integer.parseInt(tokens[0]);				
+				
+				reporteModel.listaReporte = siscomfiManager.queryReportePartidos(idTipoProceso, -1, -1, -1);
+				reporteModel.fireTableChanged(null);
+			}
+		});
 		btnGenerar.setBounds(97, 253, 89, 23);
-		getContentPane().add(btnGenerar);
-		reporteModel = new MyTableModel();
+		getContentPane().add(btnGenerar);		
 				
 		btnExportar = new JButton("Exportar");
 		btnExportar.setBounds(283, 253, 89, 23);
@@ -98,14 +113,18 @@ public class VistaReporte extends JInternalFrame implements ActionListener{
 		btnCancelar.setBounds(469, 253, 89, 23);
 		getContentPane().add(btnCancelar);
 		
-		JScrollPane spnTabla = new JScrollPane();
-		spnTabla.setBounds(10, 68, 637, 163);
-		getContentPane().add(spnTabla);
+		JPanel panTabla = new JPanel();
+		panTabla.setBounds(10, 77, 637, 165);
+		getContentPane().add(panTabla);
+		panTabla.setLayout(new GridLayout(1, 0, 0, 0));
+		
+		JScrollPane scrollPane = new JScrollPane();
+		panTabla.add(scrollPane);
 		
 		tblReporte = new JTable();
+		scrollPane.setViewportView(tblReporte);		
+		reporteModel = new MyTableModel();
 		tblReporte.setModel(reporteModel);
-		
-		spnTabla.setViewportView(tblReporte);
 		
 		//llenamos los combos:
 		LlenarCmbTipoProceso();
@@ -127,38 +146,58 @@ public class VistaReporte extends JInternalFrame implements ActionListener{
 		}
 	}
 	
-	class MyTableModel extends DefaultTableModel{
-		ArrayList<PartidoPolitico> listaPartido = null;
+	class MyTableModel extends AbstractTableModel{
+		ArrayList<Reporte> listaReporte = null; //se inicializa vacio
 		String titles[] = {"PARTIDO","ANIO","PROCESO","TIPO", "FASE 1", "FASE 2", "#ADHERE.", "ESTADO FINAL"};
+		
 		
 		public MyTableModel (){
 			try {
-				//this.listaPartido =  siscomfiManager.;
+				this.listaReporte =  new ArrayList <Reporte>();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		} 
+		
 		@Override
 		public int getColumnCount() {
 			// TODO Auto-generated method stub
-			return titles.length;
+			return 8;
 		}
-
+		
+		@Override
+		public int getRowCount() {
+			// TODO Auto-generated method stub
+			return listaReporte.size();
+		}
+	
+		@Override
+		public Object getValueAt(int row, int col) {
+			String value = "";
+			switch(col){
+				case 0:  value = "" + listaReporte.get(row).getPartido(); break;
+				case 1:  value = "" + listaReporte.get(row).getAnio(); break;
+				case 2:  value = "" + listaReporte.get(row).getIdProceso(); break;	
+				case 3:  value = "" + listaReporte.get(row).getTipoProceso(); break;
+				case 4:  value = "" + listaReporte.get(row).getFase1(); break;
+				case 5:  value = "" + listaReporte.get(row).getFase2(); break;
+				case 6:  value = "" + listaReporte.get(row).getNumeroAdherentes(); break;
+				case 7:  value = "" + listaReporte.get(row).getEstadoFinal(); break;				
+			}
+			return value;
+		}
+		
+		@Override
 		public String getColumnName(int col){
 			return titles[col];
-		}		
-
-		@Override
-		public Object getValueAt(int arg0, int arg1) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+		}	
 		
 	}
 	
 	public void LlenarCmbTipoProceso(){ //mostrare solo los clientes que estan activos
 		cmbTipo.removeAllItems();
+		cmbTipo.addItem("Todos");
 		ArrayList<TipoProceso> listaTipoProceso;
 		try {
 			listaTipoProceso = siscomfiManager.queryAllTipoProcesos();
@@ -188,5 +227,4 @@ public class VistaReporte extends JInternalFrame implements ActionListener{
 			e.printStackTrace();
 		}		
 	}
-	
 }

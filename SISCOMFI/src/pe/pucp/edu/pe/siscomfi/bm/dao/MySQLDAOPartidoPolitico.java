@@ -236,11 +236,22 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 						"       	pl.idPartidoPolitico = ppxp.idPartidoPolitico and								" +	
 						"        	pl.idProceso = ppxp.idProceso and												" +
 						"        	pl.idPlanillon = axp.idPlanillon and        									" +
-						"        	axp.EstadoValidez <> '0'														" ;
+						"        	axp.EstadoValidez <> '0'														" +
+						"group by 	CONCAT(CAST(ppxp.idPartidoPolitico as char(5)), ' - ', pp.Nombre) ,				" +
+						"			year(p.FechaProceso1Inicio) , ppxp.idProceso, tp.Nombre ,						" +
+					    "   	 	'SI',																			" +
+					    "    		case when FechaFase2 is null then 'NO'											" +
+						"				else 'SI'																	" +	
+						"			end ,																			" +
+					    "    		case when ppxp.EstadoPartido = '1' then 'ACEPTADO'								" +	
+						"				when ppxp.EstadoPartido = '0' then 'RECHAZADO'								" +
+					    "            	else 'EN PROCESO'															" +
+						"			END 																			" ;
+						
 				pstmt = conn.prepareStatement(sql);
 			}
 			// 2: si idTipoProceso si existe y los demas no: num, -1, -1, -1
-			else if (idTipoProceso > 0 && anio == -1 && idFase == -1 && estadoPartido == -1){
+			else if (idTipoProceso >= 0 && anio == -1 && idFase == -1 && estadoPartido == -1){
 				String sql = 
 						" select 	CONCAT(CAST(ppxp.idPartidoPolitico as char(5)), ' - ', pp.Nombre) as Partido, 	" +
 						"			year(p.FechaProceso1Inicio) as Anio, ppxp.idProceso, tp.Nombre as TipoProceso,	" +
@@ -265,9 +276,19 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 						"       	pl.idPartidoPolitico = ppxp.idPartidoPolitico and								" +	
 						"        	pl.idProceso = ppxp.idProceso and												" +
 						"        	pl.idPlanillon = axp.idPlanillon and        									" +
-						"        	axp.EstadoValidez <> '0'														" +
+						"        	axp.EstadoValidez <> '0'	and													" +
 						"  																					      	" + 
-						"			tp.idProceso = ?																" ;
+						"			tp.idTipoProceso = ?															" +
+						"group by 	CONCAT(CAST(ppxp.idPartidoPolitico as char(5)), ' - ', pp.Nombre) ,				" +
+						"			year(p.FechaProceso1Inicio) , ppxp.idProceso, tp.Nombre ,						" +
+					    "   	 	'SI',																			" +
+					    "    		case when FechaFase2 is null then 'NO'											" +
+						"				else 'SI'																	" +	
+						"			end ,																			" +
+					    "    		case when ppxp.EstadoPartido = '1' then 'ACEPTADO'								" +	
+						"				when ppxp.EstadoPartido = '0' then 'RECHAZADO'								" +
+					    "            	else 'EN PROCESO'															" +
+						"			END 																			" ;
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, idTipoProceso);
 			}
@@ -297,7 +318,17 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 						"       	pl.idPartidoPolitico = ppxp.idPartidoPolitico and								" +	
 						"        	pl.idProceso = ppxp.idProceso and												" +
 						"        	pl.idPlanillon = axp.idPlanillon and        									" +
-						"        	axp.EstadoValidez <> '0'														" ;
+						"        	axp.EstadoValidez <> '0'														" +
+						"group by 	CONCAT(CAST(ppxp.idPartidoPolitico as char(5)), ' - ', pp.Nombre) ,				" +
+						"			year(p.FechaProceso1Inicio) , ppxp.idProceso, tp.Nombre ,						" +
+					    "   	 	'SI',																			" +
+					    "    		case when FechaFase2 is null then 'NO'											" +
+						"				else 'SI'																	" +	
+						"			end ,																			" +
+					    "    		case when ppxp.EstadoPartido = '1' then 'ACEPTADO'								" +	
+						"				when ppxp.EstadoPartido = '0' then 'RECHAZADO'								" +
+					    "            	else 'EN PROCESO'															" +
+						"			END 																			" ;
 				pstmt = conn.prepareStatement(sql);
 			}
 			

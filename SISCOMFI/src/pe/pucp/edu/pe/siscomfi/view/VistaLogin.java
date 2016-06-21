@@ -108,19 +108,24 @@ public class VistaLogin implements ActionListener {
 		lblRecuperar.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				String rptaSecreta = JOptionPane.showInputDialog("Ingrese su respuesta secreta");
-				if (txtUsuario.getText().equals("")) 
+				if (txtUsuario.getText().equals(""))
 					JOptionPane.showMessageDialog(null, "Por favor ingrese su dirección de correo");
 				else {
 					String password = siscomfiManager.queryByCorreo_RptaSecreta(txtUsuario.getText(), rptaSecreta);
-					System.out.println(txtUsuario.getText()+ " " + rptaSecreta + " " + password);
-					if (password!="")	
+					System.out.println(txtUsuario.getText() + " " + rptaSecreta + " " + password);
+					if (password != "")
 						JOptionPane.showMessageDialog(null, "Su contraseña es: " + password);
 					else
-						JOptionPane.showMessageDialog(null, "No se encontraron coincidencias entre el correo y la respuesta ingresada");
+						JOptionPane.showMessageDialog(null,
+								"No se encontraron coincidencias entre el correo y la respuesta ingresada");
 				}
-				/*String correo = JOptionPane.showInputDialog("Ingrese su usuario");
-				String password = siscomfiManager.queryRecuperarContrasenia(correo);
-				JOptionPane.showMessageDialog(null, "Su contraseña es: " + password);*/
+				/*
+				 * String correo = JOptionPane.showInputDialog(
+				 * "Ingrese su usuario"); String password =
+				 * siscomfiManager.queryRecuperarContrasenia(correo);
+				 * JOptionPane.showMessageDialog(null, "Su contraseña es: " +
+				 * password);
+				 */
 			}
 		});
 		JLabel lblLogo = new JLabel("");
@@ -146,34 +151,11 @@ public class VistaLogin implements ActionListener {
 			boolean valor = siscomfiManager.queryByLogin(nombreCorreo, pass);
 			if (valor) {
 				Usuario usr = siscomfiManager.queryByCorreo(nombreCorreo);
-				JFileChooser jfcRnv = new JFileChooser();
-				jfcRnv.setDialogTitle("Seleccione el directorio de las imagenes del RNV");
-				jfcRnv.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				File pathRnv = null;
-				jfcRnv.showOpenDialog(frmSiscomfi);
-				pathRnv = jfcRnv.getSelectedFile();
-				// rnv
-				if (pathRnv != null)
-					UsuarioLogeado.pathImagenesRnv = pathRnv.getAbsolutePath();
 				// usuario logueado
 				UsuarioLogeado.usuario = usr;
-				// observados
-				JFileChooser jfcObservado = new JFileChooser();
-				jfcObservado.setDialogTitle("Seleccione el directorio donde se guardaran los padrones observados");
-				jfcObservado.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				File pathObvs = null;
-				jfcObservado.showOpenDialog(frmSiscomfi);
-				pathObvs = jfcObservado.getSelectedFile();
-				if (pathObvs != null)
-					UsuarioLogeado.pathObservadosPlanilon = pathObvs.getAbsolutePath();
-				if (pathRnv != null && pathObvs != null){
-					frmSiscomfi.dispose();
-					vMenu = new VistaMenu();
-					vMenu.setVisible(true);
-				}else{
-					JOptionPane.showMessageDialog(null, "Debe seleccionar las carpetas de los padrones y la de sus observados");
-				}
-				
+				frmSiscomfi.dispose();
+				vMenu = new VistaMenu();
+				vMenu.setVisible(true);
 			} else {
 				JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecto");
 			}

@@ -45,6 +45,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JButton btnCancelar;
 	private JButton btnProcesar;
 	private JFileChooser jfcRuta;
+	private JFileChooser jfcRnv;
 	private JComboBox<String> cbDescProceso;
 	private JTextArea txtLog;
 	private String pathPadronProcesar = null;
@@ -53,12 +54,27 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JProgressBar pgBar;
 	private JPanel pnLog;
 	private Proceso fase = null;
-	private String pathObservados = UsuarioLogeado.pathObservadosPlanilon;
+	private String pathObservados;
 
 	public VistaIniciarProceso() {
+		boolean indicador = true;
+		if (!UsuarioLogeado.verificarPaths()) {
+			String result = UsuarioLogeado.setearPathsRnv(this);
+			if (result.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Escojan un directorio de las imagenes del RNV");
+				indicador = false;
+			} else {
+				result = UsuarioLogeado.setearPathsObservado(this);
+				if (result.isEmpty()) {
+					JOptionPane.showMessageDialog(this, "Escojan un directorio para guardar los adherentes observados");
+					indicador = false;
+				}
+			}
+		}
+		if (!indicador) return;
 		setClosable(true);
 		setTitle("Iniciar Proceso");
-		setBounds(100, 100, 436, 499);
+		setBounds(100, 100, 436, 463);
 		getContentPane().setLayout(null);
 
 		JLabel lblNewLabel = new JLabel("Partido Pol\u00EDtico:");
@@ -75,22 +91,22 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(cbDescProceso);
 		fillDescProcesoCmb();
 
-		JLabel lblRuta = new JLabel("Ruta:");
-		lblRuta.setBounds(12, 144, 85, 16);
+		JLabel lblRuta = new JLabel("Ruta de los Padrones:");
+		lblRuta.setBounds(12, 140, 146, 16);
 		getContentPane().add(lblRuta);
 
 		txtRuta = new JTextField();
-		txtRuta.setBounds(168, 141, 180, 22);
+		txtRuta.setBounds(168, 137, 180, 22);
 		txtRuta.setEditable(false);
 		getContentPane().add(txtRuta);
 		txtRuta.setColumns(10);
 
 		btnRuta = new JButton("...");
-		btnRuta.setBounds(358, 140, 45, 25);
+		btnRuta.setBounds(358, 136, 45, 25);
 		getContentPane().add(btnRuta);
 
 		btnProcesar = new JButton("Procesar");
-		btnProcesar.setBounds(75, 190, 97, 25);
+		btnProcesar.setBounds(85, 180, 97, 25);
 		getContentPane().add(btnProcesar);
 
 		txtFase = new JTextField();
@@ -115,7 +131,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(lblFaseDelProceso);
 
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(230, 190, 97, 25);
+		btnCancelar.setBounds(215, 180, 97, 25);
 		getContentPane().add(btnCancelar);
 
 		JLabel lblDescripcionDelProceso = new JLabel("Descripcion del proceso:");
@@ -125,7 +141,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		pnLog = new JPanel();
 		pnLog.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Log", TitledBorder.LEADING,
 				TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnLog.setBounds(31, 278, 353, 173);
+		pnLog.setBounds(33, 254, 353, 173);
 		getContentPane().add(pnLog);
 		pnLog.setLayout(null);
 
@@ -139,9 +155,8 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		txtLog.setText("");
 
 		pgBar = new JProgressBar();
-		pgBar.setBounds(63, 250, 299, 17);
+		pgBar.setBounds(63, 226, 299, 17);
 		getContentPane().add(pgBar);
-
 		// listener
 		btnCancelar.addActionListener(this);
 		btnRuta.addActionListener(this);
@@ -208,7 +223,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			if (siscomfiManager.verificarPartidoProceso(idPartido, fase.getIdProceso()) == 0) {
 				// agergar partidoxproceso
 				siscomfiManager.addPartidoxProceso(idPartido, fase.getIdProceso(), 2, 0, 2);
-				File pPartido = new File(pathObservados + "\\" + partido);
+				File pPartido = new File(UsuarioLogeado.pathObservadosPlanilon + "\\" + partido);
 				if (!pPartido.exists())
 					pPartido.mkdir();
 				if (pathPadronProcesar != null) {
@@ -266,9 +281,8 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									txtLog.update(txtLog.getGraphics());
 									ImagePlus huella = HelperMethods.quitarBorde(partes.get(3));
 									imgHuella = new Duplicator().run(huella);
-									ImagePlus huellaRnv = IJ
-											.openImage(UsuarioLogeado.pathImagenesRnv + "\\huellas\\"
-													+ adh.getrHuella() + ".jpg");
+									ImagePlus huellaRnv = IJ.openImage(
+											UsuarioLogeado.pathImagenesRnv + "\\huellas\\" + adh.getrHuella() + ".jpg");
 									imgHuellaOriginal = new Duplicator().run(huellaRnv);
 									double[][] original = Fingerprint.imageGraph(huellaRnv);
 									double[][] sospechosa = Fingerprint.imageGraph(huella);
@@ -290,9 +304,8 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									txtLog.update(txtLog.getGraphics());
 									ImagePlus firma = HelperMethods.quitarBorde(partes.get(2));
 									imgFirma = new Duplicator().run(firma);
-									ImagePlus firmaRnv = IJ
-											.openImage(UsuarioLogeado.pathImagenesRnv + "\\firmas\\"
-													+ adherente.getrFirma() + ".jpg");
+									ImagePlus firmaRnv = IJ.openImage(UsuarioLogeado.pathImagenesRnv + "\\firmas\\"
+											+ adherente.getrFirma() + ".jpg");
 									imgFirmaOriginal = new Duplicator().run(firmaRnv);
 									firmaRnv = Signatures.formatoFirma(firmaRnv);
 									firma = Signatures.formatoFirma(firma);
@@ -369,7 +382,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 					}
 					if (nObservados == 0)
 						siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(), 1);
-					else 
+					else
 						siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(), 3);
 				} else {
 					JOptionPane.showMessageDialog(this, "Escojan un directorio.");

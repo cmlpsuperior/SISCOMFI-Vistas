@@ -24,31 +24,38 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		ResultSet rs = null;
 		int id = 0;
 		try {
-			// Paso 1: Registrar el Driver
-			DriverManager.registerDriver(new Driver());
-
-			// Paso 2: Obtener la conexión
-			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
-
-			// Paso 3: Preparar la sentencia
-			String sql = "INSERT INTO Adherente "
-					+ "(Nombre, ApellidoPaterno, ApellidoMaterno, DNI, FechaNacimiento, idDistrito)"
-					+ "VALUES (?,?,?,?,?,?)";
-			pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-
-			// pstmt.setInt(1, p.getId());
-			pstmt.setString(1, a.getNombre());
-			pstmt.setString(2, a.getAppPaterno());
-			pstmt.setString(3, a.getAppMaterno());
-			pstmt.setString(4, a.getDni());
-			pstmt.setDate(5, new java.sql.Date(a.getFechaNacimiento().getTime()));
-			pstmt.setInt(6, a.getIdDistrito());
-
-			// Paso 4: Ejecutar la sentencia
-			pstmt.executeUpdate();
-			rs = pstmt.getGeneratedKeys();
-			if (rs.next()) {
-				id = rs.getInt(1);
+			//verifico que el adherente que se quiere insertar no exista:
+			int idAdherenteExiste =  existeAdherente (a); //0: no existe, >0: ya habia un adeherente con ese DNI
+			if (idAdherenteExiste >0){
+				id = idAdherenteExiste;
+			}
+			else {
+				// Paso 1: Registrar el Driver
+				DriverManager.registerDriver(new Driver());
+	
+				// Paso 2: Obtener la conexión
+				conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+				
+				// Paso 3: Preparar la sentencia
+				String sql = "INSERT INTO Adherente "
+						+ "(Nombre, ApellidoPaterno, ApellidoMaterno, DNI, FechaNacimiento, idDistrito)"
+						+ "VALUES (?,?,?,?,?,?)";
+				pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+	
+				// pstmt.setInt(1, p.getId());
+				pstmt.setString(1, a.getNombre());
+				pstmt.setString(2, a.getAppPaterno());
+				pstmt.setString(3, a.getAppMaterno());
+				pstmt.setString(4, a.getDni());
+				pstmt.setDate(5, new java.sql.Date(a.getFechaNacimiento().getTime()));
+				pstmt.setInt(6, a.getIdDistrito());
+	
+				// Paso 4: Ejecutar la sentencia
+				pstmt.executeUpdate();
+				rs = pstmt.getGeneratedKeys();
+				if (rs.next()) {
+					id = rs.getInt(1);
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -396,6 +403,48 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			}
 		}
 		return valor;
+	}
+	
+	//si exite devuelve el id del adherente
+	public int existeAdherente(Adherente a) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int idAdherente = 0;
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			String sql = 	" SELECT * FROM Adherente A "
+							+ " WHERE A.Dni = ? " ;
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,a.getDni() );
+			// Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			// Paso 5(opc.): Procesar los resultados
+			if (rs.next()) {
+				idAdherente = rs.getInt("idAdherente");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexión
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return idAdherente;
 	}
 
 }

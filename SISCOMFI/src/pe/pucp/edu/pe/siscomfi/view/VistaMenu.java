@@ -17,6 +17,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+
 public class VistaMenu extends JFrame {
 
 	private JDesktopPane desktop;
@@ -152,6 +154,7 @@ public class VistaMenu extends JFrame {
 					fEscogido = jfcChooser.getSelectedFile();
 					if (fEscogido != null) {
 						archivoRNV = fEscogido.getAbsolutePath();
+						siscomfiManager.llenarRegistroElector(archivoRNV);
 					} else {
 						if (result == JFileChooser.CANCEL_OPTION)
 							break;

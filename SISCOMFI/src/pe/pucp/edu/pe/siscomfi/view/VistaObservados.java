@@ -164,7 +164,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 					}
 				}
 				if (dniEncontrado != null) {
-					File pathHuella = new File(dniEncontrado.getAbsolutePath() + "\\huella");
+					File pathHuella = new File(dniEncontrado.getAbsolutePath() + "huella");
 					if (pathHuella.exists()) {
 						File[] huellas = pathHuella.listFiles();
 						for (File huella : huellas) {
@@ -202,7 +202,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 						pnObservadoH.setVisible(false);
 						pnOriginalH.setVisible(false);
 					}
-					File pathFirma = new File(dniEncontrado.getAbsolutePath() + "\\firma");
+					File pathFirma = new File(dniEncontrado.getAbsolutePath() + "firma");
 					if (pathFirma.exists()) {
 						File[] firmas = pathFirma.listFiles();
 						for (File firma : firmas) {
@@ -471,7 +471,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			// clearTable();
 			String partido = cmbPartido.getSelectedItem().toString();
 			int idPartido = partido.charAt(0);
-			pObservadosPartido = new File(pathObservados + "\\" + partido);
+			pObservadosPartido = new File(pathObservados + "" + partido);
 			if (pObservadosPartido.exists()) {
 				// buscar observados del partido
 				File[] pAdhObservados = pObservadosPartido.listFiles();

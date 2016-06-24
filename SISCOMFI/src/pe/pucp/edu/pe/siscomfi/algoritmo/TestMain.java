@@ -1,6 +1,7 @@
 package pe.pucp.edu.pe.siscomfi.algoritmo;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -58,30 +59,40 @@ public class TestMain {
 
 		// PARTE PARA CORTAR PLANILLON
 
-		/*
-		 * ImagePlus img = IJ.openImage("Imagenes\\001.jpg"); ImagePlus
-		 * recortado = HelperMethods.recortarPlanillonO(img, img); // //
-		 * recortado.show(); //IJ.saveAs(recortado, "Jpeg", //
-		 * "C:\\Users\\samoel\\Desktop\\TestImage\\padron\\pp.jpg"); ImagePlus
-		 * recortadoOriginal = new Duplicator().run(recortado);
-		 * 
-		 * List<ImagePlus> lista = HelperMethods.getFilasPlanillonO(recortado);
-		 * 
-		 * // for (ImagePlus mm : lista) { mm.show(); } for(int i = 0; i <
-		 * lista.size() ; i++){ List<ImagePlus> parteLista =
-		 * HelperMethods.getPartesFilaO(lista.get(i), recortadoOriginal); for
-		 * (ImagePlus mm : parteLista) { mm.show(); } System.out.print("Fila " +
-		 * (i+1) + ": "); int len = 8; List<ImagePlus> datos =
-		 * HelperMethods.cropSection(parteLista.get(0), len); String dni = " ";
-		 * for (ImagePlus mm : datos) { String digito =
-		 * OcrProy.ocrNumbers.reconocer(mm.getBufferedImage()); dni += digito; }
-		 * System.out.print(dni + " "); len = 48; datos =
-		 * HelperMethods.cropSection(parteLista.get(1), len); String
-		 * nombreApellido = " "; for (ImagePlus mm : datos) { //mm.show();
-		 * String letra = OcrProy.ocrLetters.reconocer(mm.getBufferedImage());
-		 * nombreApellido += letra; } System.out.print(nombreApellido);
-		 * System.out.println(); }
-		 */
+		ImagePlus imgPlanillon = IJ.openImage(
+				"C:\\Users\\samoel\\Desktop\\PUCP\\2016-1\\Desarrollo de Programas 1\\Padron\\part.H.original9.jpg");
+		// procesamos el planillon
+		imgPlanillon = HelperMethods.procesarPlanillon(imgPlanillon);
+		// sacamos el tamaño de los campos
+		ImagePlus auxImg = new Duplicator().run(imgPlanillon);
+		int[] tCampos = HelperMethods.cabeceraPlanillon(auxImg);
+		// sacamos las filas
+		List<ImagePlus> filas = HelperMethods.sacarFilasPlanillon(imgPlanillon);
+		for (ImagePlus fila : filas) {
+			List<ImagePlus> partes = HelperMethods.sacarDatosFila(fila, tCampos);
+			/*List<ImagePlus> digitosNumero = HelperMethods.getDatosParte(partes.get(0), 8);
+			String dni = "", digit;
+			for (ImagePlus dNumb : digitosNumero) {
+				if (dNumb != null) {
+					digit = OcrProy.ocrNumbers.reconocer(dNumb.getBufferedImage());
+					dni += digit;
+				}
+			}
+			System.out.print("DNI: " + dni);
+			String nombre = "",letter;
+			List<ImagePlus> letraNombre = HelperMethods.getDatosParte(partes.get(1), 48);
+			for(ImagePlus letra: letraNombre){
+				if (letra != null){
+					letter = OcrProy.ocrLetters.reconocer(letra.getBufferedImage());
+					nombre += letter;
+				}else nombre += " ";
+			}
+			System.out.println("   Nombre: " + nombre);*/
+			ImagePlus huella = HelperMethods.quitarBorde(partes.get(3));
+			huella.show();
+			ImagePlus firma = HelperMethods.quitarBorde(partes.get(2));
+			firma.show();
+		}
 
 		// CARGAR OCR - COMPARAR
 
@@ -96,20 +107,21 @@ public class TestMain {
 
 		// HUELLA
 
-		double[][] graphOriginal = Fingerprint.imageGraph("C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\002_1.jpg");
-		String filename = "";
-		for (int i = 2; i < 50; i++) {
-			for (int j = 1; j < 3; j++) {
-				if (i < 10)
-					filename = "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\00" + i + "_" + j + ".jpg";
-				else
-					filename = "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\0" + i + "_" + j + ".jpg";
-
-				double[][] graphSuspect = Fingerprint.imageGraph(filename);
-				double res = Fingerprint.comparition(graphOriginal, graphSuspect);
-				System.out.println(Fingerprint.resultado(res) + " Porcentaje: " + res);
-			}
-		}
+		/*
+		 * double[][] graphOriginal = Fingerprint.imageGraph(
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\002_1.jpg"); String
+		 * filename = ""; for (int i = 2; i < 50; i++) { for (int j = 1; j < 3;
+		 * j++) { if (i < 10) filename =
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\00" + i + "_" + j +
+		 * ".jpg"; else filename =
+		 * "C:\\Users\\samoel\\Desktop\\TestImage\\imagenes\\0" + i + "_" + j +
+		 * ".jpg";
+		 * 
+		 * double[][] graphSuspect = Fingerprint.imageGraph(filename); double
+		 * res = Fingerprint.comparition(graphOriginal, graphSuspect);
+		 * System.out.println(Fingerprint.resultado(res) + " Porcentaje: " +
+		 * res); } }
+		 */
 
 		// FIRMAS
 		/*

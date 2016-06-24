@@ -53,6 +53,9 @@ public class PartidoPoliticoDB {
     	
     }
     
+    public int contarAdherentesAceptados(int idPartido){
+    	return daoPartidoPolitico.contarAdherenteAceptado(idPartido);
+    }
     //Observados
     public ArrayList<PartidoPolitico> queryAllObservados()
     {

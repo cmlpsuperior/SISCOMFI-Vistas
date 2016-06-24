@@ -54,6 +54,9 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JPanel pnLog;
 	private Proceso fase = null;
 	private int numFase = 0;
+	private JTextField txtAceptados;
+	private JLabel lblResultadoFinal;
+	private JTextField txtResultado;
 
 	public VistaIniciarProceso() {
 		boolean indicador = true;
@@ -79,24 +82,9 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(txtFase);
 		txtFase.setColumns(10);
 
-		// Fase del Proceso
-		fase = siscomfiManager.getFase1Proceso();
-		if (fase == null) {
-			fase = siscomfiManager.getFase2Proceso();
-			if (fase == null) {
-				JOptionPane.showMessageDialog(this, "No hay procesos electorales activos");
-				return;
-			}
-			numFase = 2;
-			txtFase.setText("Fase 2");
-		} else {
-			numFase = 1;
-			txtFase.setText("Fase 1");
-		}
-
 		setClosable(true);
 		setTitle("Iniciar Proceso");
-		setBounds(100, 100, 436, 463);
+		setBounds(100, 100, 436, 551);
 		getContentPane().setLayout(null);
 
 		JLabel lblNewLabel = new JLabel("Partido Pol\u00EDtico:");
@@ -128,7 +116,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(btnRuta);
 
 		btnProcesar = new JButton("Procesar");
-		btnProcesar.setBounds(85, 180, 97, 25);
+		btnProcesar.setBounds(76, 263, 97, 25);
 		getContentPane().add(btnProcesar);
 
 		JLabel lblFaseDelProceso = new JLabel("Fase del proceso:");
@@ -136,7 +124,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		getContentPane().add(lblFaseDelProceso);
 
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(215, 180, 97, 25);
+		btnCancelar.setBounds(206, 263, 97, 25);
 		getContentPane().add(btnCancelar);
 
 		JLabel lblDescripcionDelProceso = new JLabel("Descripcion del proceso:");
@@ -146,12 +134,12 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		pnLog = new JPanel();
 		pnLog.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Log", TitledBorder.LEADING,
 				TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnLog.setBounds(33, 254, 353, 173);
+		pnLog.setBounds(24, 337, 370, 173);
 		getContentPane().add(pnLog);
 		pnLog.setLayout(null);
 
 		scpLog = new JScrollPane();
-		scpLog.setBounds(6, 16, 341, 150);
+		scpLog.setBounds(5, 16, 360, 150);
 		pnLog.add(scpLog);
 
 		txtLog = new JTextArea();
@@ -160,12 +148,35 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		txtLog.setText("");
 
 		pgBar = new JProgressBar();
-		pgBar.setBounds(63, 226, 299, 17);
+		pgBar.setBounds(54, 309, 299, 17);
 		getContentPane().add(pgBar);
+
+		JLabel lblAceptados = new JLabel("Adherentes Aceptados:");
+		lblAceptados.setBounds(12, 171, 146, 16);
+		getContentPane().add(lblAceptados);
+
+		txtAceptados = new JTextField();
+		txtAceptados.setEditable(false);
+		txtAceptados.setText("0");
+		txtAceptados.setColumns(10);
+		txtAceptados.setBounds(168, 169, 235, 22);
+		getContentPane().add(txtAceptados);
+
+		lblResultadoFinal = new JLabel("Resultado:");
+		lblResultadoFinal.setBounds(12, 205, 146, 16);
+		getContentPane().add(lblResultadoFinal);
+
+		txtResultado = new JTextField();
+		txtResultado.setEditable(false);
+		txtResultado.setColumns(10);
+		txtResultado.setBounds(168, 202, 235, 22);
+		getContentPane().add(txtResultado);
+
 		// listener
 		btnCancelar.addActionListener(this);
 		btnRuta.addActionListener(this);
 		btnProcesar.addActionListener(this);
+		cbDescProceso.addActionListener(this);
 	}
 
 	public void fillCustomerCmb() {
@@ -206,6 +217,24 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			this.dispose();
 		}
 
+		if (e.getSource() == cbDescProceso) {
+			int tipoProceso = Integer.parseInt("" + cbDescProceso.getSelectedItem().toString().charAt(0));
+			// Fase del Proceso
+			fase = siscomfiManager.getFase1Proceso(tipoProceso);
+			if (fase == null) {
+				fase = siscomfiManager.getFase2Proceso(tipoProceso);
+				if (fase == null) {
+					JOptionPane.showMessageDialog(this, "No hay procesos electorales activos");
+					txtFase.setText("");
+				}
+				numFase = 2;
+				txtFase.setText("Fase 2");
+			} else {
+				numFase = 1;
+				txtFase.setText("Fase 1");
+			}
+		}
+
 		if (e.getSource() == btnRuta) {
 			jfcRuta = new JFileChooser();
 			jfcRuta.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -217,11 +246,13 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 				padronPaths = fEscogido.listFiles();
 			}
 		}
+
 		if (e.getSource() == btnProcesar) {
 			int numPadrones = 0;
 			int idPlanillon = 0;
 			String partido = cbPartido.getSelectedItem().toString();
 			int idPartido = Integer.parseInt(partido.charAt(0) + "");
+			int cantidadAceptados = 0;
 			// tener que ver si el partidoxProceso no ha sido ya procesado
 			// 1 procesado, 0 no procesado, 2 en proceso, 3 con observados
 			// retorna 0 si no ha sido procesado y retorna -1 si fue procesado
@@ -320,6 +351,8 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									txtLog.update(txtLog.getGraphics());
 									// aceptado
 									adherente.setEstado(1);
+									cantidadAceptados++;
+									txtAceptados.setText("" + cantidadAceptados);
 								} else {
 									// asignar estado de adherente a observado
 									String estadoFinal = "";
@@ -388,6 +421,14 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 						siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(), 1);
 					else
 						siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(), 3);
+					// verificar si paso el minimo de adherentes del proceso
+					int minimoAdherente = fase.getCantidadMinAdherentes();
+					if (cantidadAceptados >= minimoAdherente) {
+						txtResultado.setText("Cumple con el mínimo de adherentes");
+					} else {
+						txtResultado
+								.setText("No cumple con el minimo, faltan: " + (minimoAdherente - cantidadAceptados));
+					}
 				} else {
 					JOptionPane.showMessageDialog(this, "Escojan un directorio.");
 				}

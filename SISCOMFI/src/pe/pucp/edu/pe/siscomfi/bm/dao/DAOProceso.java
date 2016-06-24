@@ -13,8 +13,8 @@ public interface DAOProceso {
 	ArrayList<Proceso> queryAll();
 	Proceso queryById(int idProceso);	
 	//ArrayList<Usuario> queryByFilter(String name);
-	Proceso getFase1Actual();
-	Proceso getFase2Actual();
+	Proceso getFase1Actual(int idTipoPartido);
+	Proceso getFase2Actual(int idTipoPartido);
 	int addPlanillon(Planillon p);
 	void addAdherentexPlanillon(int idAdherente, int idPlanillon, int estado, double tProcesado, double pHuella, double pFirma,String huella, String firma,int numFase);
 	void addPartidoxProceso(int idPartido,int idProceso, int idUsuario, double TiempoProcesado,  int estado);

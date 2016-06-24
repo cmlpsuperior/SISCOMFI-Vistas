@@ -46,6 +46,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private JTextField txtCodigoPlanillon;
 	private JComboBox<String> cmbPartido;
 	private MyTableModel tableModelAdherentes;
+	private PartidoAceptadoModel partidoAceptadoModel;
 	private JButton btnAceptado;
 	private JButton btnRechazado;
 	private JButton btnSalir;
@@ -64,9 +65,10 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private JButton btnTerminar;
 	private int filaSeleccionada;
 	private String pathObservados = UsuarioLogeado.pathObservadosPlanilon;
-	private Proceso fase;
 	private File pObservadosPartido;
-
+	private JTable tblPartidoAceptado;
+	private Proceso fase = null;
+	
 	public VistaObservados() {
 		boolean indicador = true;
 		if (!UsuarioLogeado.verificarPaths()) {
@@ -82,16 +84,6 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		setTitle("Adherentes observados");
 		setBounds(100, 100, 900, 456);
 		getContentPane().setLayout(null);
-
-		// Fase del Proceso
-		fase = siscomfiManager.getFase1Proceso();
-		if (fase == null) {
-			fase = siscomfiManager.getFase2Proceso();
-			if (fase == null) {
-				JOptionPane.showMessageDialog(this, "No hay procesos electorales activos");
-				this.dispose();
-			}
-		}
 
 		btnSalir = new JButton("Salir");
 		btnSalir.setBounds(289, 393, 113, 23);
@@ -122,8 +114,6 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		cmbPartido.setBounds(171, 21, 208, 20);
 		// llenar el partido
 		fillCmbPartido();
-		cmbPartido.addItem("1 - PPK");
-		cmbPartido.addItem("2 - APRA");
 		pnPartido.add(cmbPartido);
 
 		JLabel lblAceptados = new JLabel("Total Aceptados:");
@@ -137,9 +127,12 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		txtAceptados.setBounds(171, 71, 208, 20);
 		pnPartido.add(txtAceptados);
 
+		JTabbedPane pnPartidos = new JTabbedPane(JTabbedPane.TOP);
+		pnPartidos.setBounds(10, 130, 395, 252);
+		getContentPane().add(pnPartidos);
+
 		JPanel pnObservados = new JPanel();
-		pnObservados.setBounds(10, 130, 395, 252);
-		getContentPane().add(pnObservados);
+		pnPartidos.addTab("Observados", null, pnObservados, null);
 		pnObservados.setLayout(new GridLayout(1, 0, 0, 0));
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -148,7 +141,6 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		// Table
 		tblAdherentes = new JTable();
 		tblAdherentes.getTableHeader().setReorderingAllowed(false);
-		tableModelAdherentes = new MyTableModel();
 		tblAdherentes.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				int row = tblAdherentes.getSelectedRow();
@@ -264,6 +256,20 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		tblAdherentes.setModel(tableModelAdherentes);
 
 		scrollPane.setViewportView(tblAdherentes);
+
+		JPanel pnPartidosAceptado = new JPanel();
+		pnPartidos.addTab("Partidos Aceptados", null, pnPartidosAceptado, null);
+		pnPartidosAceptado.setLayout(null);
+
+		JScrollPane spnPartidoAceptado = new JScrollPane();
+		spnPartidoAceptado.setBounds(10, 11, 370, 202);
+		pnPartidosAceptado.add(spnPartidoAceptado);
+
+		tblPartidoAceptado = new JTable();
+		partidoAceptadoModel = new PartidoAceptadoModel();
+		spnPartidoAceptado.setViewportView(tblPartidoAceptado);
+
+		tableModelAdherentes = new MyTableModel();
 		JPanel pnAdherente = new JPanel();
 		pnAdherente.setBorder(new TitledBorder(null, "ADHERENTE", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnAdherente.setBounds(448, 11, 396, 114);
@@ -384,6 +390,23 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		btnTerminar.addActionListener(this);
 	}
 
+	class PartidoAceptadoModel extends DefaultTableModel {
+		String titles[] = { "NOMBRE", "CANTIDAD ACEPTADOS" };
+
+		@Override
+		public int getColumnCount() {
+			return titles.length;
+		}
+
+		public String getColumnName(int col) {
+			return titles[col];
+		}
+
+		public boolean isCellEditable(int row, int column) {
+			return false;
+		}
+	}
+
 	class MyTableModel extends DefaultTableModel {
 		String titles[] = { "DNI", "NOMBRE", "AP. PATERNO", "AP. MATERNO", "ESTADO" };
 
@@ -464,12 +487,21 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		}
 
 		if (e.getSource() == btnTerminar) {
+			int idPlanillon = 0;
 			for (int i = tableModelAdherentes.getRowCount() - 1; i >= 0; i--) {
+				
 				String dni = tableModelAdherentes.getValueAt(i, 0).toString();
 				Adherente adh = siscomfiManager.queryAdherenteByDni(dni);
+				
 				String estado = tableModelAdherentes.getValueAt(i, 4).toString();
 				siscomfiManager.updateEstadoAdherente(adh.getIdAdherente(), estado);
 			}
+			String partido = cmbPartido.getSelectedItem().toString();
+			int idPartido = partido.charAt(0);
+			siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(), 1);
+			//recontar aceptados
+			int cantidadAdherentesFinales = siscomfiManager.contarAdherentesAceptados(idPartido);
+			
 			tableModelAdherentes.setRowCount(0);
 		}
 	}

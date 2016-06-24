@@ -89,6 +89,9 @@ public class siscomfiManager {
 		return partidoPoliticoDB.queryByNombre(nombre);
 	}
 	
+	public static int contarAdherentesAceptados(int idPartido){
+		return partidoPoliticoDB.contarAdherentesAceptados(idPartido);
+	}
 	//Reporte:
 	public static ArrayList<Reporte> queryReportePartidos (int idTipoProceso, int anio, int idfase, int estadoPartido)
     {
@@ -150,12 +153,12 @@ public class siscomfiManager {
 		return procesoDB.queryAll();
 	}
 
-	public static Proceso getFase1Proceso() {
-		return procesoDB.getFase1Proceso();
+	public static Proceso getFase1Proceso(int idTipoProceso) {
+		return procesoDB.getFase1Proceso(idTipoProceso);
 	}
 
-	public static Proceso getFase2Proceso() {
-		return procesoDB.getFase2Proceso();
+	public static Proceso getFase2Proceso(int idTipoProceso) {
+		return procesoDB.getFase2Proceso(idTipoProceso);
 	}
 
 	public static int addPlanillon(Planillon p) {

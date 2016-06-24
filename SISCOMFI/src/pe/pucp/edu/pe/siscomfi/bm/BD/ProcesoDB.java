@@ -41,12 +41,12 @@ public class ProcesoDB {
 		return listaProceso;
 	}
 
-	public Proceso getFase1Proceso() {
-		return daoProceso.getFase1Actual();
+	public Proceso getFase1Proceso(int idTipoProceso) {
+		return daoProceso.getFase1Actual(idTipoProceso);
 	}
 
-	public Proceso getFase2Proceso() {
-		return daoProceso.getFase2Actual();
+	public Proceso getFase2Proceso(int idTipoProceso) {
+		return daoProceso.getFase2Actual(idTipoProceso);
 	}
 
 	public int addPlanillon(Planillon p) {

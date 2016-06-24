@@ -141,7 +141,7 @@ public class MySQLDAOProceso implements DAOProceso {
 	}
 
 	@Override
-	public Proceso getFase1Actual() {
+	public Proceso getFase1Actual(int idTipoProceso) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -152,8 +152,9 @@ public class MySQLDAOProceso implements DAOProceso {
 			// Paso 2: Obtener la conexión
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
-			String sql = "SELECT p.* FROM Proceso p WHERE (Now() between p.FechaProceso1Inicio and p.FechaProceso1Fin)";
+			String sql = "SELECT p.* FROM Proceso p WHERE (Now() between p.FechaProceso1Inicio and p.FechaProceso1Fin) AND (idTipoProceso = ?)";
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idTipoProceso);
 			// Paso 4: Ejecutar la sentencia
 			rs = pstmt.executeQuery();
 			// Paso 5(opc.): Procesar los resultados
@@ -165,7 +166,7 @@ public class MySQLDAOProceso implements DAOProceso {
 				Date fp2Inicio = rs.getTimestamp("FechaProceso2Inicio");
 				Date fp2Fin = rs.getTimestamp("FechaProceso2Fin");
 				int cantMinAdh = rs.getInt("CantidadMinAdherentes");
-				int idTipoProceso = rs.getInt("idTipoProceso");
+				int idtproceso = rs.getInt("idTipoProceso");
 
 				proceso = new Proceso();
 				proceso.setCantidadMinAdherentes(cantMinAdh);
@@ -175,7 +176,7 @@ public class MySQLDAOProceso implements DAOProceso {
 				proceso.setFechaProceso2Inicio(fp2Inicio);
 				proceso.setFechaProceso2Fin(fp2Fin);
 				proceso.setIdProceso(id);
-				proceso.setIdTipoProceso(idTipoProceso);
+				proceso.setIdTipoProceso(idtproceso);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -199,7 +200,7 @@ public class MySQLDAOProceso implements DAOProceso {
 	}
 
 	@Override
-	public Proceso getFase2Actual() {
+	public Proceso getFase2Actual(int idTipoProceso) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -210,8 +211,9 @@ public class MySQLDAOProceso implements DAOProceso {
 			// Paso 2: Obtener la conexión
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
-			String sql = "SELECT p.* FROM Proceso p WHERE (Now() between p.FechaProceso2Inicio and p.FechaProceso2Fin)";
+			String sql = "SELECT p.* FROM Proceso p WHERE (Now() between p.FechaProceso2Inicio and p.FechaProceso2Fin) AND (idTipoProceso = ?)";
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idTipoProceso);
 			// Paso 4: Ejecutar la sentencia
 			rs = pstmt.executeQuery();
 			// Paso 5(opc.): Procesar los resultados
@@ -223,7 +225,7 @@ public class MySQLDAOProceso implements DAOProceso {
 				Date fp2Inicio = rs.getTimestamp("FechaProceso2Inicio");
 				Date fp2Fin = rs.getTimestamp("FechaProceso2Fin");
 				int cantMinAdh = rs.getInt("CantidadMinAdherentes");
-				int idTipoProceso = rs.getInt("idTipoProceso");
+				int idtproceso = rs.getInt("idTipoProceso");
 
 				proceso = new Proceso();
 				proceso.setCantidadMinAdherentes(cantMinAdh);
@@ -233,7 +235,7 @@ public class MySQLDAOProceso implements DAOProceso {
 				proceso.setFechaProceso2Inicio(fp2Inicio);
 				proceso.setFechaProceso2Fin(fp2Fin);
 				proceso.setIdProceso(id);
-				proceso.setIdTipoProceso(idTipoProceso);
+				proceso.setIdTipoProceso(idtproceso);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

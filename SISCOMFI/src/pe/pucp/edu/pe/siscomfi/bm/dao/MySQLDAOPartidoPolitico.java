@@ -622,7 +622,6 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		ArrayList<PartidoPolitico> arr = new ArrayList<PartidoPolitico>();
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
@@ -631,7 +630,48 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 			// Paso 3: Preparar la sentencia
 			String sql = "select count(*) from Planillon A, Proceso B, AdherentexPlanillon C where (? = A.idPartidoPolitico)   "
 					+ "   AND (A.idPlanillon = C.idPlanillon) AND (A.idProceso = B.idProceso) AND (C.EstadoValidez='1') ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idPartido);
+			// Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			// Paso 5(opc.): Procesar los resultados
+			if (rs.next()) {
+				int id = rs.getInt(1);
+				return id;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return -1;
+	}
 
+	@Override
+	public int cantidadMinAdherentesAceptados(int idPartido) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			String sql = "select B.CantidadMinAdherentes from Planillon A, Proceso B, AdherentexPlanillon C  "
+					+ "   where (? = A.idPartidoPolitico) AND (A.idPlanillon = C.idPlanillon) AND (A.idProceso = B.idProceso) AND (C.EstadoValidez='2')  ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idPartido);
 			// Paso 4: Ejecutar la sentencia

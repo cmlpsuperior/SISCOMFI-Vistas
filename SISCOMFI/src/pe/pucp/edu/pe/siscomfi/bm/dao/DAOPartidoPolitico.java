@@ -14,6 +14,7 @@ public interface DAOPartidoPolitico {
 	PartidoPolitico queryByNombre(String nombre);
 	ArrayList<PartidoPolitico> queryAllObservados();
 	int contarAdherenteAceptado(int idPartido);
+	int cantidadMinAdherentesAceptados(int idPartido);
 	//por el momento anio esta hardcodeado con el valor = 2016
 	ArrayList<Reporte> queryReporte(int idTipoProceso, int anio, int idfase, int estadoPartido_enProceso);
 }

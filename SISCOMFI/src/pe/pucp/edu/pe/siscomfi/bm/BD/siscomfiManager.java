@@ -92,6 +92,10 @@ public class siscomfiManager {
 	public static int contarAdherentesAceptados(int idPartido){
 		return partidoPoliticoDB.contarAdherentesAceptados(idPartido);
 	}
+	
+	public static int minimaCantidadAdherentes(int idPartido){
+		return partidoPoliticoDB.minimaCantidadAdherenes(idPartido);
+	}
 	//Reporte:
 	public static ArrayList<Reporte> queryReportePartidos (int idTipoProceso, int anio, int idfase, int estadoPartido)
     {

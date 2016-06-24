@@ -68,7 +68,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private File pObservadosPartido;
 	private JTable tblPartidoAceptado;
 	private Proceso fase = null;
-	
+
 	public VistaObservados() {
 		boolean indicador = true;
 		if (!UsuarioLogeado.verificarPaths()) {
@@ -267,6 +267,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 
 		tblPartidoAceptado = new JTable();
 		partidoAceptadoModel = new PartidoAceptadoModel();
+		tblPartidoAceptado.setModel(partidoAceptadoModel);
 		spnPartidoAceptado.setViewportView(tblPartidoAceptado);
 
 		tableModelAdherentes = new MyTableModel();
@@ -391,7 +392,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	}
 
 	class PartidoAceptadoModel extends DefaultTableModel {
-		String titles[] = { "NOMBRE", "CANTIDAD ACEPTADOS" };
+		String titles[] = { "ID - NOMBRE", "CANTIDAD ACEPTADOS" };
 
 		@Override
 		public int getColumnCount() {
@@ -489,19 +490,22 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		if (e.getSource() == btnTerminar) {
 			int idPlanillon = 0;
 			for (int i = tableModelAdherentes.getRowCount() - 1; i >= 0; i--) {
-				
+
 				String dni = tableModelAdherentes.getValueAt(i, 0).toString();
 				Adherente adh = siscomfiManager.queryAdherenteByDni(dni);
-				
+
 				String estado = tableModelAdherentes.getValueAt(i, 4).toString();
 				siscomfiManager.updateEstadoAdherente(adh.getIdAdherente(), estado);
 			}
 			String partido = cmbPartido.getSelectedItem().toString();
 			int idPartido = partido.charAt(0);
 			siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(), 1);
-			//recontar aceptados
+			// recontar aceptados
 			int cantidadAdherentesFinales = siscomfiManager.contarAdherentesAceptados(idPartido);
-			
+			int minimaCantidadAdherentes = siscomfiManager.minimaCantidadAdherentes(idPartido);
+			if (cantidadAdherentesFinales >= minimaCantidadAdherentes) {
+				partidoAceptadoModel.addRow(new Object[] { partido, "" + cantidadAdherentesFinales });
+			}
 			tableModelAdherentes.setRowCount(0);
 		}
 	}

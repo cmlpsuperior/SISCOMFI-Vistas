@@ -1,9 +1,11 @@
 package pe.pucp.edu.pe.siscomfi.bm.dao;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pe.pucp.edu.pe.siscomfi.model.Planillon;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
+import pe.pucp.edu.pe.siscomfi.model.RegistroElector;
 
 public interface DAOProceso {
 	void add (Proceso p);
@@ -20,4 +22,5 @@ public interface DAOProceso {
 	void addPartidoxProceso(int idPartido,int idProceso, int idUsuario, double TiempoProcesado,  int estado);
 	int verificarPartidoProcesado(int idPartido, int idProceso);
 	void updateEstadoPartidoxProceso(int idPartido, int idProceso,int estado);
+	void agregarRegistroElectorRNV(RegistroElector registros);
 }

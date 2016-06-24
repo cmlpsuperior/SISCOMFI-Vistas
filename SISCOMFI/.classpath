@@ -6,5 +6,12 @@
 	<classpathentry kind="lib" path="lib/JDatePicker.jar"/>
 	<classpathentry kind="lib" path="lib/ij.jar"/>
 	<classpathentry kind="lib" path="lib/encog-core-3.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="lib/poi-examples-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="lib/poi-excelant-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="lib/poi-ooxml-schemas-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="lib/poi-scratchpad-3.14-20160307.jar"/>
+	<classpathentry kind="lib" path="lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

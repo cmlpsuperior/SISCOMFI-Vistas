@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.sql.rowset.serial.SerialBlob;
 
@@ -15,6 +16,7 @@ import com.mysql.jdbc.Driver;
 
 import pe.pucp.edu.pe.siscomfi.model.Planillon;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
+import pe.pucp.edu.pe.siscomfi.model.RegistroElector;
 
 public class MySQLDAOProceso implements DAOProceso {
 
@@ -451,6 +453,50 @@ public class MySQLDAOProceso implements DAOProceso {
 			// Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
 			// Paso 5(opc.): Procesar los resultados
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexión
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+	@Override
+	public void agregarRegistroElectorRNV(RegistroElector registros) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexión
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			String sql = "INSERT INTO RegistroElector "
+					+ "(Nombre, ApellidoPaterno, ApellidoMaterno, DNI, FechaNacimiento, Huella,Firma,idDistrito, ubigeo)"
+					+ "VALUES (?,?,?,?,Now(),?,?,2,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, registros.getNombre());
+			pstmt.setString(2, registros.getApellidoPaterno());
+			pstmt.setString(3, registros.getApellidoMaterno());
+			System.out.println(registros.getDNI());
+			pstmt.setString(4, registros.getDNI());
+			pstmt.setString(5, registros.getrHuella());
+			pstmt.setString(6, registros.getrFirma());
+			pstmt.setString(7, ""+registros.getUbigeo());			
+			// Paso 4: Ejecutar la sentencia
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

@@ -8,6 +8,7 @@ import pe.pucp.edu.pe.siscomfi.bm.dao.DBConnection;
 import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 import pe.pucp.edu.pe.siscomfi.model.Planillon;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
+import pe.pucp.edu.pe.siscomfi.model.RegistroElector;
 
 public class ProcesoDB {
 
@@ -68,5 +69,9 @@ public class ProcesoDB {
 	
 	public void updateEstadoPartidoxProceso(int idPartido, int idProceso, int estado){
 		daoProceso.updateEstadoPartidoxProceso(idPartido, idProceso, estado);
+	}
+	
+	public void agregarRegistroElector(RegistroElector reg){
+		daoProceso.agregarRegistroElectorRNV(reg);
 	}
 }

@@ -67,8 +67,8 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private String pathObservados = UsuarioLogeado.pathObservadosPlanilon;
 	private File pObservadosPartido;
 	private JTable tblPartidoAceptado;
-	private Proceso fase = null;
-
+	private JComboBox<String> cmbProceso;
+	
 	public VistaObservados() {
 		boolean indicador = true;
 		if (!UsuarioLogeado.verificarPaths()) {
@@ -93,42 +93,51 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		pnPartido.setLayout(null);
 		pnPartido.setBorder(
 				new TitledBorder(null, "PARTIDO POLITICO", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		pnPartido.setBounds(10, 11, 396, 114);
+		pnPartido.setBounds(10, 11, 396, 138);
 		getContentPane().add(pnPartido);
 
-		JLabel lblTotalObservados = new JLabel("Total observados:");
-		lblTotalObservados.setBounds(10, 49, 151, 14);
+		JLabel lblTotalObservados = new JLabel("Total Observados:");
+		lblTotalObservados.setBounds(12, 76, 151, 14);
 		pnPartido.add(lblTotalObservados);
 
-		JLabel lblPartidoPolitico = new JLabel("Partido politico:");
-		lblPartidoPolitico.setBounds(10, 24, 151, 14);
+		JLabel lblPartidoPolitico = new JLabel("Partido Politico:");
+		lblPartidoPolitico.setBounds(12, 50, 151, 14);
 		pnPartido.add(lblPartidoPolitico);
 
 		txtCantObservados = new JTextField();
 		txtCantObservados.setEditable(false);
 		txtCantObservados.setColumns(10);
-		txtCantObservados.setBounds(171, 46, 208, 20);
+		txtCantObservados.setBounds(173, 74, 208, 20);
 		pnPartido.add(txtCantObservados);
 
 		cmbPartido = new JComboBox<String>();
-		cmbPartido.setBounds(171, 21, 208, 20);
+		cmbPartido.setBounds(173, 47, 208, 20);
 		// llenar el partido
-		fillCmbPartido();
 		pnPartido.add(cmbPartido);
 
 		JLabel lblAceptados = new JLabel("Total Aceptados:");
-		lblAceptados.setBounds(10, 74, 151, 14);
+		lblAceptados.setBounds(12, 102, 151, 14);
 		pnPartido.add(lblAceptados);
 
 		txtAceptados = new JTextField();
 		txtAceptados.setEditable(false);
 		txtAceptados.setText("0");
 		txtAceptados.setColumns(10);
-		txtAceptados.setBounds(171, 71, 208, 20);
+		txtAceptados.setBounds(173, 100, 208, 20);
 		pnPartido.add(txtAceptados);
-
+		
+		JLabel lblProceso = new JLabel("Proceso Electoral:");
+		lblProceso.setBounds(12, 24, 151, 14);
+		pnPartido.add(lblProceso);
+		
+		cmbProceso = new JComboBox<String>();
+		cmbProceso.setBounds(173, 21, 208, 20);
+		pnPartido.add(cmbProceso);
+		//Llenamos el combo con los procesos electorales.2
+		fillDescProcesoCmb();
+		
 		JTabbedPane pnPartidos = new JTabbedPane(JTabbedPane.TOP);
-		pnPartidos.setBounds(10, 130, 395, 252);
+		pnPartidos.setBounds(10, 161, 395, 221);
 		getContentPane().add(pnPartidos);
 
 		JPanel pnObservados = new JPanel();
@@ -426,11 +435,11 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 
 	}
 
-	public void fillCmbPartido() {
+	public void fillCmbPartido(int idProceso) {
 		cmbPartido.removeAllItems();
 		ArrayList<PartidoPolitico> listaObservados;
 		try {
-			listaObservados = siscomfiManager.queryAllPartidosConObservados();
+			listaObservados = siscomfiManager.queryAllPartidosConObservados(idProceso);
 			for (int i = 0; i < listaObservados.size(); i++) {
 				PartidoPolitico p = (PartidoPolitico) listaObservados.get(i);
 				cmbPartido.addItem(p.getIdPartidoPolitico() + " - " + p.getNombrePartido());
@@ -440,8 +449,29 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		}
 	}
 
+	public void fillDescProcesoCmb() {
+		cmbProceso.removeAllItems();
+		ArrayList<Proceso> procesoList;
+		try {
+			procesoList = siscomfiManager.queryAllProcesos();
+			for (int i = 0; i < procesoList.size(); i++) {
+				Proceso pro = (Proceso) procesoList.get(i);
+				cmbProceso.addItem(pro.getIdProceso() + " - " + pro.getDescripcion());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == cmbProceso){
+			//Para el proceso electoral seleccionado, obtenemos los partidos politicos
+			//que tienen estado observado.2
+			int idProceso = cmbProceso.getSelectedItem().toString().charAt(0);
+			fillCmbPartido(idProceso);
+		}
+		
 		if (e.getSource() == btnSalir) {
 			this.dispose();
 		}
@@ -470,7 +500,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			tableModelAdherentes.setRowCount(0);
 			// clearTable();
 			String partido = cmbPartido.getSelectedItem().toString();
-			int idPartido = partido.charAt(0);
+			//if (partidoAnalizado.getE)
 			pObservadosPartido = new File(pathObservados + "/" + partido);
 			if (pObservadosPartido.exists()) {
 				// buscar observados del partido
@@ -499,13 +529,16 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			}
 			String partido = cmbPartido.getSelectedItem().toString();
 			int idPartido = partido.charAt(0);
-			siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(), 1);
+			int idProceso = cmbProceso.getSelectedItem().toString().charAt(0);
+			siscomfiManager.updateEstadoPartidoProceso(idPartido, idProceso, 1);
 			// recontar aceptados
 			int cantidadAdherentesFinales = siscomfiManager.contarAdherentesAceptados(idPartido);
 			int minimaCantidadAdherentes = siscomfiManager.minimaCantidadAdherentes(idPartido);
 			if (cantidadAdherentesFinales >= minimaCantidadAdherentes) {
 				partidoAceptadoModel.addRow(new Object[] { partido, "" + cantidadAdherentesFinales });
 			}
+			//volvemos a llenar el combo de los partidos.2
+			fillCmbPartido(idProceso);
 			tableModelAdherentes.setRowCount(0);
 		}
 	}

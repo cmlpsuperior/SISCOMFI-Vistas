@@ -27,7 +27,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "INSERT INTO Proceso "
@@ -48,7 +48,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -85,7 +85,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "SELECT * FROM Proceso";
@@ -119,7 +119,7 @@ public class MySQLDAOProceso implements DAOProceso {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -151,7 +151,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "SELECT p.* FROM Proceso p WHERE (Now() between p.FechaProceso1Inicio and p.FechaProceso1Fin) AND (idTipoProceso = ?)";
@@ -184,7 +184,7 @@ public class MySQLDAOProceso implements DAOProceso {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -210,7 +210,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "SELECT p.* FROM Proceso p WHERE (Now() between p.FechaProceso2Inicio and p.FechaProceso2Fin) AND (idTipoProceso = ?)";
@@ -243,7 +243,7 @@ public class MySQLDAOProceso implements DAOProceso {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -269,7 +269,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "INSERT INTO Planillon " + "(TiempoProcesado, idPartidoPolitico, idProceso)"
@@ -287,7 +287,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -312,7 +312,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "INSERT INTO AdherentexPlanillon "
@@ -334,7 +334,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -357,7 +357,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "INSERT INTO PartidoPoliticoxProceso "
@@ -375,7 +375,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -400,10 +400,10 @@ public class MySQLDAOProceso implements DAOProceso {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
-			String sql = "SELECT * FROM PartidoPoliticoxProceso WHERE (idPartidoPolitico = ?) AND (idProceso = ?) AND (EstadoPartido = '1')";
+			String sql = "SELECT * FROM PartidoPoliticoxProceso WHERE (idPartidoPolitico = ?) AND (idProceso = ?) AND ((EstadoPartido = '1') or (EstadoPartido = '2')) ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idPartido);
 			pstmt.setInt(2, idProceso);
@@ -416,7 +416,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -440,7 +440,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "UPDATE PartidoPoliticoxProceso "
@@ -456,7 +456,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -480,7 +480,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "INSERT INTO RegistroElector "
@@ -500,7 +500,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();

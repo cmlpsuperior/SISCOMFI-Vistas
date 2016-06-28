@@ -259,7 +259,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			if (siscomfiManager.verificarPartidoProceso(idPartido, fase.getIdProceso()) == 0) {
 				// agergar partidoxproceso
 				siscomfiManager.addPartidoxProceso(idPartido, fase.getIdProceso(), 2, 0, 2);
-				File pPartido = new File(UsuarioLogeado.pathObservadosPlanilon + "\\" + partido);
+				File pPartido = new File(UsuarioLogeado.pathObservadosPlanilon + "/" + partido);
 				if (!pPartido.exists())
 					pPartido.mkdir();
 				if (pathPadronProcesar != null) {
@@ -274,7 +274,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 						ImagePlus imgPlanillon = IJ.openImage(padron.getAbsolutePath());
 						// procesamos el planillon
 						imgPlanillon = HelperMethods.procesarPlanillon(imgPlanillon);
-						// sacamos el tamaño de los campos
+						// sacamos el tamaï¿½o de los campos
 						ImagePlus auxImg = new Duplicator().run(imgPlanillon);
 						int[] tCampos = HelperMethods.cabeceraPlanillon(auxImg);
 						// sacamos las filas
@@ -317,7 +317,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									ImagePlus huella = HelperMethods.quitarBorde(partes.get(3));
 									imgHuella = new Duplicator().run(huella);
 									ImagePlus huellaRnv = IJ.openImage(
-											UsuarioLogeado.pathImagenesRnv + "\\huellas\\" + adh.getrHuella() + ".jpg");
+											UsuarioLogeado.pathImagenesRnv + "/huellas/" + adh.getrHuella() + ".jpg");
 									imgHuellaOriginal = new Duplicator().run(huellaRnv);
 									double[][] original = Fingerprint.imageGraph(huellaRnv);
 									double[][] sospechosa = Fingerprint.imageGraph(huella);
@@ -338,7 +338,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									txtLog.update(txtLog.getGraphics());
 									ImagePlus firma = HelperMethods.quitarBorde(partes.get(2));
 									imgFirma = new Duplicator().run(firma);
-									ImagePlus firmaRnv = IJ.openImage(UsuarioLogeado.pathImagenesRnv + "\\firmas\\"
+									ImagePlus firmaRnv = IJ.openImage(UsuarioLogeado.pathImagenesRnv + "/firmas/"
 											+ adherente.getrFirma() + ".jpg");
 									imgFirmaOriginal = new Duplicator().run(firmaRnv);
 									firmaRnv = Signatures.formatoFirma(firmaRnv);
@@ -368,24 +368,24 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 										// guardar las imagenes en la carpeta de
 										// observados
 										File fAdherente = new File(
-												pPartido.getAbsoluteFile() + "\\" + adherente.getDni());
+												pPartido.getAbsoluteFile() + "/" + adherente.getDni());
 										fAdherente.mkdir();
 										// carpeta de huellas
-										File fHuella = new File(fAdherente.getAbsolutePath() + "\\huella");
+										File fHuella = new File(fAdherente.getAbsolutePath() + "/huella");
 										fHuella.mkdir();
 										if (imgHuella != null) {
-											IJ.saveAs(imgHuella, "Jpeg", fHuella.getAbsolutePath() + "\\observado.jpg");
+											IJ.saveAs(imgHuella, "Jpeg", fHuella.getAbsolutePath() + "/observado.jpg");
 											IJ.saveAs(imgHuellaOriginal, "Jpeg",
-													fHuella.getAbsolutePath() + "\\original.jpg");
+													fHuella.getAbsolutePath() + "/original.jpg");
 										}
 
 										// carpeta de firmas
-										File fFirma = new File(fAdherente.getAbsolutePath() + "\\firma");
+										File fFirma = new File(fAdherente.getAbsolutePath() + "/firma");
 										fFirma.mkdir();
 										if (imgFirma != null) {
-											IJ.saveAs(imgFirma, "Jpeg", fFirma.getAbsolutePath() + "\\observado.jpg");
+											IJ.saveAs(imgFirma, "Jpeg", fFirma.getAbsolutePath() + "/observado.jpg");
 											IJ.saveAs(imgFirmaOriginal, "Jpeg",
-													fFirma.getAbsolutePath() + "\\original.jpg");
+													fFirma.getAbsolutePath() + "/original.jpg");
 										}
 									}
 									txtLog.update(txtLog.getGraphics());
@@ -399,12 +399,11 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									// guardar adherente
 									idAdherente = siscomfiManager.addAdherente(adherente);
 									// guardamos el adherentexplanillon
-
 									siscomfiManager.addAdherentexPlanillon(idAdherente, idPlanillon,
 											adherente.getEstado(), 0, adherente.getpHuella(), adherente.getpFirma(),
 											adherente.getrHuella(), adherente.getrFirma(), numFase);
 								} else {
-									siscomfiManager.updateEstadoAdherente(idAdherente, "" + adherente.getEstado());
+									siscomfiManager.updateEstadoAdherente(idAdherente, "0");
 								}
 
 							} else {
@@ -424,7 +423,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 					// verificar si paso el minimo de adherentes del proceso
 					int minimoAdherente = fase.getCantidadMinAdherentes();
 					if (cantidadAceptados >= minimoAdherente) {
-						txtResultado.setText("Cumple con el mínimo de adherentes");
+						txtResultado.setText("Cumple con el mï¿½nimo de adherentes");
 					} else {
 						txtResultado
 								.setText("No cumple con el minimo, faltan: " + (minimoAdherente - cantidadAceptados));

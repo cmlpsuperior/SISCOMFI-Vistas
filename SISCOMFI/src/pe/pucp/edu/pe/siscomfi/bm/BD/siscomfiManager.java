@@ -69,8 +69,8 @@ public class siscomfiManager {
 	}
 
 	// PartidosPoliticos:
-	public static ArrayList<PartidoPolitico> queryAllPartidosConObservados() {
-		return partidoPoliticoDB.queryAllObservados();
+	public static ArrayList<PartidoPolitico> queryAllPartidosConObservados(int idProceso) {
+		return partidoPoliticoDB.queryAllObservados(idProceso);
 	}
 
 	public static ArrayList<PartidoPolitico> queryAllPartidos() {

@@ -22,7 +22,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "INSERT INTO PartidoPolitico "
@@ -43,7 +43,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -66,7 +66,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "UPDATE PartidoPolitico "
@@ -84,7 +84,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -107,7 +107,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "UPDATE PartidoPolitico SET EstadoActivo = 'E' " + "WHERE idPartidoPolitico=?";
@@ -119,7 +119,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -144,7 +144,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "SELECT * FROM PartidoPolitico WHERE EstadoActivo <> 'E' ORDER BY 2";
@@ -179,7 +179,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -205,7 +205,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 
 			// Paso 3: Preparar la sentencia
@@ -360,7 +360,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -386,7 +386,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "SELECT * FROM PartidoPolitico " + "WHERE idPartidoPolitico=?";
@@ -418,7 +418,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -444,7 +444,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "SELECT * FROM PartidoPolitico " + "WHERE Representante=?";
@@ -476,7 +476,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -502,7 +502,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "SELECT * FROM PartidoPolitico " + "WHERE Nombre=?";
@@ -534,7 +534,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -553,7 +553,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 
 	// Esta listando todos los partidos que estan actualmente en un proceso
 	@Override
-	public ArrayList<PartidoPolitico> queryAllObservados() {
+	public ArrayList<PartidoPolitico> queryAllObservados(int idProceso) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -561,16 +561,17 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = " select pa.*    "
 					+ " from PartidoPoliticoxProceso pp join Proceso p on pp.idProceso =  p.idProceso  									"
 					+ " 								  join PartidoPolitico pa on pa.idPartidoPolitico = pp.idPartidoPolitico			"
-					+ " where (Now() between p.FechaProceso1Inicio and p.FechaProceso1Fin) or 											"
-					+ "		(Now() between p.FechaProceso2Inicio and p.FechaProceso2Fin)  and (pp.EstadoPartido = '3') 			 									";
+					+ " where ((Now() between p.FechaProceso1Inicio and p.FechaProceso1Fin) or 											"
+					+ "		(Now() between p.FechaProceso2Inicio and p.FechaProceso2Fin))  and (pp.EstadoPartido = '3') and (pp.idProceso = ?)			 									";
 
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idProceso);
 			// Paso 4: Ejecutar la sentencia
 			rs = pstmt.executeQuery();
 			// Paso 5(opc.): Procesar los resultados
@@ -625,7 +626,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "select count(*) from Planillon A, Proceso B, AdherentexPlanillon C where (? = A.idPartidoPolitico)   "
@@ -667,7 +668,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "select B.CantidadMinAdherentes from Planillon A, Proceso B, AdherentexPlanillon C  "

@@ -26,11 +26,22 @@ import pe.pucp.edu.pe.siscomfi.model.RegistroElector;
 public class TestMain {
 
 	public static void main(String[] args) throws IOException {
-
+		String path = "/home/osboxes/Desktop/ImagenesRNV/firma";
+		File imagenes = new File (path);
+		File [] lista = imagenes.listFiles();
+		for(File img: lista){
+			String name = img.getName();
+			System.out.println("name:" +name);
+			int n = name.indexOf(".");
+			String ss = name.substring(0, n);
+			String ssName = ss + ".jpg";
+			img.renameTo(new File(path+"/"+ssName));
+		}
+/*
 		try {
 
 			FileInputStream file = new FileInputStream(
-					"C:\\Users\\samoel\\Desktop\\PUCP\\2016-1\\Desarrollo de Programas 1\\h.rnv.xlsx");
+					"/home/osboxes/Desktop/ImagenesRNV/huella");
 
 			// Get the workbook instance for XLS file
 			XSSFWorkbook workbook = new XSSFWorkbook(file);
@@ -117,7 +128,7 @@ public class TestMain {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 		/*
 		 * List<Adherente> lista =
@@ -167,7 +178,7 @@ public class TestMain {
 		 * ImagePlus imgPlanillon = IJ.openImage(
 		 * "C:\\Users\\samoel\\Desktop\\PUCP\\2016-1\\Desarrollo de Programas 1\\Padron\\part.H.original9.jpg"
 		 * ); // procesamos el planillon imgPlanillon =
-		 * HelperMethods.procesarPlanillon(imgPlanillon); // sacamos el tamaño
+		 * HelperMethods.procesarPlanillon(imgPlanillon); // sacamos el tamaï¿½o
 		 * de los campos ImagePlus auxImg = new Duplicator().run(imgPlanillon);
 		 * int[] tCampos = HelperMethods.cabeceraPlanillon(auxImg); // sacamos
 		 * las filas List<ImagePlus> filas =

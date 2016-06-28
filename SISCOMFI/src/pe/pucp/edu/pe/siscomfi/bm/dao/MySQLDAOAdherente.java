@@ -33,7 +33,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 				
 				// Paso 1: Registrar el Driver
 				DriverManager.registerDriver(new Driver());	
-				// Paso 2: Obtener la conexión
+				// Paso 2: Obtener la conexiï¿½n
 				conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);				
 				// Paso 3: Preparar la sentencia
 				String sql = "INSERT INTO Adherente "
@@ -59,7 +59,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -84,7 +84,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "UPDATE Adherente "
@@ -105,7 +105,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -129,7 +129,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia (1=ACEPTADO, 0=RECHAZADO,
 			// 2=OBSERVADO)
@@ -144,7 +144,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -170,7 +170,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia (1=ACEPTADO, 0=RECHAZADO,
 			// 2=OBSERVADO)
@@ -185,7 +185,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -222,7 +222,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentenciad
 			String sql = "SELECT * FROM RegistroElector WHERE compararDNI(?,DNI) >= 5;";
@@ -240,8 +240,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 				String dniL = rs.getString("DNI");
 				int idDistrito = rs.getInt("idDistrito");
 				Date fechaNacimiento = new Date(rs.getDate("FechaNacimiento").getTime());
-				int huella = rs.getInt("Huella");
-				String pathHuella = (huella < 10) ? ("00" + huella) : (huella < 100) ? ("0" + huella) : ("" + huella);
+				String pathHuella = rs.getString("Huella");
 				String pathFirma = rs.getString("Firma");
 				Adherente adherente = new Adherente(id, idDistrito, nombre, apPaterno, apMaterno, dniL, fechaNacimiento,
 						pathHuella, pathFirma, "0");
@@ -251,7 +250,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -279,7 +278,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "SELECT * FROM Adherente A, AdherentexPlanillon B "
@@ -303,7 +302,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -327,7 +326,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			// (1=ACEPTADO,0=RECHAZADO,2=OBSERVADO)
@@ -341,7 +340,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -367,7 +366,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			// (1=ACEPTADO,0=RECHAZADO,2=OBSERVADO)
@@ -385,7 +384,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -412,7 +411,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		try {
 			// Paso 1: Registrar el Driver
 			DriverManager.registerDriver(new Driver());
-			// Paso 2: Obtener la conexión
+			// Paso 2: Obtener la conexiï¿½n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = 	" SELECT * FROM Adherente A "
@@ -428,7 +427,7 @@ public class MySQLDAOAdherente implements DAOAdherente {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			// Paso 6(OJO): Cerrar la conexión
+			// Paso 6(OJO): Cerrar la conexiï¿½n
 			try {
 				if (pstmt != null)
 					pstmt.close();

@@ -12,7 +12,7 @@ public interface DAOPartidoPolitico {
 	PartidoPolitico queryByRepresentante(String representante);
 	PartidoPolitico queryById(int idPartido);
 	PartidoPolitico queryByNombre(String nombre);
-	ArrayList<PartidoPolitico> queryAllObservados();
+	ArrayList<PartidoPolitico> queryAllObservados(int idProceso);
 	int contarAdherenteAceptado(int idPartido);
 	int cantidadMinAdherentesAceptados(int idPartido);
 	//por el momento anio esta hardcodeado con el valor = 2016

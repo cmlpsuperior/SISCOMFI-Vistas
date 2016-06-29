@@ -42,10 +42,13 @@ public class AdherenteDB {
 		return daoAdherente.queryByDNI(dni);
 	}
 
-	public void updateEstadoAdherente(int  idAdherente, String estado) {
-		daoAdherente.updateEstadoAdherente(idAdherente, estado);
+	public void updateEstadoAdherente(int  idAdherente, int idPlanillon, double tProcesado, String estado) {
+		daoAdherente.updateEstadoAdherente(idAdherente, idPlanillon, tProcesado,estado);
 	}
 	
+	public void updateEstadoAdherente(int idAdherente, String estado){
+		daoAdherente.updateEstadoAdherente(idAdherente, estado);
+	}
 	public int verificarAdherenteRepetido(int idProceso, String dni){
 		return daoAdherente.verificarAdherenteRepetido(idProceso, dni);
 	}

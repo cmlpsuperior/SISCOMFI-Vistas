@@ -21,6 +21,7 @@ public interface DAOProceso {
 	void addAdherentexPlanillon(int idAdherente, int idPlanillon, int estado, double tProcesado, double pHuella, double pFirma,String huella, String firma,int numFase);
 	void addPartidoxProceso(int idPartido,int idProceso, int idUsuario, double TiempoProcesado,  int estado);
 	int verificarPartidoProcesado(int idPartido, int idProceso);
-	void updateEstadoPartidoxProceso(int idPartido, int idProceso,int estado);
+	void updateEstadoPartidoxProceso(int idPartido, int idProceso, double tProcesado, int estado);
+	void updateEstadoPartidoxProceso(int idPartido, int idProceso, int estado);
 	void agregarRegistroElectorRNV(RegistroElector registros);
 }

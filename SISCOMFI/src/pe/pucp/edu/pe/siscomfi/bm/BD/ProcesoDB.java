@@ -67,6 +67,10 @@ public class ProcesoDB {
 		return daoProceso.verificarPartidoProcesado(idPartido, idProceso);
 	}
 	
+	public void updateEstadoPartidoxProceso(int idPartido, int idProceso,double tProcesado, int estado){
+		daoProceso.updateEstadoPartidoxProceso(idPartido, idProceso, tProcesado, estado);
+	}
+	
 	public void updateEstadoPartidoxProceso(int idPartido, int idProceso, int estado){
 		daoProceso.updateEstadoPartidoxProceso(idPartido, idProceso, estado);
 	}

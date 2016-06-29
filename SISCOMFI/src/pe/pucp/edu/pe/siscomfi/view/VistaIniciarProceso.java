@@ -13,6 +13,7 @@ import pe.pucp.edu.pe.siscomfi.algoritmo.HelperMethods;
 import pe.pucp.edu.pe.siscomfi.algoritmo.OcrProy;
 import pe.pucp.edu.pe.siscomfi.algoritmo.Signatures;
 import pe.pucp.edu.pe.siscomfi.bm.BD.siscomfiManager;
+import pe.pucp.edu.pe.siscomfi.model.Cronometro;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
 import pe.pucp.edu.pe.siscomfi.model.UsuarioLogeado;
 import pe.pucp.edu.pe.siscomfi.model.Adherente;
@@ -40,12 +41,12 @@ import javax.swing.JProgressBar;
 public class VistaIniciarProceso extends JInternalFrame implements ActionListener {
 	private JTextField txtRuta;
 	private JTextField txtFase;
-	private JComboBox<String> cbPartido;
+	private JComboBox<String> cmbPartido;
 	private JButton btnRuta;
 	private JButton btnCancelar;
 	private JButton btnProcesar;
 	private JFileChooser jfcRuta;
-	private JComboBox<String> cbDescProceso;
+	private JComboBox<String> cmbProceso;
 	private JTextArea txtLog;
 	private String pathPadronProcesar = null;
 	private File[] padronPaths = null;
@@ -78,68 +79,68 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 
 		txtFase = new JTextField();
 		txtFase.setEditable(false);
-		txtFase.setBounds(168, 70, 235, 22);
+		txtFase.setBounds(292, 67, 235, 22);
 		getContentPane().add(txtFase);
 		txtFase.setColumns(10);
 
 		setClosable(true);
 		setTitle("Iniciar Proceso");
-		setBounds(100, 100, 436, 551);
+		setBounds(100, 100, 554, 551);
 		getContentPane().setLayout(null);
 
 		JLabel lblNewLabel = new JLabel("Partido Pol\u00EDtico:");
-		lblNewLabel.setBounds(12, 108, 126, 16);
+		lblNewLabel.setBounds(12, 108, 205, 16);
 		getContentPane().add(lblNewLabel);
 
-		cbPartido = new JComboBox<String>();
-		cbPartido.setBounds(168, 106, 235, 20);
-		getContentPane().add(cbPartido);
-		fillCustomerCmb();
+		cmbPartido = new JComboBox<String>();
+		cmbPartido.setBounds(292, 106, 235, 20);
+		getContentPane().add(cmbPartido);
+		fillPartidoCmb();
 
-		cbDescProceso = new JComboBox<String>();
-		cbDescProceso.setBounds(168, 35, 235, 22);
-		getContentPane().add(cbDescProceso);
-		fillDescProcesoCmb();
+		cmbProceso = new JComboBox<String>();
+		cmbProceso.setBounds(292, 35, 235, 22);
+		getContentPane().add(cmbProceso);
+		fillProcesoCmb();
 
 		JLabel lblRuta = new JLabel("Ruta de los Padrones:");
-		lblRuta.setBounds(12, 140, 146, 16);
+		lblRuta.setBounds(12, 140, 205, 16);
 		getContentPane().add(lblRuta);
 
 		txtRuta = new JTextField();
-		txtRuta.setBounds(168, 137, 180, 22);
+		txtRuta.setBounds(292, 138, 180, 22);
 		txtRuta.setEditable(false);
 		getContentPane().add(txtRuta);
 		txtRuta.setColumns(10);
 
 		btnRuta = new JButton("...");
-		btnRuta.setBounds(358, 136, 45, 25);
+		btnRuta.setBounds(482, 136, 45, 25);
 		getContentPane().add(btnRuta);
 
 		btnProcesar = new JButton("Procesar");
-		btnProcesar.setBounds(76, 263, 97, 25);
+		btnProcesar.setBounds(120, 244, 97, 25);
 		getContentPane().add(btnProcesar);
 
 		JLabel lblFaseDelProceso = new JLabel("Fase del proceso:");
-		lblFaseDelProceso.setBounds(12, 73, 108, 16);
+		lblFaseDelProceso.setBounds(12, 73, 205, 16);
 		getContentPane().add(lblFaseDelProceso);
 
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(206, 263, 97, 25);
+		btnCancelar.setBounds(292, 244, 97, 25);
 		getContentPane().add(btnCancelar);
 
-		JLabel lblDescripcionDelProceso = new JLabel("Descripcion del proceso:");
-		lblDescripcionDelProceso.setBounds(12, 38, 143, 16);
-		getContentPane().add(lblDescripcionDelProceso);
+		JLabel lblProceso = new JLabel("Proceso Electoral:");
+		lblProceso.setBounds(12, 38, 205, 16);
+		getContentPane().add(lblProceso);
 
 		pnLog = new JPanel();
 		pnLog.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Log", TitledBorder.LEADING,
 				TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnLog.setBounds(24, 337, 370, 173);
+		pnLog.setBounds(24, 337, 503, 173);
 		getContentPane().add(pnLog);
 		pnLog.setLayout(null);
 
 		scpLog = new JScrollPane();
-		scpLog.setBounds(5, 16, 360, 150);
+		scpLog.setBounds(12, 16, 479, 150);
 		pnLog.add(scpLog);
 
 		txtLog = new JTextArea();
@@ -148,61 +149,59 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		txtLog.setText("");
 
 		pgBar = new JProgressBar();
-		pgBar.setBounds(54, 309, 299, 17);
+		pgBar.setBounds(24, 308, 503, 17);
 		getContentPane().add(pgBar);
 
 		JLabel lblAceptados = new JLabel("Adherentes Aceptados:");
-		lblAceptados.setBounds(12, 171, 146, 16);
+		lblAceptados.setBounds(12, 171, 205, 16);
 		getContentPane().add(lblAceptados);
 
 		txtAceptados = new JTextField();
 		txtAceptados.setEditable(false);
 		txtAceptados.setText("0");
 		txtAceptados.setColumns(10);
-		txtAceptados.setBounds(168, 169, 235, 22);
+		txtAceptados.setBounds(292, 169, 235, 22);
 		getContentPane().add(txtAceptados);
 
 		lblResultadoFinal = new JLabel("Resultado:");
-		lblResultadoFinal.setBounds(12, 205, 146, 16);
+		lblResultadoFinal.setBounds(12, 205, 205, 16);
 		getContentPane().add(lblResultadoFinal);
 
 		txtResultado = new JTextField();
 		txtResultado.setEditable(false);
 		txtResultado.setColumns(10);
-		txtResultado.setBounds(168, 202, 235, 22);
+		txtResultado.setBounds(292, 203, 235, 22);
 		getContentPane().add(txtResultado);
 
 		// listener
 		btnCancelar.addActionListener(this);
 		btnRuta.addActionListener(this);
 		btnProcesar.addActionListener(this);
-		cbDescProceso.addActionListener(this);
+		cmbProceso.addActionListener(this);
 	}
 
-	public void fillCustomerCmb() {
-		cbPartido.removeAllItems();
+	public void fillPartidoCmb() {
+		cmbPartido.removeAllItems();
 		ArrayList<PartidoPolitico> PartidoPoliticoList;
 		try {
 			PartidoPoliticoList = siscomfiManager.queryAllPartidos();
 			for (int i = 0; i < PartidoPoliticoList.size(); i++) {
 				PartidoPolitico pp = (PartidoPolitico) PartidoPoliticoList.get(i);
-				cbPartido.addItem(pp.getIdPartidoPolitico() + " - " + pp.getNombrePartido());
+				cmbPartido.addItem(pp.getIdPartidoPolitico() + " - " + pp.getNombrePartido());
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
-	public void fillDescProcesoCmb() {
-		cbDescProceso.removeAllItems();
+	public void fillProcesoCmb() {
+		cmbProceso.removeAllItems();
 		ArrayList<Proceso> ProcesoList;
 		try {
 			ProcesoList = siscomfiManager.queryAllProcesos();
 			for (int i = 0; i < ProcesoList.size(); i++) {
 				Proceso pro = (Proceso) ProcesoList.get(i);
-				cbDescProceso.addItem(pro.getIdProceso() + " - " + pro.getDescripcion());
+				cmbProceso.addItem(pro.getIdProceso() + " - " + pro.getDescripcion());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -217,8 +216,8 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			this.dispose();
 		}
 
-		if (e.getSource() == cbDescProceso) {
-			int tipoProceso = Integer.parseInt("" + cbDescProceso.getSelectedItem().toString().charAt(0));
+		if (e.getSource() == cmbProceso) {
+			int tipoProceso = Integer.parseInt("" + cmbProceso.getSelectedItem().toString().charAt(0));
 			// Fase del Proceso
 			fase = siscomfiManager.getFase1Proceso(tipoProceso);
 			if (fase == null) {
@@ -226,6 +225,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 				if (fase == null) {
 					JOptionPane.showMessageDialog(this, "No hay procesos electorales activos");
 					txtFase.setText("");
+					return;
 				}
 				numFase = 2;
 				txtFase.setText("Fase 2");
@@ -250,26 +250,41 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		if (e.getSource() == btnProcesar) {
 			int numPadrones = 0;
 			int idPlanillon = 0;
-			String partido = cbPartido.getSelectedItem().toString();
+			String partido = cmbPartido.getSelectedItem().toString();
 			int idPartido = Integer.parseInt(partido.charAt(0) + "");
 			int cantidadAceptados = 0;
+			//verificamos denuevo de que haya una fase activa para iniciar el procesov2
+			if (fase == null){
+				JOptionPane.showMessageDialog(this, "No hay procesos electorales activos");
+				return;
+			}
 			// tener que ver si el partidoxProceso no ha sido ya procesado
 			// 1 procesado, 0 no procesado, 2 en proceso, 3 con observados
 			// retorna 0 si no ha sido procesado y retorna -1 si fue procesado
 			if (siscomfiManager.verificarPartidoProceso(idPartido, fase.getIdProceso()) == 0) {
-				// agergar partidoxproceso
+				// lo agregamos a partidoxproceso con estado 2
 				siscomfiManager.addPartidoxProceso(idPartido, fase.getIdProceso(), 2, 0, 2);
-				File pPartido = new File(UsuarioLogeado.pathObservadosPlanilon + "/" + partido);
+				//agregamos los observados en Observados>Proceso>Fase>Partidov2
+				String proceso = cmbProceso.getSelectedItem().toString();
+				String txtfase = txtFase.getText();
+				String pathObsPartido = UsuarioLogeado.pathObservadosPlanilon + "/"+proceso+"/"+txtfase; 
+				File pPartido = new File(pathObsPartido + "/" + partido);
 				if (!pPartido.exists())
 					pPartido.mkdir();
 				if (pathPadronProcesar != null) {
 					int cantPadrones = padronPaths.length;
 					int nObservados = 0;
+					//cronometro del partido
+					Cronometro crnPartido = new Cronometro();
+					crnPartido.start();
 					for (File padron : padronPaths) {
 						txtLog.append("Padron: " + (numPadrones + 1) + "\n");
 						txtLog.update(txtLog.getGraphics());
 						// agregamos el planillon a la bd
 						idPlanillon = siscomfiManager.addPlanillon(new Planillon(0, 0, idPartido, fase.getIdProceso()));
+						//empezamos a calcular el tiempo de planillonv2
+						Cronometro crnPlanillon = new Cronometro();
+						crnPlanillon.start();
 						// leemos el planillon
 						ImagePlus imgPlanillon = IJ.openImage(padron.getAbsolutePath());
 						// procesamos el planillon
@@ -285,6 +300,9 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 							List<ImagePlus> partes = HelperMethods.sacarDatosFila(fila, tCampos);
 							txtLog.append("Fila " + nFila + ": Procesando Dni = ");
 							txtLog.update(txtLog.getGraphics());
+							//empezamos a calcular el tiempro de proceso del adherentexplanillonv2
+							Cronometro crnAdherente = new Cronometro();
+							crnAdherente.start();
 							// sacamoslos digitos del DNI (8)
 							List<ImagePlus> digitosNumero = HelperMethods.getDatosParte(partes.get(0), 8);
 							String dni = "", digit;
@@ -309,6 +327,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 								// las originales del rnv
 								ImagePlus imgHuellaOriginal = null;
 								ImagePlus imgFirmaOriginal = null;
+								//porcentajes de firma y huella
 								double pFirma = 0, pHuella = 0;
 								Adherente adherente = null;
 								for (Adherente adh : lista) {
@@ -332,7 +351,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 									txtLog.update(txtLog.getGraphics());
 								}
 								int idAdherente = 0;
-
+								//solo debe de haber 1 igual si se encontraron muchos matches
 								if (contIguales == 1) {
 									txtLog.append("Procesando Firma: ");
 									txtLog.update(txtLog.getGraphics());
@@ -356,13 +375,13 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 								} else {
 									// asignar estado de adherente a observado
 									String estadoFinal = "";
+									//si hay mas de 1 igual rechazamos al adherente
 									if (contIguales > 1) {
 										estadoFinal = "Rechazado";
 										adherente.setEstado(0);
 									} else {
 										estadoFinal = "Observado";
 										nObservados++;
-
 										txtLog.append("Adherente: " + estadoFinal + "\n");
 										adherente.setEstado(2);
 										// guardar las imagenes en la carpeta de
@@ -398,32 +417,44 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 										adherente.getDni()) == -1) {
 									// guardar adherente
 									idAdherente = siscomfiManager.addAdherente(adherente);
+									//seteamos el tiempo fin
+									crnAdherente.stop();
 									// guardamos el adherentexplanillon
 									siscomfiManager.addAdherentexPlanillon(idAdherente, idPlanillon,
-											adherente.getEstado(), 0, adherente.getpHuella(), adherente.getpFirma(),
+											adherente.getEstado(), crnAdherente.getElapsedSeconds(), adherente.getpHuella(), adherente.getpFirma(),
 											adherente.getrHuella(), adherente.getrFirma(), numFase);
 								} else {
-									siscomfiManager.updateEstadoAdherente(idAdherente, "0");
+									//seteamos el tiempo fin
+									crnAdherente.stop();
+									siscomfiManager.updateEstadoAdherente(idAdherente,idPlanillon, crnAdherente.getElapsedSeconds(),"0");
 								}
 
 							} else {
 								txtLog.append("No se encontraron adherentes\n");
 								txtLog.update(txtLog.getGraphics());
+								//si no se encuentra se rechaza al adherente
 							}
+							//se termina 
 							nFila--;
 						}
+						//termina de procesar el planillon
+						crnPlanillon.stop();
+						//setear el tiempo de proceso para el planillon
 						numPadrones++;
 						pgBar.setValue(numPadrones * 100 / cantPadrones);
 						pgBar.update(pgBar.getGraphics());
 					}
+					//termina de procesar el partido
+					crnPartido.stop();
 					if (nObservados == 0)
-						siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(), 1);
+						siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(),crnPartido.getElapsedSeconds(), 1);
 					else
-						siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(), 3);
+						siscomfiManager.updateEstadoPartidoProceso(idPartido, fase.getIdProceso(),crnPartido.getElapsedSeconds(), 3);
+
 					// verificar si paso el minimo de adherentes del proceso
 					int minimoAdherente = fase.getCantidadMinAdherentes();
 					if (cantidadAceptados >= minimoAdherente) {
-						txtResultado.setText("Cumple con el m�nimo de adherentes");
+						txtResultado.setText("Cumple con el minimo de adherentes. Notificar al partido");
 					} else {
 						txtResultado
 								.setText("No cumple con el minimo, faltan: " + (minimoAdherente - cantidadAceptados));

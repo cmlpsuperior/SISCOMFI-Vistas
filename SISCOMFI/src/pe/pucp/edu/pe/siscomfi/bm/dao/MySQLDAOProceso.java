@@ -434,6 +434,48 @@ public class MySQLDAOProceso implements DAOProceso {
 	}
 
 	@Override
+	public void updateEstadoPartidoxProceso(int idPartido, int idProceso, double tProcesado, int estado) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexi�n
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			String sql = "UPDATE PartidoPoliticoxProceso   "
+					+ "SET EstadoPartido = ?, TiempoProcesado = ?  "
+					+ "WHERE idPartidoPolitico = ? AND idProceso = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, ""+estado);
+			pstmt.setDouble(2, tProcesado);
+			pstmt.setInt(3, idPartido);
+			pstmt.setInt(4, idProceso);
+			// Paso 4: Ejecutar la sentencia
+			pstmt.executeUpdate();
+			// Paso 5(opc.): Procesar los resultados
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexi�n
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+	
+	@Override
 	public void updateEstadoPartidoxProceso(int idPartido, int idProceso, int estado) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -443,8 +485,8 @@ public class MySQLDAOProceso implements DAOProceso {
 			// Paso 2: Obtener la conexi�n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
-			String sql = "UPDATE PartidoPoliticoxProceso "
-					+ "SET EstadoPartido = ? "
+			String sql = "UPDATE PartidoPoliticoxProceso   "
+					+ "SET EstadoPartido = ?  "
 					+ "WHERE idPartidoPolitico = ? AND idProceso = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, ""+estado);
@@ -472,7 +514,7 @@ public class MySQLDAOProceso implements DAOProceso {
 		}
 		
 	}
-
+	
 	@Override
 	public void agregarRegistroElectorRNV(RegistroElector registros) {
 		Connection conn = null;

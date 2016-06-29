@@ -156,7 +156,11 @@ public class siscomfiManager {
 		return adherenteDB.queryByDni(dni);
 	}
 
-	public static void updateEstadoAdherente(int idAdherente, String estado) {
+	public static void updateEstadoAdherente(int idAdherente,int idPlanillon, double tProcesado, String estado) {
+		adherenteDB.updateEstadoAdherente(idAdherente, idPlanillon, tProcesado,estado);
+	}
+	
+	public static void updateEstadoAdherente(int idAdherente, String estado){
 		adherenteDB.updateEstadoAdherente(idAdherente, estado);
 	}
 
@@ -204,15 +208,18 @@ public class siscomfiManager {
 		return procesoDB.verificarPartidoProcesado(idPartido, idProceso);
 	}
 
-	public static void updateEstadoPartidoProceso(int idPartido, int idProceso, int estado) {
-		procesoDB.updateEstadoPartidoxProceso(idPartido, idProceso, estado);
+	public static void updateEstadoPartidoProceso(int idPartido, int idProceso, double tProcesado, int estado) {
+		procesoDB.updateEstadoPartidoxProceso(idPartido, idProceso, tProcesado, estado);
 	}
 
+	public static void updateEstadoPartidoProceso (int idPartido, int idProceso, int estado){
+		procesoDB.updateEstadoPartidoxProceso(idPartido, idProceso, estado);
+	}
 	public static void agregarRegistroElector(RegistroElector reg) {
 		procesoDB.agregarRegistroElector(reg);
 	}
 
-	public static void llenarRegistroElector(String path) {
+	public static boolean llenarRegistroElector(String path) {
 		try {
 			FileInputStream file = new FileInputStream(path);
 			// Get the workbook instance for XLS file
@@ -235,7 +242,7 @@ public class siscomfiManager {
 					Cell cell = cellIterator.next();
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_BLANK:
-						return;
+						return true;
 					case Cell.CELL_TYPE_NUMERIC:
 						int number = (int) cell.getNumericCellValue();
 						if (cont == 2) {
@@ -294,5 +301,6 @@ public class siscomfiManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 }

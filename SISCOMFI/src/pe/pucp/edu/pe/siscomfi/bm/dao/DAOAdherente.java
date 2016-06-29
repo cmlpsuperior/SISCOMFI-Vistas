@@ -14,6 +14,7 @@ public interface DAOAdherente {
 	void delete_OBS(int idAdherente);
 	List<Adherente> getPosibleAdherente(String dni);
 	Adherente queryByDNI(String dni);
-	void updateEstadoAdherente(int idAdherente,String estado);
+	void updateEstadoAdherente(int idAdherente, int idPlanillon, double tProcesado, String estado);
+	void updateEstadoAdherente(int idAdherente, String estado);
 	int verificarAdherenteRepetido(int idProceso, String dni);
 }

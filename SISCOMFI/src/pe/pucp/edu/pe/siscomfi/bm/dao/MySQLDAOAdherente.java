@@ -320,6 +320,47 @@ public class MySQLDAOAdherente implements DAOAdherente {
 	}
 
 	@Override
+	public void updateEstadoAdherente(int idAdherente, int idPlanillon, double tProcesado, String estado) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexi�n
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			// (1=ACEPTADO,0=RECHAZADO,2=OBSERVADO)
+			String sql = "UPDATE AdherentexPlanillon SET EstadoValidez=?, TiempoProcesado = ?  " +
+					" WHERE idAdherente = ? AND idPlanillon = ?";
+			pstmt = conn.prepareStatement(sql);
+			int nEstado = (estado.compareTo("ACEPTADO") == 0) ? 1 : 0;
+			pstmt.setString(1, "" + nEstado);
+			pstmt.setDouble(2, tProcesado);
+			pstmt.setInt(3, idAdherente);
+			pstmt.setInt(4, idPlanillon);
+			// Paso 4: Ejecutar la sentencia
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexi�n
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
 	public void updateEstadoAdherente(int idAdherente, String estado) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -330,7 +371,8 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			// (1=ACEPTADO,0=RECHAZADO,2=OBSERVADO)
-			String sql = "UPDATE AdherentexPlanillon SET EstadoValidez=? WHERE idAdherente = ?";
+			String sql = "UPDATE AdherentexPlanillon SET EstadoValidez=?  " +
+					" WHERE idAdherente = ? ";
 			pstmt = conn.prepareStatement(sql);
 			int nEstado = (estado.compareTo("ACEPTADO") == 0) ? 1 : 0;
 			pstmt.setString(1, "" + nEstado);
@@ -356,7 +398,6 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			}
 		}
 	}
-
 	@Override
 	public int verificarAdherenteRepetido(int idProceso, String dni) {
 		Connection conn = null;

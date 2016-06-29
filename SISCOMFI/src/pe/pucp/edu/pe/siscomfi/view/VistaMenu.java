@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -154,7 +155,11 @@ public class VistaMenu extends JFrame {
 					fEscogido = jfcChooser.getSelectedFile();
 					if (fEscogido != null) {
 						archivoRNV = fEscogido.getAbsolutePath();
-						siscomfiManager.llenarRegistroElector(archivoRNV);
+						//mensaje de confirmacion
+						if (siscomfiManager.llenarRegistroElector(archivoRNV))
+							JOptionPane.showMessageDialog(desktop, "Excel del RNV cargado correctamente!");
+						else
+							JOptionPane.showMessageDialog(desktop, "Hubo un problema! Comunicarse con un administrador.");						
 					} else {
 						if (result == JFileChooser.CANCEL_OPTION)
 							break;

@@ -189,7 +189,7 @@ public class HelperMethods {
 			int espacioCampo = xRight - xLeft + 1;
 			tCampos[i] = espacioCampo;
 		}
-		// 0 N°,1 DNI, 2 Nombre y Apelido, 3 Firma, 4 Huella
+		// 0 Nï¿½,1 DNI, 2 Nombre y Apelido, 3 Firma, 4 Huella
 		planillon = new ImagePlus("", auxPlanillon.getProcessor());
 		return tCampos;
 	}
@@ -381,7 +381,7 @@ public class HelperMethods {
 
 		img.setRoi(0, min, img.getWidth(), max - min);
 		img = new Duplicator().run(img);
-		// si la imagen es pequeña la ignoramos
+		// si la imagen es pequeï¿½a la ignoramos
 		if (img.getHeight() < 10 || img.getWidth() < 10) {
 			img = null;
 		}
@@ -392,13 +392,14 @@ public class HelperMethods {
 		ImagePlus auxImg = new Duplicator().run(img);
 		IJ.run(img, "Make Binary", "");
 		img = borrarBordeArriba(img);
+		int y = auxImg.getHeight() - img.getHeight();
 		img = borrarBordeIzquierda(img);
+		int x = auxImg.getWidth() - img.getWidth();
 		img = borrarBordeDerecha(img);
 		img = borrarBordeAbajo(img);
-		auxImg.setRoi(auxImg.getWidth() - img.getWidth(), auxImg.getHeight() - img.getHeight(), img.getWidth(),
-				img.getHeight());
+		auxImg.setRoi(x,y, img.getWidth(), img.getHeight());
 		IJ.run(auxImg, "Crop", "");
-		return img;
+		return auxImg;
 	}
 
 	public static ArrayList<ImagePlus> getDatosParte(ImagePlus img, int n) {

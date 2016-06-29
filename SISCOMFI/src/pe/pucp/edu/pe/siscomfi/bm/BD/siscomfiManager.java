@@ -38,6 +38,10 @@ public class siscomfiManager {
 	public static void addUsuario(Usuario u) {
 		usuarioDB.add(u);
 	}
+	
+	public static void updateUsuario(Usuario u) { //nuevo
+		usuarioDB.update(u);
+	}
 
 	public static ArrayList<Rol> queryAllRoles() {
 		return rolDB.queryAll();

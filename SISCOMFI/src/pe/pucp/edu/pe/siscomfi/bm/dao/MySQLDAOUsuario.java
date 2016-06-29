@@ -152,7 +152,43 @@ public class MySQLDAOUsuario implements DAOUsuario {
 
 	@Override
 	public void update(Usuario u) {
-		// TODO Auto-generated method stub
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexi�n
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			String sql = "UPDATE Usuario "
+					+ " SET Contrasenia = ?, preguntaSecreta = ?, RptaSecreta = ?"
+					+ "WHERE CorreoElectronico = ? and Contrasenia =?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, u.getContrasenia());
+			pstmt.setString(2, u.getPreguntaSecreta());
+			pstmt.setString(3, u.getRptaSecreta());
+			pstmt.setString(4, u.getCorreoElectronico());
+			pstmt.setString(5, u.getAntContrasenia());
+			// Paso 4: Ejecutar la sentencia
+			pstmt.executeUpdate();
+			// Paso 5(opc.): Procesar los resultados
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexi�n
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		
 	}
 

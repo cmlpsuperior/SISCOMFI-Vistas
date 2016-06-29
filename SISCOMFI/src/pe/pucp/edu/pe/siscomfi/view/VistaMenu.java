@@ -37,6 +37,9 @@ public class VistaMenu extends JFrame {
 	private VistaRegistrarProceso vRegistrarProceso;
 
 	private VistaMantPartido vMantPartido;
+	private VistaMantUsuario vMantUsuario;//nuevo
+	
+	
 	private VistaMenu me = this;
 
 	private boolean loginPermisoResult = false;
@@ -114,6 +117,16 @@ public class VistaMenu extends JFrame {
 			}
 		});
 		mnUsuario.add(mntmRegistrarUsuario);
+		
+		JMenuItem mntmMantenimiento = new JMenuItem("Hacer Mantenimiento");
+		mntmMantenimiento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				vMantUsuario = new VistaMantUsuario();
+				desktop.add(vMantUsuario);
+				vMantUsuario.setVisible(true);
+			}
+		});
+		mnUsuario.add(mntmMantenimiento);
 
 		JMenu mnReporte = new JMenu("Reporte");
 		menuBar.add(mnReporte);

@@ -13,7 +13,16 @@ public class Usuario {
 	private String dni;
 	private String PreguntaSecreta; //nuevo
 	private String RptaSecreta; //nuevo
+	private String antContrasenia;
 	
+	public String getAntContrasenia() {
+		return antContrasenia;
+	}
+
+	public void setAntContrasenia(String antContrasenia) {
+		this.antContrasenia = antContrasenia;
+	}
+
 	public Usuario(){
 		
 	}

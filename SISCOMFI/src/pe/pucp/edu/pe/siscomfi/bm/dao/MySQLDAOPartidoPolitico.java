@@ -195,7 +195,94 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 		}
 		return arr;
 	}
+	
+	@Override
+	public ArrayList<PartidoPolitico> queryDisponibles(int idProceso, int numFase) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<PartidoPolitico> arr = new ArrayList<PartidoPolitico>();
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexion
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			
+			// Paso 3: Preparar la sentencia
+			String sql;
+			if (numFase ==1){				
+				 sql =		"	select * 																								"+
+							"	from PartidoPolitico pp																					"+
+							"	where idPartidoPolitico not in (select 	pp.idPartidoPolitico											"+
+							"									from 	Proceso p, PartidoPoliticoxProceso ppxp, PartidoPolitico pp		"+
+							"									where 	pp.idPartidoPolitico = ppxp.idPartidoPolitico and				"+
+							"											p.idProceso = ppxp.idProceso and								"+
+							"																											"+
+							"											p.idProceso = ?);												";		
+			}
+			else if (numFase==2){
+				sql =	"	select 	pp.*																							"+
+						"	from 	Proceso p, PartidoPoliticoxProceso ppxp, PartidoPolitico pp										"+		
+						"	where 	pp.idPartidoPolitico = ppxp.idPartidoPolitico and												"+
+						"	p.idProceso = ppxp.idProceso and																		"+
+						"																											"+	
+						"	ppxp.FechaFase2 is null and																				"+
+						"	p.idProceso = ?;																						";
+			}
+			else { // la fase no es ni uno ni dos, no debe votar nada
+				sql = 	"	Select * from Proceso where 1=0;	";
+			}
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idProceso);
+			
+			// Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			// Paso 5(opc.): Procesar los resultados
+			while (rs.next()) {
+				int id = rs.getInt("idPartidoPolitico");
+				String nombre = rs.getString("Nombre");
+				String rep = rs.getString("Representante");
+				String correo = rs.getString("CorreoRepresentante");
+				String direccion = rs.getString("Direccion");
+				String telefono = rs.getString("Telefono");
+				int idDistrito = rs.getInt("idDistrito");
+				Date fechaRegistro = rs.getTimestamp("FechaRegistro");
+				String estadoActivo = rs.getString("EstadoActivo");
 
+				PartidoPolitico p = new PartidoPolitico();
+				p.setIdPartidoPolitco(id);
+				p.setNombrePartido(nombre);
+				p.setRepresentante(rep);
+				p.setCorreo(correo);
+				p.setDireccion(direccion);
+				p.setTelefono(telefono);
+				p.setIdDistrito(idDistrito);
+				p.setFechaRegistro(fechaRegistro);
+				p.setEstadoActivo(estadoActivo);
+
+				arr.add(p);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexi�n
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return arr;
+	}
+	
 	@Override
 	public ArrayList<Reporte> queryReporte(int idTipoProceso, int anio, int idFase, int estadoPartido) {
 		Connection conn = null;

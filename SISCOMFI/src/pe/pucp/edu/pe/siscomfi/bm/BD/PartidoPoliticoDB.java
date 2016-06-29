@@ -25,6 +25,12 @@ public class PartidoPoliticoDB {
     	return listaPartido;
     }
     
+    public ArrayList<PartidoPolitico> queryDisponibles(int idProceso, int numFase) //nuevo :)
+    {
+    	listaPartido = daoPartidoPolitico.queryDisponibles(idProceso, numFase);
+    	return listaPartido;
+    }
+    
     public void update(PartidoPolitico p)
     {
     	daoPartidoPolitico.update(p);

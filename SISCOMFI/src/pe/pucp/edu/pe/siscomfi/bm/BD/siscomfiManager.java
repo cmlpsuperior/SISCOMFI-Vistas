@@ -80,6 +80,10 @@ public class siscomfiManager {
 	public static ArrayList<PartidoPolitico> queryAllPartidos() {
 		return partidoPoliticoDB.queryAll();
 	}
+	
+	public static ArrayList<PartidoPolitico> queryPartidosDisponibles(int idProceso, int numFase) {
+		return partidoPoliticoDB.queryDisponibles(idProceso, numFase);
+	}
 
 	public static void addPartido(PartidoPolitico p) {
 		partidoPoliticoDB.add(p);
@@ -175,6 +179,10 @@ public class siscomfiManager {
 	// proceso
 	public static ArrayList<Proceso> queryAllProcesos() {
 		return procesoDB.queryAll();
+	}
+	
+	public static Proceso queryProcesoById(int idProceso) { // nuevo :)
+		return procesoDB.queryById(idProceso);
 	}
 	
 	public static ArrayList<Proceso> queryProcesosDisponibles() { //Agregado :)

@@ -9,6 +9,7 @@ public interface DAOPartidoPolitico {
 	void update(PartidoPolitico u);
 	void delete (int idPartido);
 	ArrayList<PartidoPolitico> queryAll();
+	ArrayList<PartidoPolitico> queryDisponibles(int idProceso, int numFase);
 	PartidoPolitico queryByRepresentante(String representante);
 	PartidoPolitico queryById(int idPartido);
 	PartidoPolitico queryByNombre(String nombre);

@@ -450,10 +450,10 @@ public class VistaMantPartido extends JInternalFrame {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}		
 		
 	}
+	
 	public void LlenarCmbProvincia(int idDepartamento){ //mostrare solo los clientes que estan activos
 		cmbProvincia.removeAllItems();
 		ArrayList<Provincia> listaProvincia;

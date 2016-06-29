@@ -37,6 +37,8 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JProgressBar;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 @SuppressWarnings("serial")
 public class VistaIniciarProceso extends JInternalFrame implements ActionListener {
@@ -55,7 +57,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 	private JProgressBar pgBar;
 	private JPanel pnLog;
 	private Proceso fase = null;
-	private int numFase = 0;
+	private int numFase = 0; // fase cero es que el proceso npo tiene fase disponible.
 	private JTextField txtAceptados;
 	private JLabel lblResultadoFinal;
 	private JTextField txtResultado;
@@ -96,9 +98,41 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		cmbPartido = new JComboBox<String>();
 		cmbPartido.setBounds(292, 106, 235, 20);
 		getContentPane().add(cmbPartido);
-		fillPartidoCmb();
+		//fillPartidoCmb();
 
 		cmbProceso = new JComboBox<String>();
+		cmbProceso.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {				
+				if (cmbProceso.getSelectedItem() != null){
+					String[] tokens = cmbProceso.getSelectedItem().toString().split(" ");
+					int idProceso = Integer.parseInt(tokens[0]);
+					
+					//actualizamos la fase del proceso:
+					// Fase del Proceso
+					Proceso pr = siscomfiManager.queryProcesoById(idProceso); // mejor :)
+					
+					Date ahora = new Date();
+					if (ahora.after(pr.getFechaProceso1Inicio()) && ahora.before(pr.getFechaProceso1Fin()) ){
+						numFase = 1;
+						txtFase.setText("Fase "+ numFase);
+					}
+					else if (ahora.after(pr.getFechaProceso2Inicio()) && ahora.before(pr.getFechaProceso2Fin()) ){
+						numFase = 2;
+						txtFase.setText("Fase "+ numFase);
+					}
+					else {
+						numFase = 0;
+						txtFase.setText("Fase "+ numFase);
+						JOptionPane.showMessageDialog(null, "No hay procesos electorales activos");
+					}
+					
+					//actualizamos los partidos del combo
+					fillPartidoCmb(idProceso);
+					
+					
+				}
+			}
+		});
 		cmbProceso.setBounds(292, 35, 235, 22);
 		getContentPane().add(cmbProceso);
 		fillProcesoCmb();
@@ -181,15 +215,22 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		cmbProceso.addActionListener(this);
 	}
 
-	public void fillPartidoCmb() {
+	public void fillPartidoCmb(int idProceso) {
 		cmbPartido.removeAllItems();
 		ArrayList<PartidoPolitico> PartidoPoliticoList;
 		try {
-			PartidoPoliticoList = siscomfiManager.queryAllPartidos();
-			for (int i = 0; i < PartidoPoliticoList.size(); i++) {
-				PartidoPolitico pp = (PartidoPolitico) PartidoPoliticoList.get(i);
-				cmbPartido.addItem(pp.getIdPartidoPolitico() + " - " + pp.getNombrePartido());
+			if (numFase ==1 || numFase ==2){
+				PartidoPoliticoList = siscomfiManager.queryPartidosDisponibles(idProceso, numFase);
+				for (int i = 0; i < PartidoPoliticoList.size(); i++) {
+					PartidoPolitico pp = (PartidoPolitico) PartidoPoliticoList.get(i);
+					cmbPartido.addItem(pp.getIdPartidoPolitico() + " - " + pp.getNombrePartido());
+				}
+				
 			}
+			else {
+				JOptionPane.showMessageDialog(this, "No hay Fase 1 ni 2 asignadas"); //la variable numFase seguramente ==0
+			}
+				
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -240,23 +281,30 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		}
 
 		if (e.getSource() == cmbProceso) {
-			int tipoProceso = Integer.parseInt("" + cmbProceso.getSelectedItem().toString().charAt(0));
-			// Fase del Proceso
-			fase = siscomfiManager.getFase1Proceso(tipoProceso);
-			if (fase == null) {
-				fase = siscomfiManager.getFase2Proceso(tipoProceso);
+			/*if (cmbProceso.getSelectedItem() != null){
+				String[] tokens = cmbProceso.getSelectedItem().toString().split(" ");
+				int tipoProceso = Integer.parseInt(tokens[0]);
+				
+				// Fase del Proceso
+				fase = siscomfiManager.getFase1Proceso(tipoProceso);
 				if (fase == null) {
-					JOptionPane.showMessageDialog(this, "No hay procesos electorales activos");
-					txtFase.setText("");
-					return;
+					fase = siscomfiManager.getFase2Proceso(tipoProceso);
+					if (fase == null) {
+						JOptionPane.showMessageDialog(this, "No hay procesos electorales activos");
+						txtFase.setText("");
+						return;
+					}
+					numFase = 2;
+					txtFase.setText("Fase 2");
+					
+				} else {
+					numFase = 1;
+					txtFase.setText("Fase 1");
 				}
-				numFase = 2;
-				txtFase.setText("Fase 2");
-			} else {
-				numFase = 1;
-				txtFase.setText("Fase 1");
-			}
+				fillPartidoCmb(tipoProceso);
+			}*/
 		}
+		
 
 		if (e.getSource() == btnRuta) {
 			jfcRuta = new JFileChooser();

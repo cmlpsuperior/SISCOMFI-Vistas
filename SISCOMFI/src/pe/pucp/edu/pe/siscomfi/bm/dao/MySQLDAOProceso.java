@@ -14,6 +14,7 @@ import javax.sql.rowset.serial.SerialBlob;
 
 import com.mysql.jdbc.Driver;
 
+import pe.pucp.edu.pe.siscomfi.model.PartidoPolitico;
 import pe.pucp.edu.pe.siscomfi.model.Planillon;
 import pe.pucp.edu.pe.siscomfi.model.Proceso;
 import pe.pucp.edu.pe.siscomfi.model.RegistroElector;
@@ -202,8 +203,60 @@ public class MySQLDAOProceso implements DAOProceso {
 	
 	@Override
 	public Proceso queryById(int idProceso) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Proceso p = null;
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexi�n
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			String sql = "SELECT * FROM Proceso " + "WHERE idProceso = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idProceso);
+			// Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			// Paso 5(opc.): Procesar los resultados
+			if (rs.next()) {
+				int id = rs.getInt("idProceso");
+				String descripcion = rs.getString("Descripcion");
+				Date fp1Inicio = rs.getTimestamp("FechaProceso1Inicio");
+				Date fp1Fin = rs.getTimestamp("FechaProceso1Fin");
+				Date fp2Inicio = rs.getTimestamp("FechaProceso2Inicio");
+				Date fp2Fin = rs.getTimestamp("FechaProceso2Fin");
+				int cantMinAdh = rs.getInt("CantidadMinAdherentes");
+				int idTipoProceso = rs.getInt("idTipoProceso");
+
+				p = new Proceso();
+				p.setCantidadMinAdherentes(cantMinAdh);
+				p.setDescripcion(descripcion);
+				p.setFechaProceso1Inicio(fp1Inicio);
+				p.setFechaProceso1Fin(fp1Fin);
+				p.setFechaProceso2Inicio(fp2Inicio);
+				p.setFechaProceso2Fin(fp2Fin);
+				p.setIdProceso(id);
+				p.setIdTipoProceso(idTipoProceso);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexi�n
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return p;
 	}
 
 	@Override

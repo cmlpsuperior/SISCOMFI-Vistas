@@ -198,7 +198,7 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 		cmbProceso.removeAllItems();
 		ArrayList<Proceso> ProcesoList;
 		try {
-			ProcesoList = siscomfiManager.queryAllProcesos();
+			ProcesoList = siscomfiManager.queryProcesosDisponibles();
 			for (int i = 0; i < ProcesoList.size(); i++) {
 				Proceso pro = (Proceso) ProcesoList.get(i);
 				cmbProceso.addItem(pro.getIdProceso() + " - " + pro.getDescripcion());

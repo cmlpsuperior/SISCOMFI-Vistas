@@ -135,7 +135,71 @@ public class MySQLDAOProceso implements DAOProceso {
 		}
 		return arr;
 	}
+	
+	@Override
+	public ArrayList<Proceso> queryDisponibles() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<Proceso> arr = new ArrayList<Proceso>();
+		try {
+			// Paso 1: Registrar el Driver
+			DriverManager.registerDriver(new Driver());
+			// Paso 2: Obtener la conexi�n
+			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
+			// Paso 3: Preparar la sentencia
+			String sql = "	select *																	"+
+						 "	from Proceso																"+
+						 "	where	(Now() between FechaProceso1Inicio and FechaProceso1Fin) or 		"+
+						 "			(Now() between FechaProceso2Inicio and FechaProceso2Fin)			";
+			
+			pstmt = conn.prepareStatement(sql);
+			// Paso 4: Ejecutar la sentencia
+			rs = pstmt.executeQuery();
+			// Paso 5(opc.): Procesar los resultados
+			while (rs.next()) {
+				int id = rs.getInt("idProceso");
+				String descripcion = rs.getString("Descripcion");
+				Date fp1Inicio = rs.getTimestamp("FechaProceso1Inicio");
+				Date fp1Fin = rs.getTimestamp("FechaProceso1Fin");
+				Date fp2Inicio = rs.getTimestamp("FechaProceso2Inicio");
+				Date fp2Fin = rs.getTimestamp("FechaProceso2Fin");
+				int cantMinAdh = rs.getInt("CantidadMinAdherentes");
+				int idTipoProceso = rs.getInt("idTipoProceso");
 
+				Proceso p = new Proceso();
+				p.setCantidadMinAdherentes(cantMinAdh);
+				p.setDescripcion(descripcion);
+				p.setFechaProceso1Inicio(fp1Inicio);
+				p.setFechaProceso1Fin(fp1Fin);
+				p.setFechaProceso2Inicio(fp2Inicio);
+				p.setFechaProceso2Fin(fp2Fin);
+				p.setIdProceso(id);
+				p.setIdTipoProceso(idTipoProceso);
+
+				arr.add(p);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			// Paso 6(OJO): Cerrar la conexi�n
+			try {
+				if (pstmt != null)
+					pstmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return arr;
+	}
+	
 	@Override
 	public Proceso queryById(int idProceso) {
 		// TODO Auto-generated method stub
@@ -361,8 +425,8 @@ public class MySQLDAOProceso implements DAOProceso {
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "INSERT INTO PartidoPoliticoxProceso "
-					+ "(idPartidoPolitico, idProceso, idUsuario, TiempoProcesado, EstadoPartido)"
-					+ "VALUES (?,?,?,?,?)";
+					+ "(idPartidoPolitico, idProceso, idUsuario, TiempoProcesado, EstadoPartido, FechaFase1)"
+					+ "VALUES (?,?,?,?,?, Now())"; //le Agrege el Now()
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idPartido);
 			pstmt.setInt(2, idProceso);

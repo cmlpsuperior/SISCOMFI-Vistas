@@ -41,6 +41,11 @@ public class ProcesoDB {
 		listaProceso = daoProceso.queryAll();
 		return listaProceso;
 	}
+	
+	public ArrayList<Proceso> queryDisponibles() { //agregado :)
+		listaProceso = daoProceso.queryDisponibles();
+		return listaProceso;
+	}
 
 	public Proceso getFase1Proceso(int idTipoProceso) {
 		return daoProceso.getFase1Actual(idTipoProceso);

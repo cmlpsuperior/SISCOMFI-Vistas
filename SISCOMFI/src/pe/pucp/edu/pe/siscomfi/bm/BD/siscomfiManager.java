@@ -176,6 +176,10 @@ public class siscomfiManager {
 	public static ArrayList<Proceso> queryAllProcesos() {
 		return procesoDB.queryAll();
 	}
+	
+	public static ArrayList<Proceso> queryProcesosDisponibles() { //Agregado :)
+		return procesoDB.queryDisponibles();
+	}
 
 	public static Proceso getFase1Proceso(int idTipoProceso) {
 		return procesoDB.getFase1Proceso(idTipoProceso);
@@ -202,6 +206,8 @@ public class siscomfiManager {
 	public static ArrayList<TipoProceso> queryAllTipoProcesos() {
 		return tipoProcesoDB.queryAll();
 	}
+	
+	
 
 	public static void addPartidoxProceso(int idPartido, int idProceso, int idUsuario, double tiempoProcesado,
 			int estado) {

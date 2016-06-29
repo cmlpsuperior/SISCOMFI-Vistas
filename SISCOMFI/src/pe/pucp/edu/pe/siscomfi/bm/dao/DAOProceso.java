@@ -13,6 +13,7 @@ public interface DAOProceso {
 	void delete (int idProceso);
 	//ArrayList<Usuario> queryAll();
 	ArrayList<Proceso> queryAll();
+	ArrayList<Proceso> queryDisponibles(); //agregado :)
 	Proceso queryById(int idProceso);	
 	//ArrayList<Usuario> queryByFilter(String name);
 	Proceso getFase1Actual(int idTipoPartido);

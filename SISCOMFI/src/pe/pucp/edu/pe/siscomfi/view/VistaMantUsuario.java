@@ -136,10 +136,13 @@ public class VistaMantUsuario extends JInternalFrame {
 				String nuevaContra = txtNuevaContra.getText();
 				String pregSecreta = txtPregSecreta.getText();
 				String rptaSecreta = txtRptaSecreta.getText();
-				//String cmbPregSecreta = cmbPregSecreta
-				if (!correo.equals("") && !correo.toLowerCase().contains("@") )
+
+				if (correo.equals("") && antContra.equals("") && nuevaContra.equals("") && pregSecreta.equals("") && rptaSecreta.equals("")){
+					JOptionPane.showMessageDialog(null, "Por favor llene los campos mostrados en la ventana.");
+				}
+				else if (!correo.equals("") && !correo.toLowerCase().contains("@") ){
 					JOptionPane.showMessageDialog(null, "El correo debe tene el formato persona@partido.com");
-				else if (!correo.isEmpty() && !antContra.isEmpty()) {
+				}else if (!correo.isEmpty() && !antContra.isEmpty()) {
 					boolean valor = siscomfiManager.queryByLogin(correo, antContra);
 					if (valor) { //caso en que ya se valido el usuario y contraseña
 						//todos llenos
@@ -153,7 +156,7 @@ public class VistaMantUsuario extends JInternalFrame {
 							
 							try {
 								siscomfiManager.updateUsuario(u);
-								JOptionPane.showMessageDialog(null, "Se actualizo el usuario satisfactoriamente");
+								JOptionPane.showMessageDialog(null, "Se actualizo el usuario satisfactoriamente.");
 								LimpiarTextos();
 							} catch (Exception e1) {
 								// TODO Auto-generated catch block
@@ -161,11 +164,10 @@ public class VistaMantUsuario extends JInternalFrame {
 							}
 						}
 					} else {
-						JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecto");
-						LimpiarTextos();
+						JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecto.");
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Por favor ingrese su correo y contraseña");
+					JOptionPane.showMessageDialog(null, "Por favor ingrese su correo y contraseña.");
 					LimpiarTextos();
 				}
 				

@@ -69,13 +69,15 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private JTable tblPartidoAceptado;
 	private JComboBox<String> cmbProceso;
 	private JComboBox<String> cmbFase;
-	
+
 	public VistaObservados() {
 		boolean indicador = true;
 		if (!UsuarioLogeado.verificarPaths()) {
 			String result = UsuarioLogeado.setearPathsObservado(this);
 			if (result.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Escojan el directorio donde estan los adherentes observados");
+				JOptionPane
+						.showMessageDialog(this,
+								"Escojan el directorio donde estan los adherentes observados");
 				indicador = false;
 			}
 		}
@@ -92,8 +94,8 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 
 		JPanel pnPartido = new JPanel();
 		pnPartido.setLayout(null);
-		pnPartido.setBorder(
-				new TitledBorder(null, "PARTIDO POLITICO", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pnPartido.setBorder(new TitledBorder(null, "PARTIDO POLITICO",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnPartido.setBounds(10, 11, 396, 157);
 		getContentPane().add(pnPartido);
 
@@ -126,27 +128,27 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		txtAceptados.setColumns(10);
 		txtAceptados.setBounds(173, 126, 208, 20);
 		pnPartido.add(txtAceptados);
-		
+
 		JLabel lblProceso = new JLabel("Proceso Electoral:");
 		lblProceso.setBounds(12, 24, 151, 14);
 		pnPartido.add(lblProceso);
-		
+
 		cmbProceso = new JComboBox<String>();
 		cmbProceso.setBounds(173, 21, 208, 20);
 		pnPartido.add(cmbProceso);
-		
+
 		JLabel lblFase = new JLabel("Fase:");
 		lblFase.setBounds(12, 76, 151, 14);
 		pnPartido.add(lblFase);
-		
+
 		cmbFase = new JComboBox<String>();
 		cmbFase.setBounds(173, 71, 208, 20);
 		pnPartido.add(cmbFase);
 		cmbFase.addItem("Fase 1");
 		cmbFase.addItem("Fase 2");
-		//Llenamos el combo con los procesos electorales.2
+		// Llenamos el combo con los procesos electorales.2
 		fillCmbProceso();
-		
+
 		JTabbedPane pnPartidos = new JTabbedPane(JTabbedPane.TOP);
 		pnPartidos.setBounds(10, 180, 395, 265);
 		getContentPane().add(pnPartidos);
@@ -184,34 +186,42 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 					}
 				}
 				if (dniEncontrado != null) {
-					File pathHuella = new File(dniEncontrado.getAbsolutePath() + "/huella");
+					File pathHuella = new File(dniEncontrado.getAbsolutePath()
+							+ "/huella");
 					if (pathHuella.exists()) {
 						File[] huellas = pathHuella.listFiles();
 						for (File huella : huellas) {
 							if (huella.getName().compareTo("original.jpg") == 0) {
-								ImagePlus iHuellaOriginal = IJ.openImage(huella.getAbsolutePath());
+								ImagePlus iHuellaOriginal = IJ.openImage(huella
+										.getAbsolutePath());
 								int width = lblHuellaOriginal.getWidth();
-								ImageProcessor imp = iHuellaOriginal.getProcessor();
+								ImageProcessor imp = iHuellaOriginal
+										.getProcessor();
 								imp = imp.resize(width);
 								iHuellaOriginal = new ImagePlus("original", imp);
-								lblHuellaOriginal.setBounds(lblHuellaObservado.getBounds().x,
-										lblHuellaObservado.getBounds().y, iHuellaOriginal.getWidth(),
+								lblHuellaOriginal.setBounds(
+										lblHuellaObservado.getBounds().x,
+										lblHuellaObservado.getBounds().y,
+										iHuellaOriginal.getWidth(),
 										iHuellaOriginal.getHeight());
-								lblHuellaOriginal.setIcon(new ImageIcon(iHuellaOriginal.getBufferedImage()));
-								pnOriginalH.setBounds(pnOriginalH.getBounds().x, pnOriginalH.getBounds().y,
-										iHuellaOriginal.getWidth(), iHuellaOriginal.getHeight());
+								lblHuellaOriginal.setIcon(new ImageIcon(
+										iHuellaOriginal.getBufferedImage()));
 							} else {
-								ImagePlus iHuellaObservado = IJ.openImage(huella.getAbsolutePath());
+								ImagePlus iHuellaObservado = IJ
+										.openImage(huella.getAbsolutePath());
 								int width = lblHuellaObservado.getWidth();
-								ImageProcessor imp = iHuellaObservado.getProcessor();
+								ImageProcessor imp = iHuellaObservado
+										.getProcessor();
 								imp = imp.resize(width);
-								iHuellaObservado = new ImagePlus("observado", imp);
-								lblHuellaObservado.setBounds(lblHuellaObservado.getBounds().x,
-										lblHuellaObservado.getBounds().y, iHuellaObservado.getWidth(),
+								iHuellaObservado = new ImagePlus("observado",
+										imp);
+								lblHuellaObservado.setBounds(
+										lblHuellaObservado.getBounds().x,
+										lblHuellaObservado.getBounds().y,
+										iHuellaObservado.getWidth(),
 										iHuellaObservado.getHeight());
-								lblHuellaObservado.setIcon(new ImageIcon(iHuellaObservado.getBufferedImage()));
-								pnObservadoH.setBounds(pnObservadoH.getBounds().x, pnObservadoH.getBounds().y,
-										iHuellaObservado.getWidth(), iHuellaObservado.getHeight());
+								lblHuellaObservado.setIcon(new ImageIcon(
+										iHuellaObservado.getBufferedImage()));
 							}
 							pnObservadoH.setVisible(true);
 							pnOriginalH.setVisible(true);
@@ -222,42 +232,42 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 						pnObservadoH.setVisible(false);
 						pnOriginalH.setVisible(false);
 					}
-					File pathFirma = new File(dniEncontrado.getAbsolutePath() + "/firma");
+					File pathFirma = new File(dniEncontrado.getAbsolutePath()
+							+ "/firma");
 					if (pathFirma.exists()) {
 						File[] firmas = pathFirma.listFiles();
 						for (File firma : firmas) {
 							if (firma.getName().compareTo("original.jpg") == 0) {
-								ImagePlus iFirmaOriginal = IJ.openImage(firma.getAbsolutePath());
+								ImagePlus iFirmaOriginal = IJ.openImage(firma
+										.getAbsolutePath());
 								int width = lblFirmaOriginal.getWidth();
-								ImageProcessor imp = iFirmaOriginal.getProcessor();
+								ImageProcessor imp = iFirmaOriginal
+										.getProcessor();
 								imp = imp.resize(width);
 								iFirmaOriginal = new ImagePlus("original", imp);
-								lblFirmaOriginal.setBounds(lblFirmaOriginal.getBounds().x,
-										lblFirmaOriginal.getBounds().y, iFirmaOriginal.getWidth(),
+								lblFirmaOriginal.setBounds(
+										lblFirmaOriginal.getBounds().x,
+										lblFirmaOriginal.getBounds().y,
+										iFirmaOriginal.getWidth(),
 										iFirmaOriginal.getHeight());
-								lblFirmaOriginal.setIcon(new ImageIcon(iFirmaOriginal.getBufferedImage()));
-								/*
-								 * pnOriginalF.setBounds(pnOriginalF.getBounds()
-								 * .x, pnOriginalF.getBounds().y,
-								 * iFirmaOriginal.getWidth(),
-								 * iFirmaOriginal.getHeight());
-								 */
+								lblFirmaOriginal.setIcon(new ImageIcon(
+										iFirmaOriginal.getBufferedImage()));
 							} else {
-								ImagePlus iFirmaObservado = IJ.openImage(firma.getAbsolutePath());
+								ImagePlus iFirmaObservado = IJ.openImage(firma
+										.getAbsolutePath());
 								int width = lblFirmaObservado.getWidth();
-								ImageProcessor imp = iFirmaObservado.getProcessor();
+								ImageProcessor imp = iFirmaObservado
+										.getProcessor();
 								imp = imp.resize(width);
-								iFirmaObservado = new ImagePlus("observado", imp);
-								lblFirmaObservado.setBounds(lblFirmaObservado.getBounds().x,
-										lblFirmaObservado.getBounds().y, iFirmaObservado.getWidth(),
+								iFirmaObservado = new ImagePlus("observado",
+										imp);
+								lblFirmaObservado.setBounds(
+										lblFirmaObservado.getBounds().x,
+										lblFirmaObservado.getBounds().y,
+										iFirmaObservado.getWidth(),
 										iFirmaObservado.getHeight());
-								lblFirmaObservado.setIcon(new ImageIcon(iFirmaObservado.getBufferedImage()));
-								/*
-								 * pnObservadoF.setBounds(pnObservadoF.getBounds
-								 * ().x, pnObservadoF.getBounds().y,
-								 * iFirmaObservado.getWidth(),
-								 * iFirmaObservado.getHeight());
-								 */
+								lblFirmaObservado.setIcon(new ImageIcon(
+										iFirmaObservado.getBufferedImage()));
 							}
 							pnOriginalF.setVisible(true);
 							pnObservadoF.setVisible(true);
@@ -269,7 +279,8 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 						pnObservadoF.setVisible(false);
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "No se encontraron las imagenes");
+					JOptionPane.showMessageDialog(null,
+							"No se encontraron las imagenes");
 				}
 			}
 		});
@@ -293,7 +304,8 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 
 		tableModelAdherentes = new MyTableModel();
 		JPanel pnAdherente = new JPanel();
-		pnAdherente.setBorder(new TitledBorder(null, "ADHERENTE", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pnAdherente.setBorder(new TitledBorder(null, "ADHERENTE",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnAdherente.setBounds(448, 11, 396, 157);
 		getContentPane().add(pnAdherente);
 		pnAdherente.setLayout(null);
@@ -341,8 +353,10 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		pnHuella.add(lblHuellaNoDisponible);
 
 		pnOriginalH = new JPanel();
-		pnOriginalH.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "ORIGINAL",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnOriginalH.setBorder(new TitledBorder(UIManager
+				.getBorder("TitledBorder.border"), "ORIGINAL",
+				TitledBorder.LEADING, TitledBorder.TOP, null,
+				new Color(0, 0, 0)));
 		pnOriginalH.setBounds(12, 5, 208, 221);
 		pnHuella.add(pnOriginalH);
 		pnOriginalH.setLayout(null);
@@ -352,8 +366,10 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		pnOriginalH.add(lblHuellaOriginal);
 
 		pnObservadoH = new JPanel();
-		pnObservadoH.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "OBSERVADO",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnObservadoH.setBorder(new TitledBorder(UIManager
+				.getBorder("TitledBorder.border"), "OBSERVADO",
+				TitledBorder.LEADING, TitledBorder.TOP, null,
+				new Color(0, 0, 0)));
 		pnObservadoH.setBounds(230, 5, 208, 221);
 		pnHuella.add(pnObservadoH);
 		pnObservadoH.setLayout(null);
@@ -371,8 +387,10 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		pnFirma.add(lblFirmaNoDisponible);
 
 		pnOriginalF = new JPanel();
-		pnOriginalF.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "ORIGINAL",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnOriginalF.setBorder(new TitledBorder(UIManager
+				.getBorder("TitledBorder.border"), "ORIGINAL",
+				TitledBorder.LEADING, TitledBorder.TOP, null,
+				new Color(0, 0, 0)));
 		pnOriginalF.setBounds(12, 5, 208, 221);
 		pnFirma.add(pnOriginalF);
 		pnOriginalF.setLayout(null);
@@ -382,8 +400,10 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		pnOriginalF.add(lblFirmaOriginal);
 
 		pnObservadoF = new JPanel();
-		pnObservadoF.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "OBSERVADO",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		pnObservadoF.setBorder(new TitledBorder(UIManager
+				.getBorder("TitledBorder.border"), "OBSERVADO",
+				TitledBorder.LEADING, TitledBorder.TOP, null,
+				new Color(0, 0, 0)));
 		pnObservadoF.setBounds(230, 5, 208, 221);
 		pnFirma.add(pnObservadoF);
 		pnObservadoF.setLayout(null);
@@ -393,11 +413,11 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		pnObservadoF.add(lblFirmaObservado);
 
 		btnAceptado = new JButton("Aceptado");
-		btnAceptado.setBounds(474, 457, 134, 23);
+		btnAceptado.setBounds(505, 457, 134, 23);
 		getContentPane().add(btnAceptado);
 
 		btnRechazado = new JButton("Rechazado");
-		btnRechazado.setBounds(678, 457, 134, 23);
+		btnRechazado.setBounds(735, 457, 134, 23);
 		getContentPane().add(btnRechazado);
 
 		btnTerminar = new JButton("Terminar");
@@ -408,7 +428,8 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		btnRechazado.addActionListener(this);
 		btnAceptado.addActionListener(this);
 		btnSalir.addActionListener(this);
-		cmbPartido.addActionListener(this);
+		cmbProceso.addActionListener(this);
+		cmbFase.addActionListener(this);
 		btnTerminar.addActionListener(this);
 	}
 
@@ -430,7 +451,8 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	}
 
 	class MyTableModel extends DefaultTableModel {
-		String titles[] = { "DNI", "NOMBRE", "AP. PATERNO", "AP. MATERNO", "ESTADO" };
+		String titles[] = { "DNI", "NOMBRE", "AP. PATERNO", "AP. MATERNO",
+				"ESTADO" };
 
 		@Override
 		public int getColumnCount() {
@@ -451,10 +473,12 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		cmbPartido.removeAllItems();
 		ArrayList<PartidoPolitico> listaObservados;
 		try {
-			listaObservados = siscomfiManager.queryAllPartidosConObservados(idProceso);
+			listaObservados = siscomfiManager
+					.queryAllPartidosConObservados(idProceso);
 			for (int i = 0; i < listaObservados.size(); i++) {
 				PartidoPolitico p = (PartidoPolitico) listaObservados.get(i);
-				cmbPartido.addItem(p.getIdPartidoPolitico() + " - " + p.getNombrePartido());
+				cmbPartido.addItem(p.getIdPartidoPolitico() + " - "
+						+ p.getNombrePartido());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -468,26 +492,53 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			procesoList = siscomfiManager.queryDisponibleObs();
 			for (int i = 0; i < procesoList.size(); i++) {
 				Proceso pro = (Proceso) procesoList.get(i);
-				cmbProceso.addItem(pro.getIdProceso() + " - " + pro.getDescripcion());
+				cmbProceso.addItem(pro.getIdProceso() + " - "
+						+ pro.getDescripcion());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//Observados>Proceso>Partido>Fase
-		if(e.getSource() == cmbProceso){
-			//Para el proceso electoral seleccionado, obtenemos los partidos politicos
-			//que tienen estado observado.2
-			int idProceso = cmbProceso.getSelectedItem().toString().charAt(0);
+		// Observados>Proceso>Partido>Fase
+		if (e.getSource() == cmbProceso) {
+			// Para el proceso electoral seleccionado, obtenemos los partidos
+			// politicos
+			// que tienen estado observado.2
+			String proceso = cmbProceso.getSelectedItem().toString();
+			String [] tproceso = proceso.split(" ");
+			int idProceso = Integer.parseInt(tproceso[0]);
 			fillCmbPartido(idProceso);
 		}
-		
-		if (e.getSource() == cmbFase){
-			
+
+		if (e.getSource() == cmbFase) {
+			// seleccionamos el partido que se esta viendo
+			tableModelAdherentes.setRowCount(0);
+			String proceso = cmbProceso.getSelectedItem().toString();
+			String partido = cmbPartido.getSelectedItem().toString();
+			String fase = cmbFase.getSelectedItem().toString();
+			// if (partidoAnalizado.getE)
+			pObservadosPartido = new File(pathObservados + "/" + proceso + "/"
+					+ partido + "/" + fase);
+			if (pObservadosPartido.exists()) {
+				// buscar observados del partido
+				File[] pAdhObservados = pObservadosPartido.listFiles();
+				List<Adherente> adhObservados = new ArrayList<Adherente>();
+				for (File pDni : pAdhObservados) {
+					String dni = pDni.getName();
+					Adherente adh = siscomfiManager.queryAdherenteByDni(dni);
+					adhObservados.add(adh);
+				}
+				fillTable(adhObservados);
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"Partido no cuenta con adherentes observados");
+			}
 		}
+
 		if (e.getSource() == btnSalir) {
 			this.dispose();
 		}
@@ -502,7 +553,8 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 
 		if (e.getSource() == btnRechazado) {
 			String estado = "ACEPTADO";
-			if (estado.compareTo(tblAdherentes.getValueAt(filaSeleccionada, 4).toString()) == 0) {
+			if (estado.compareTo(tblAdherentes.getValueAt(filaSeleccionada, 4)
+					.toString()) == 0) {
 				tblAdherentes.setValueAt("RECHAZADO", filaSeleccionada, 4);
 				int aceptado = Integer.parseInt(txtAceptados.getText());
 				aceptado--;
@@ -511,49 +563,34 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			tblAdherentes.setValueAt("RECHAZADO", filaSeleccionada, 4);
 		}
 
-		if (e.getSource() == cmbPartido) {
-			// seleccionamos el partido que se esta viendo
-			tableModelAdherentes.setRowCount(0);
-			// clearTable();
-			String partido = cmbPartido.getSelectedItem().toString();
-			//if (partidoAnalizado.getE)
-			pObservadosPartido = new File(pathObservados + "/" + partido);
-			if (pObservadosPartido.exists()) {
-				// buscar observados del partido
-				File[] pAdhObservados = pObservadosPartido.listFiles();
-				List<Adherente> adhObservados = new ArrayList<Adherente>();
-				for (File pDni : pAdhObservados) {
-					String dni = pDni.getName();
-					Adherente adh = siscomfiManager.queryAdherenteByDni(dni);
-					adhObservados.add(adh);
-				}
-				fillTable(adhObservados);
-			} else {
-				JOptionPane.showMessageDialog(this, "Partido no cuenta con adherentes observados");
-			}
-		}
-
 		if (e.getSource() == btnTerminar) {
-			int idPlanillon = 0;
 			for (int i = tableModelAdherentes.getRowCount() - 1; i >= 0; i--) {
 
 				String dni = tableModelAdherentes.getValueAt(i, 0).toString();
 				Adherente adh = siscomfiManager.queryAdherenteByDni(dni);
 
-				String estado = tableModelAdherentes.getValueAt(i, 4).toString();
-				siscomfiManager.updateEstadoAdherente(adh.getIdAdherente(), estado);
+				String estado = tableModelAdherentes.getValueAt(i, 4)
+						.toString();
+				siscomfiManager.updateEstadoAdherente(adh.getIdAdherente(),
+						estado);
 			}
 			String partido = cmbPartido.getSelectedItem().toString();
-			int idPartido = partido.charAt(0);
-			int idProceso = cmbProceso.getSelectedItem().toString().charAt(0);
+			String [] tpartido = partido.split(" ");
+			int idPartido = Integer.parseInt(tpartido[0]);
+			String proceso = cmbProceso.getSelectedItem().toString();
+			String[] tproceso = proceso.split(" ");
+			int idProceso = Integer.parseInt(tproceso[0]);
 			siscomfiManager.updateEstadoPartidoProceso(idPartido, idProceso, 1);
 			// recontar aceptados
-			int cantidadAdherentesFinales = siscomfiManager.contarAdherentesAceptados(idPartido);
-			int minimaCantidadAdherentes = siscomfiManager.minimaCantidadAdherentes(idPartido);
+			int cantidadAdherentesFinales = siscomfiManager
+					.contarAdherentesAceptados(idPartido,idProceso);
+			int minimaCantidadAdherentes = siscomfiManager
+					.cantidadMinimaAdherentes(idProceso);
 			if (cantidadAdherentesFinales >= minimaCantidadAdherentes) {
-				partidoAceptadoModel.addRow(new Object[] { partido, "" + cantidadAdherentesFinales });
+				partidoAceptadoModel.addRow(new Object[] { partido,
+						"" + cantidadAdherentesFinales });
 			}
-			//volvemos a llenar el combo de los partidos.2
+			// volvemos a llenar el combo de los partidos.2
 			fillCmbPartido(idProceso);
 			tableModelAdherentes.setRowCount(0);
 		}
@@ -566,8 +603,9 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 
 	public void fillTable(List<Adherente> lista) {
 		for (Adherente adh : lista) {
-			tableModelAdherentes.addRow(
-					new Object[] { "" + adh.getDni(), adh.getNombre(), adh.getAppPaterno(), adh.getAppMaterno(), "" });
+			tableModelAdherentes.addRow(new Object[] { "" + adh.getDni(),
+					adh.getNombre(), adh.getAppPaterno(), adh.getAppMaterno(),
+					"" });
 		}
 	}
 }

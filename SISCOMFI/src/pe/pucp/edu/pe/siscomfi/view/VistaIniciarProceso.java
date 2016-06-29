@@ -326,7 +326,8 @@ public class VistaIniciarProceso extends JInternalFrame implements
 			int numPadrones = 0;
 			int idPlanillon = 0;
 			String partido = cmbPartido.getSelectedItem().toString();
-			int idPartido = Integer.parseInt(partido.charAt(0) + "");
+			String[] tpartido = partido.split(" ");
+			int idPartido = Integer.parseInt(tpartido[0]);
 			int cantidadAceptados = 0;
 
 			// verificamos denuevo de que haya una fase activa para iniciar el

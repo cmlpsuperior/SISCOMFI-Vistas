@@ -59,8 +59,8 @@ public class PartidoPoliticoDB {
     	
     }
     
-    public int contarAdherentesAceptados(int idPartido){
-    	return daoPartidoPolitico.contarAdherenteAceptado(idPartido);
+    public int contarAdherentesAceptados(int idPartido, int idProceso){
+    	return daoPartidoPolitico.contarAdherenteAceptado(idPartido,idProceso);
     }
     
     public int minimaCantidadAdherenes(int idPartido){

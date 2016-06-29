@@ -705,7 +705,7 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 	}
 
 	@Override
-	public int contarAdherenteAceptado(int idPartido) {
+	public int contarAdherenteAceptado(int idPartido, int idProceso) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -716,9 +716,11 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			String sql = "select count(*) from Planillon A, Proceso B, AdherentexPlanillon C where (? = A.idPartidoPolitico)   "
-					+ "   AND (A.idPlanillon = C.idPlanillon) AND (A.idProceso = B.idProceso) AND (C.EstadoValidez='1') ";
+					+ "   AND (A.idPlanillon = C.idPlanillon) AND (A.idProceso = B.idProceso) AND (C.EstadoValidez = '1') "
+					+ "   AND (B.idProceso = ?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idPartido);
+			pstmt.setInt(2, idProceso);
 			// Paso 4: Ejecutar la sentencia
 			rs = pstmt.executeQuery();
 			// Paso 5(opc.): Procesar los resultados

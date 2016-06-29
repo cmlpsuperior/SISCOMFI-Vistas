@@ -29,6 +29,7 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
@@ -201,6 +202,28 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			ProcesoList = siscomfiManager.queryProcesosDisponibles();
 			for (int i = 0; i < ProcesoList.size(); i++) {
 				Proceso pro = (Proceso) ProcesoList.get(i);
+				//Agrego la fase del primer proceso que saldrá en el combo:
+				if (i==0){
+					Date ahora = new Date();
+					Date inicioFase1 = new Date (pro.getFechaProceso1Inicio().getTime());
+					Date finFase1 = new Date (pro.getFechaProceso1Fin().getTime());
+					Date inicioFase2 = new Date (pro.getFechaProceso2Inicio().getTime());
+					Date finFase2 = new Date (pro.getFechaProceso2Fin().getTime());
+					
+					if (ahora.after(inicioFase1) && ahora.before(finFase1) ){
+						numFase = 1;
+						txtFase.setText("Fase 1");
+					}
+					else if (ahora.after(inicioFase2) && ahora.before(finFase2) ){
+						numFase = 2;
+						txtFase.setText("Fase 2");
+					}
+					else {
+						numFase = 0;
+						txtFase.setText("No se encontro Fase Disponible");
+					}
+				}
+				
 				cmbProceso.addItem(pro.getIdProceso() + " - " + pro.getDescripcion());
 			}
 		} catch (Exception e) {

@@ -323,17 +323,24 @@ public class VistaIniciarProceso extends JInternalFrame implements ActionListene
 			String partido = cmbPartido.getSelectedItem().toString();
 			int idPartido = Integer.parseInt(partido.charAt(0) + "");
 			int cantidadAceptados = 0;
-			//verificamos denuevo de que haya una fase activa para iniciar el procesov2
-			if (fase == null){
+			
+			//verificamos denuevo de que haya una fase activa para iniciar el procesov2			
+			if (cmbProceso.getSelectedItem() == null || numFase ==0 ){
 				JOptionPane.showMessageDialog(this, "No hay procesos electorales activos");
 				return;
 			}
+			// quiere decir que si hay un proceso en el combBox
+			String[] tokens = cmbProceso.getSelectedItem().toString().split(" ");
+			int idProceso = Integer.parseInt(tokens[0]); //obtengo el codigo el proceso
+			
 			// tener que ver si el partidoxProceso no ha sido ya procesado
 			// 1 procesado, 0 no procesado, 2 en proceso, 3 con observados
 			// retorna 0 si no ha sido procesado y retorna -1 si fue procesado
-			if (siscomfiManager.verificarPartidoProceso(idPartido, fase.getIdProceso()) == 0) {
+			if (siscomfiManager.verificarPartidoProceso(idPartido, idProceso) == 0) {
 				// lo agregamos a partidoxproceso con estado 2
-				siscomfiManager.addPartidoxProceso(idPartido, fase.getIdProceso(), 2, 0, 2);
+				
+				//siscomfiManager.addPartidoxProceso(idPartido, fase.getIdProceso(), 2, 0, 2);   //-------------------------------AQUI lo comente
+				
 				//agregamos los observados en Observados>Proceso>Fase>Partidov2
 				String proceso = cmbProceso.getSelectedItem().toString();
 				String txtfase = txtFase.getText();

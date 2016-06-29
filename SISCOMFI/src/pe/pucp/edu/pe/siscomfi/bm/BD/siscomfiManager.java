@@ -218,8 +218,8 @@ public class siscomfiManager {
 	
 
 	public static void addPartidoxProceso(int idPartido, int idProceso, int idUsuario, double tiempoProcesado,
-			int estado) {
-		procesoDB.addPartidoxProceso(idPartido, idProceso, idUsuario, tiempoProcesado, estado);
+			int estado, int numFase) {
+		procesoDB.addPartidoxProceso(idPartido, idProceso, idUsuario, tiempoProcesado, estado, numFase);
 	}
 
 	public static int verificarPartidoProceso(int idPartido, int idProceso) {

@@ -468,7 +468,7 @@ public class MySQLDAOProceso implements DAOProceso {
 	}
 
 	@Override
-	public void addPartidoxProceso(int idPartido, int idProceso, int idUsuario, double tiempoProcesado, int estado) {
+	public void addPartidoxProceso(int idPartido, int idProceso, int idUsuario, double tiempoProcesado, int estado, int numFase) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -477,7 +477,9 @@ public class MySQLDAOProceso implements DAOProceso {
 			// Paso 2: Obtener la conexi�n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
-			String sql = "INSERT INTO PartidoPoliticoxProceso "
+			String sql; 
+			//_______________________________________________________________CAMBIAR:
+			sql= "INSERT INTO PartidoPoliticoxProceso "
 					+ "(idPartidoPolitico, idProceso, idUsuario, TiempoProcesado, EstadoPartido, FechaFase1)"
 					+ "VALUES (?,?,?,?,?, Now())"; //le Agrege el Now()
 			pstmt = conn.prepareStatement(sql);

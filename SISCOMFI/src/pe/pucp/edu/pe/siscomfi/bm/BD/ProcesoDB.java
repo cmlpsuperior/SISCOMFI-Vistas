@@ -64,8 +64,8 @@ public class ProcesoDB {
 		daoProceso.addAdherentexPlanillon(idAdherente, adPlanillon, estado, tProcesado, pHuella, pFirma, huella, firma,numFase);
 	}
 
-	public void addPartidoxProceso(int idPartido, int idProceso, int idUsuario, double tiempoProcesado, int estado) {
-		daoProceso.addPartidoxProceso(idPartido, idProceso, idUsuario, tiempoProcesado, estado);
+	public void addPartidoxProceso(int idPartido, int idProceso, int idUsuario, double tiempoProcesado, int estado, int numFase) {
+		daoProceso.addPartidoxProceso(idPartido, idProceso, idUsuario, tiempoProcesado, estado, numFase);
 	}
 	
 	public int verificarPartidoProcesado(int idPartido, int idProceso){

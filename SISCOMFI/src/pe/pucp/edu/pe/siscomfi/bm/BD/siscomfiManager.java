@@ -38,8 +38,8 @@ public class siscomfiManager {
 	public static void addUsuario(Usuario u) {
 		usuarioDB.add(u);
 	}
-	
-	public static void updateUsuario(Usuario u) { //nuevo
+
+	public static void updateUsuario(Usuario u) { // nuevo
 		usuarioDB.update(u);
 	}
 
@@ -59,7 +59,8 @@ public class siscomfiManager {
 		return usuarioDB.queryByUsuario(correo);
 	}
 
-	public static String queryByCorreo_RptaSecreta(String correo, String rptaSecreta) {
+	public static String queryByCorreo_RptaSecreta(String correo,
+			String rptaSecreta) {
 		return usuarioDB.queryByCorreo_RptaSecreta(correo, rptaSecreta);
 	}
 
@@ -73,15 +74,17 @@ public class siscomfiManager {
 	}
 
 	// PartidosPoliticos:
-	public static ArrayList<PartidoPolitico> queryAllPartidosConObservados(int idProceso) {
+	public static ArrayList<PartidoPolitico> queryAllPartidosConObservados(
+			int idProceso) {
 		return partidoPoliticoDB.queryAllObservados(idProceso);
 	}
 
 	public static ArrayList<PartidoPolitico> queryAllPartidos() {
 		return partidoPoliticoDB.queryAll();
 	}
-	
-	public static ArrayList<PartidoPolitico> queryPartidosDisponibles(int idProceso, int numFase) {
+
+	public static ArrayList<PartidoPolitico> queryPartidosDisponibles(
+			int idProceso, int numFase) {
 		return partidoPoliticoDB.queryDisponibles(idProceso, numFase);
 	}
 
@@ -101,7 +104,8 @@ public class siscomfiManager {
 		return partidoPoliticoDB.queryById(idPartido);
 	}
 
-	public static PartidoPolitico queryPartido_byRepresentante(String representante) {
+	public static PartidoPolitico queryPartido_byRepresentante(
+			String representante) {
 		return partidoPoliticoDB.queryByRepresentante(representante);
 	}
 
@@ -118,12 +122,15 @@ public class siscomfiManager {
 	}
 
 	// Reporte:
-	public static ArrayList<Reporte> queryReportePartidos(int idTipoProceso, int anio, int idfase, int estadoPartido) {
-		return partidoPoliticoDB.queryReporte(idTipoProceso, anio, idfase, estadoPartido);
+	public static ArrayList<Reporte> queryReportePartidos(int idTipoProceso,
+			int anio, int idfase, int estadoPartido) {
+		return partidoPoliticoDB.queryReporte(idTipoProceso, anio, idfase,
+				estadoPartido);
 	}
 
 	// Ubicacion
-	public static ArrayList<Distrito> queryDistritosByIdProvincia(int idProvincia) {
+	public static ArrayList<Distrito> queryDistritosByIdProvincia(
+			int idProvincia) {
 		return ubicacionDB.queryDistritosByIdProvincia(idProvincia);
 	}
 
@@ -164,11 +171,13 @@ public class siscomfiManager {
 		return adherenteDB.queryByDni(dni);
 	}
 
-	public static void updateEstadoAdherente(int idAdherente,int idPlanillon, double tProcesado, String estado) {
-		adherenteDB.updateEstadoAdherente(idAdherente, idPlanillon, tProcesado,estado);
+	public static void updateEstadoAdherente(int idAdherente, int idPlanillon,
+			double tProcesado, String estado) {
+		adherenteDB.updateEstadoAdherente(idAdherente, idPlanillon, tProcesado,
+				estado);
 	}
-	
-	public static void updateEstadoAdherente(int idAdherente, String estado){
+
+	public static void updateEstadoAdherente(int idAdherente, String estado) {
 		adherenteDB.updateEstadoAdherente(idAdherente, estado);
 	}
 
@@ -180,12 +189,12 @@ public class siscomfiManager {
 	public static ArrayList<Proceso> queryAllProcesos() {
 		return procesoDB.queryAll();
 	}
-	
+
 	public static Proceso queryProcesoById(int idProceso) { // nuevo :)
 		return procesoDB.queryById(idProceso);
 	}
-	
-	public static ArrayList<Proceso> queryProcesosDisponibles() { //Agregado :)
+
+	public static ArrayList<Proceso> queryProcesosDisponibles() { // Agregado :)
 		return procesoDB.queryDisponibles();
 	}
 
@@ -201,10 +210,11 @@ public class siscomfiManager {
 		return procesoDB.addPlanillon(p);
 	}
 
-	public static void addAdherentexPlanillon(int idAdherente, int adPlanillon, int estado, double tProcesado,
-			double pHuella, double pFirma, String huella, String firma, int numFase) {
-		procesoDB.addAdherentexPlanillon(idAdherente, adPlanillon, estado, tProcesado, pHuella, pFirma, huella, firma,
-				numFase);
+	public static void addAdherentexPlanillon(int idAdherente, int adPlanillon,
+			int estado, double tProcesado, double pHuella, double pFirma,
+			String huella, String firma, int numFase) {
+		procesoDB.addAdherentexPlanillon(idAdherente, adPlanillon, estado,
+				tProcesado, pHuella, pFirma, huella, firma, numFase);
 	}
 
 	public static void addProceso(Proceso p) {
@@ -214,27 +224,38 @@ public class siscomfiManager {
 	public static ArrayList<TipoProceso> queryAllTipoProcesos() {
 		return tipoProcesoDB.queryAll();
 	}
-	
-	
 
-	public static void addPartidoxProceso(int idPartido, int idProceso, int idUsuario, double tiempoProcesado,
-			int estado, int numFase) {
-		procesoDB.addPartidoxProceso(idPartido, idProceso, idUsuario, tiempoProcesado, estado, numFase);
+	public static int cantidadMinimaAdherentes(int idProceso) {
+		return procesoDB.cantidadMinimaAdherentes(idProceso);
+	}
+
+	public static void addPartidoxProceso(int idPartido, int idProceso,
+			int idUsuario, double tiempoProcesado, int estado, int numFase) {
+		procesoDB.addPartidoxProceso(idPartido, idProceso, idUsuario,
+				tiempoProcesado, estado, numFase);
 	}
 
 	public static int verificarPartidoProceso(int idPartido, int idProceso) {
 		return procesoDB.verificarPartidoProcesado(idPartido, idProceso);
 	}
 
-	public static void updateEstadoPartidoProceso(int idPartido, int idProceso, double tProcesado, int estado) {
-		procesoDB.updateEstadoPartidoxProceso(idPartido, idProceso, tProcesado, estado);
+	public static void updateEstadoPartidoProceso(int idPartido, int idProceso,
+			double tProcesado, int estado) {
+		procesoDB.updateEstadoPartidoxProceso(idPartido, idProceso, tProcesado,
+				estado);
 	}
 
-	public static void updateEstadoPartidoProceso (int idPartido, int idProceso, int estado){
+	public static void updateEstadoPartidoProceso(int idPartido, int idProceso,
+			int estado) {
 		procesoDB.updateEstadoPartidoxProceso(idPartido, idProceso, estado);
 	}
+
 	public static void agregarRegistroElector(RegistroElector reg) {
 		procesoDB.agregarRegistroElector(reg);
+	}
+
+	public static ArrayList<Proceso> queryDisponibleObs() {
+		return procesoDB.queryDisponibleObs();
 	}
 
 	public static boolean llenarRegistroElector(String path) {

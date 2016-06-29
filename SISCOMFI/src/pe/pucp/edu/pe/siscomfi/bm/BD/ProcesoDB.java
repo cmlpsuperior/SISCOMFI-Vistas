@@ -83,4 +83,12 @@ public class ProcesoDB {
 	public void agregarRegistroElector(RegistroElector reg){
 		daoProceso.agregarRegistroElectorRNV(reg);
 	}
+	
+	public int cantidadMinimaAdherentes (int idProceso){
+		return daoProceso.cantidadMinimaAdherente(idProceso);
+	}
+	 
+	public ArrayList<Proceso> queryDisponibleObs(){
+		return daoProceso.queryDisponibleObs();
+	}
 }

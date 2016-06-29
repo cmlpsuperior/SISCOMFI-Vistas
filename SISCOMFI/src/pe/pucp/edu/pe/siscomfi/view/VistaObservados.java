@@ -68,6 +68,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private File pObservadosPartido;
 	private JTable tblPartidoAceptado;
 	private JComboBox<String> cmbProceso;
+	private JComboBox<String> cmbFase;
 	
 	public VistaObservados() {
 		boolean indicador = true;
@@ -82,22 +83,22 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			return;
 		setClosable(true);
 		setTitle("Adherentes observados");
-		setBounds(100, 100, 900, 456);
+		setBounds(100, 100, 925, 535);
 		getContentPane().setLayout(null);
 
 		btnSalir = new JButton("Salir");
-		btnSalir.setBounds(289, 393, 113, 23);
+		btnSalir.setBounds(270, 457, 113, 23);
 		getContentPane().add(btnSalir);
 
 		JPanel pnPartido = new JPanel();
 		pnPartido.setLayout(null);
 		pnPartido.setBorder(
 				new TitledBorder(null, "PARTIDO POLITICO", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		pnPartido.setBounds(10, 11, 396, 138);
+		pnPartido.setBounds(10, 11, 396, 157);
 		getContentPane().add(pnPartido);
 
 		JLabel lblTotalObservados = new JLabel("Total Observados:");
-		lblTotalObservados.setBounds(12, 76, 151, 14);
+		lblTotalObservados.setBounds(12, 102, 151, 14);
 		pnPartido.add(lblTotalObservados);
 
 		JLabel lblPartidoPolitico = new JLabel("Partido Politico:");
@@ -107,7 +108,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		txtCantObservados = new JTextField();
 		txtCantObservados.setEditable(false);
 		txtCantObservados.setColumns(10);
-		txtCantObservados.setBounds(173, 74, 208, 20);
+		txtCantObservados.setBounds(173, 100, 208, 20);
 		pnPartido.add(txtCantObservados);
 
 		cmbPartido = new JComboBox<String>();
@@ -116,14 +117,14 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		pnPartido.add(cmbPartido);
 
 		JLabel lblAceptados = new JLabel("Total Aceptados:");
-		lblAceptados.setBounds(12, 102, 151, 14);
+		lblAceptados.setBounds(12, 128, 151, 14);
 		pnPartido.add(lblAceptados);
 
 		txtAceptados = new JTextField();
 		txtAceptados.setEditable(false);
 		txtAceptados.setText("0");
 		txtAceptados.setColumns(10);
-		txtAceptados.setBounds(173, 100, 208, 20);
+		txtAceptados.setBounds(173, 126, 208, 20);
 		pnPartido.add(txtAceptados);
 		
 		JLabel lblProceso = new JLabel("Proceso Electoral:");
@@ -133,11 +134,21 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		cmbProceso = new JComboBox<String>();
 		cmbProceso.setBounds(173, 21, 208, 20);
 		pnPartido.add(cmbProceso);
+		
+		JLabel lblFase = new JLabel("Fase:");
+		lblFase.setBounds(12, 76, 151, 14);
+		pnPartido.add(lblFase);
+		
+		cmbFase = new JComboBox<String>();
+		cmbFase.setBounds(173, 71, 208, 20);
+		pnPartido.add(cmbFase);
+		cmbFase.addItem("Fase 1");
+		cmbFase.addItem("Fase 2");
 		//Llenamos el combo con los procesos electorales.2
-		fillDescProcesoCmb();
+		fillCmbProceso();
 		
 		JTabbedPane pnPartidos = new JTabbedPane(JTabbedPane.TOP);
-		pnPartidos.setBounds(10, 161, 395, 221);
+		pnPartidos.setBounds(10, 180, 395, 265);
 		getContentPane().add(pnPartidos);
 
 		JPanel pnObservados = new JPanel();
@@ -262,6 +273,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 				}
 			}
 		});
+
 		tblAdherentes.setModel(tableModelAdherentes);
 
 		scrollPane.setViewportView(tblAdherentes);
@@ -282,7 +294,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		tableModelAdherentes = new MyTableModel();
 		JPanel pnAdherente = new JPanel();
 		pnAdherente.setBorder(new TitledBorder(null, "ADHERENTE", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		pnAdherente.setBounds(448, 11, 396, 114);
+		pnAdherente.setBounds(448, 11, 396, 157);
 		getContentPane().add(pnAdherente);
 		pnAdherente.setLayout(null);
 
@@ -297,27 +309,27 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		txtAdherente.setColumns(10);
 
 		JLabel lblPlanillon = new JLabel("Planillon:");
-		lblPlanillon.setBounds(10, 52, 153, 14);
+		lblPlanillon.setBounds(10, 72, 153, 14);
 		pnAdherente.add(lblPlanillon);
 
 		txtCodigoPlanillon = new JTextField();
 		txtCodigoPlanillon.setEditable(false);
-		txtCodigoPlanillon.setBounds(171, 46, 204, 20);
+		txtCodigoPlanillon.setBounds(171, 70, 204, 20);
 		pnAdherente.add(txtCodigoPlanillon);
 		txtCodigoPlanillon.setColumns(10);
 
 		txtDni = new JTextField();
 		txtDni.setEditable(false);
 		txtDni.setColumns(10);
-		txtDni.setBounds(171, 71, 204, 20);
+		txtDni.setBounds(171, 110, 204, 20);
 		pnAdherente.add(txtDni);
 
 		JLabel lblDni = new JLabel("Dni:");
-		lblDni.setBounds(10, 74, 153, 14);
+		lblDni.setBounds(10, 112, 153, 14);
 		pnAdherente.add(lblDni);
 
 		JTabbedPane tbpImagenes = new JTabbedPane(JTabbedPane.TOP);
-		tbpImagenes.setBounds(448, 130, 396, 252);
+		tbpImagenes.setBounds(448, 180, 455, 265);
 		getContentPane().add(tbpImagenes);
 
 		JPanel pnHuella = new JPanel();
@@ -331,23 +343,23 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		pnOriginalH = new JPanel();
 		pnOriginalH.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "ORIGINAL",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnOriginalH.setBounds(4, 11, 162, 202);
+		pnOriginalH.setBounds(12, 5, 208, 221);
 		pnHuella.add(pnOriginalH);
 		pnOriginalH.setLayout(null);
 
 		lblHuellaOriginal = new JLabel("");
-		lblHuellaOriginal.setBounds(6, 16, 150, 179);
+		lblHuellaOriginal.setBounds(12, 16, 184, 193);
 		pnOriginalH.add(lblHuellaOriginal);
 
 		pnObservadoH = new JPanel();
 		pnObservadoH.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "OBSERVADO",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnObservadoH.setBounds(180, 11, 162, 202);
+		pnObservadoH.setBounds(230, 5, 208, 221);
 		pnHuella.add(pnObservadoH);
 		pnObservadoH.setLayout(null);
 
 		lblHuellaObservado = new JLabel("");
-		lblHuellaObservado.setBounds(6, 16, 150, 174);
+		lblHuellaObservado.setBounds(12, 16, 184, 193);
 		pnObservadoH.add(lblHuellaObservado);
 
 		JPanel pnFirma = new JPanel();
@@ -361,35 +373,35 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		pnOriginalF = new JPanel();
 		pnOriginalF.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "ORIGINAL",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnOriginalF.setBounds(4, 11, 157, 209);
+		pnOriginalF.setBounds(12, 5, 208, 221);
 		pnFirma.add(pnOriginalF);
 		pnOriginalF.setLayout(null);
 
 		lblFirmaOriginal = new JLabel("");
-		lblFirmaOriginal.setBounds(6, 16, 144, 193);
+		lblFirmaOriginal.setBounds(12, 16, 184, 193);
 		pnOriginalF.add(lblFirmaOriginal);
 
 		pnObservadoF = new JPanel();
 		pnObservadoF.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "OBSERVADO",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnObservadoF.setBounds(172, 11, 144, 209);
+		pnObservadoF.setBounds(230, 5, 208, 221);
 		pnFirma.add(pnObservadoF);
 		pnObservadoF.setLayout(null);
 
 		lblFirmaObservado = new JLabel("");
-		lblFirmaObservado.setBounds(6, 16, 144, 193);
+		lblFirmaObservado.setBounds(12, 16, 184, 193);
 		pnObservadoF.add(lblFirmaObservado);
 
 		btnAceptado = new JButton("Aceptado");
-		btnAceptado.setBounds(479, 393, 134, 23);
+		btnAceptado.setBounds(474, 457, 134, 23);
 		getContentPane().add(btnAceptado);
 
 		btnRechazado = new JButton("Rechazado");
-		btnRechazado.setBounds(673, 393, 134, 23);
+		btnRechazado.setBounds(678, 457, 134, 23);
 		getContentPane().add(btnRechazado);
 
 		btnTerminar = new JButton("Terminar");
-		btnTerminar.setBounds(38, 393, 89, 23);
+		btnTerminar.setBounds(37, 457, 113, 23);
 		getContentPane().add(btnTerminar);
 
 		// listener
@@ -449,11 +461,11 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		}
 	}
 
-	public void fillDescProcesoCmb() {
+	public void fillCmbProceso() {
 		cmbProceso.removeAllItems();
 		ArrayList<Proceso> procesoList;
 		try {
-			procesoList = siscomfiManager.queryAllProcesos();
+			procesoList = siscomfiManager.queryDisponibleObs();
 			for (int i = 0; i < procesoList.size(); i++) {
 				Proceso pro = (Proceso) procesoList.get(i);
 				cmbProceso.addItem(pro.getIdProceso() + " - " + pro.getDescripcion());
@@ -465,6 +477,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		//Observados>Proceso>Partido>Fase
 		if(e.getSource() == cmbProceso){
 			//Para el proceso electoral seleccionado, obtenemos los partidos politicos
 			//que tienen estado observado.2
@@ -472,6 +485,9 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			fillCmbPartido(idProceso);
 		}
 		
+		if (e.getSource() == cmbFase){
+			
+		}
 		if (e.getSource() == btnSalir) {
 			this.dispose();
 		}

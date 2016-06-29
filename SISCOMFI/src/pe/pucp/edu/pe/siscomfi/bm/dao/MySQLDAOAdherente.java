@@ -411,8 +411,9 @@ public class MySQLDAOAdherente implements DAOAdherente {
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
 			// (1=ACEPTADO,0=RECHAZADO,2=OBSERVADO)
-			String sql = "SELECT * FROM Planillon A, AdherentexPlanillon B, Adherente C "
-					+ "WHERE (A.idProceso = ?) AND (A.idPlanillon = B.idPlanillon) AND (C.DNI = ?)";
+			String sql = "   SELECT * FROM Planillon A, AdherentexPlanillon B, Adherente C "
+					+    "   WHERE (A.idProceso = ?) AND (C.idAdherente = B.idAdherente) AND (A.idPlanillon = B.idPlanillon) " +
+					     "   AND (C.DNI = ?) AND (B.EstadoValidez = '1') ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idProceso);
 			pstmt.setString(2, dni);

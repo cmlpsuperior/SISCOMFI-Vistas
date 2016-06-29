@@ -14,6 +14,7 @@ public interface DAOProceso {
 	//ArrayList<Usuario> queryAll();
 	ArrayList<Proceso> queryAll();
 	ArrayList<Proceso> queryDisponibles(); //agregado :)
+	ArrayList<Proceso> queryDisponibleObs();
 	Proceso queryById(int idProceso);	
 	//ArrayList<Usuario> queryByFilter(String name);
 	Proceso getFase1Actual(int idTipoPartido);
@@ -25,4 +26,5 @@ public interface DAOProceso {
 	void updateEstadoPartidoxProceso(int idPartido, int idProceso, double tProcesado, int estado);
 	void updateEstadoPartidoxProceso(int idPartido, int idProceso, int estado);
 	void agregarRegistroElectorRNV(RegistroElector registros);
+	int cantidadMinimaAdherente(int idProceso);
 }

@@ -651,11 +651,10 @@ public class MySQLDAOPartidoPolitico implements DAOPartidoPolitico {
 			// Paso 2: Obtener la conexi�n
 			conn = DriverManager.getConnection(DBConnection.URL_JDBC_MySQL, DBConnection.user, DBConnection.password);
 			// Paso 3: Preparar la sentencia
-			String sql = " select pa.*    "
-					+ " from PartidoPoliticoxProceso pp join Proceso p on pp.idProceso =  p.idProceso  									"
-					+ " 								  join PartidoPolitico pa on pa.idPartidoPolitico = pp.idPartidoPolitico			"
-					+ " where ((Now() between p.FechaProceso1Inicio and p.FechaProceso1Fin) or 											"
-					+ "		(Now() between p.FechaProceso2Inicio and p.FechaProceso2Fin))  and (pp.EstadoPartido = '3') and (pp.idProceso = ?)			 									";
+			String sql =  " select pa.*    "
+						+ " from PartidoPoliticoxProceso pp join Proceso p on pp.idProceso =  p.idProceso  							  "
+						+ " 								join PartidoPolitico pa on pa.idPartidoPolitico = pp.idPartidoPolitico    "
+						+ " where (pp.EstadoPartido = '3') and (pp.idProceso = ?)			 									      ";
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idProceso);

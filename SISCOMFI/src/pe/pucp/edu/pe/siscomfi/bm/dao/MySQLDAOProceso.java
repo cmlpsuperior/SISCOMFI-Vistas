@@ -542,15 +542,32 @@ public class MySQLDAOProceso implements DAOProceso {
 			// Paso 3: Preparar la sentencia
 			String sql; 
 			//_______________________________________________________________CAMBIAR:
-			sql= "INSERT INTO PartidoPoliticoxProceso "
-					+ "(idPartidoPolitico, idProceso, idUsuario, TiempoProcesado, EstadoPartido, FechaFase1)"
-					+ "VALUES (?,?,?,?,?, Now())"; //le Agrege el Now()
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, idPartido);
-			pstmt.setInt(2, idProceso);
-			pstmt.setInt(3, idUsuario);
-			pstmt.setDouble(4, tiempoProcesado);
-			pstmt.setString(5, "" + estado);
+			if (numFase ==1){
+				sql= 		"	INSERT INTO PartidoPoliticoxProceso 															"
+						+ 	"		(idPartidoPolitico, idProceso, idUsuario, TiempoProcesado, EstadoPartido, FechaFase1)		"
+						+ 	"		VALUES (?,?,?,?,?, Now())																	"; //le Agrege el Now()
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, idPartido);
+				pstmt.setInt(2, idProceso);
+				pstmt.setInt(3, idUsuario);
+				pstmt.setDouble(4, tiempoProcesado);
+				pstmt.setString(5, "" + estado);
+			}
+			else if (numFase ==2){
+				sql = 		"		update PartidoPoliticoxProceso			"+
+						 	"		set FechaFase2 = Now()					"+
+						 	"		where idPartido = ? and idProceso = ?	";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, idPartido);
+				pstmt.setInt(2, idProceso);
+									
+			}
+			else { //no hace nada
+				sql = "		update PartidoPoliticoxProceso set FechaFase2=2 where 1=0 ";
+			}
+			
 			// Paso 4: Ejecutar la sentencia
 			pstmt.executeUpdate();
 			// Paso 5(opc.): Procesar los resultados

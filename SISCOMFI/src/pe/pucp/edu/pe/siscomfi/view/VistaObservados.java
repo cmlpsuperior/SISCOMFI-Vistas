@@ -43,7 +43,6 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private JTextField txtCantObservados;
 	private JTable tblAdherentes;
 	private JTextField txtAdherente;
-	private JTextField txtCodigoPlanillon;
 	private JComboBox<String> cmbPartido;
 	private MyTableModel tableModelAdherentes;
 	private PartidoAceptadoModel partidoAceptadoModel;
@@ -64,7 +63,6 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 	private JTextField txtDni;
 	private JButton btnTerminar;
 	private int filaSeleccionada;
-	private String pathObservados = UsuarioLogeado.pathObservadosPlanilon;
 	private File pObservadosPartido;
 	private JTable tblPartidoAceptado;
 	private JComboBox<String> cmbProceso;
@@ -284,7 +282,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 				}
 			}
 		});
-
+		tableModelAdherentes = new MyTableModel();
 		tblAdherentes.setModel(tableModelAdherentes);
 
 		scrollPane.setViewportView(tblAdherentes);
@@ -302,7 +300,6 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		tblPartidoAceptado.setModel(partidoAceptadoModel);
 		spnPartidoAceptado.setViewportView(tblPartidoAceptado);
 
-		tableModelAdherentes = new MyTableModel();
 		JPanel pnAdherente = new JPanel();
 		pnAdherente.setBorder(new TitledBorder(null, "ADHERENTE",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -311,33 +308,23 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 		pnAdherente.setLayout(null);
 
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(10, 27, 153, 14);
+		lblNombre.setBounds(10, 48, 153, 14);
 		pnAdherente.add(lblNombre);
 
 		txtAdherente = new JTextField();
 		txtAdherente.setEditable(false);
-		txtAdherente.setBounds(171, 21, 204, 20);
+		txtAdherente.setBounds(171, 46, 204, 20);
 		pnAdherente.add(txtAdherente);
 		txtAdherente.setColumns(10);
-
-		JLabel lblPlanillon = new JLabel("Planillon:");
-		lblPlanillon.setBounds(10, 72, 153, 14);
-		pnAdherente.add(lblPlanillon);
-
-		txtCodigoPlanillon = new JTextField();
-		txtCodigoPlanillon.setEditable(false);
-		txtCodigoPlanillon.setBounds(171, 70, 204, 20);
-		pnAdherente.add(txtCodigoPlanillon);
-		txtCodigoPlanillon.setColumns(10);
 
 		txtDni = new JTextField();
 		txtDni.setEditable(false);
 		txtDni.setColumns(10);
-		txtDni.setBounds(171, 110, 204, 20);
+		txtDni.setBounds(171, 89, 204, 20);
 		pnAdherente.add(txtDni);
 
 		JLabel lblDni = new JLabel("Dni:");
-		lblDni.setBounds(10, 112, 153, 14);
+		lblDni.setBounds(10, 91, 153, 14);
 		pnAdherente.add(lblDni);
 
 		JTabbedPane tbpImagenes = new JTabbedPane(JTabbedPane.TOP);
@@ -509,20 +496,34 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			// politicos
 			// que tienen estado observado.2
 			String proceso = cmbProceso.getSelectedItem().toString();
-			String [] tproceso = proceso.split(" ");
+			String[] tproceso = proceso.split(" ");
 			int idProceso = Integer.parseInt(tproceso[0]);
 			fillCmbPartido(idProceso);
 		}
 
 		if (e.getSource() == cmbFase) {
+			//nos fijamos de que hayan procesos activos
+			if (cmbProceso.getItemCount() == 0) {
+				JOptionPane.showMessageDialog(this,
+						"No hay procesos activos");
+				return;
+			} else {
+				// nos fijamos si no hay nada en el combo de los partidos
+				if (cmbPartido.getItemCount() == 0) {
+					JOptionPane.showMessageDialog(this,
+							"No hay partidos con observados");
+					return;
+				}
+			}
 			// seleccionamos el partido que se esta viendo
 			tableModelAdherentes.setRowCount(0);
 			String proceso = cmbProceso.getSelectedItem().toString();
 			String partido = cmbPartido.getSelectedItem().toString();
 			String fase = cmbFase.getSelectedItem().toString();
-			// if (partidoAnalizado.getE)
-			pObservadosPartido = new File(pathObservados + "/" + proceso + "/"
-					+ partido + "/" + fase);
+			pObservadosPartido = new File(
+					UsuarioLogeado.pathObservadosPlanillon + "/" + proceso
+							+ "/" + partido + "/" + fase);
+			
 			if (pObservadosPartido.exists()) {
 				// buscar observados del partido
 				File[] pAdhObservados = pObservadosPartido.listFiles();
@@ -533,6 +534,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 					adhObservados.add(adh);
 				}
 				fillTable(adhObservados);
+				txtCantObservados.setText(""+adhObservados.size());
 			} else {
 				JOptionPane.showMessageDialog(this,
 						"Partido no cuenta con adherentes observados");
@@ -575,7 +577,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 						estado);
 			}
 			String partido = cmbPartido.getSelectedItem().toString();
-			String [] tpartido = partido.split(" ");
+			String[] tpartido = partido.split(" ");
 			int idPartido = Integer.parseInt(tpartido[0]);
 			String proceso = cmbProceso.getSelectedItem().toString();
 			String[] tproceso = proceso.split(" ");
@@ -583,7 +585,7 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			siscomfiManager.updateEstadoPartidoProceso(idPartido, idProceso, 1);
 			// recontar aceptados
 			int cantidadAdherentesFinales = siscomfiManager
-					.contarAdherentesAceptados(idPartido,idProceso);
+					.contarAdherentesAceptados(idPartido, idProceso);
 			int minimaCantidadAdherentes = siscomfiManager
 					.cantidadMinimaAdherentes(idProceso);
 			if (cantidadAdherentesFinales >= minimaCantidadAdherentes) {
@@ -593,6 +595,13 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			// volvemos a llenar el combo de los partidos.2
 			fillCmbPartido(idProceso);
 			tableModelAdherentes.setRowCount(0);
+			//limpiar
+			txtDni.setText("");
+			txtAdherente.setText("");
+			lblHuellaOriginal.setIcon(null);
+			lblHuellaObservado.setIcon(null);
+			lblFirmaOriginal.setIcon(null);
+			lblFirmaObservado.setIcon(null);
 		}
 	}
 

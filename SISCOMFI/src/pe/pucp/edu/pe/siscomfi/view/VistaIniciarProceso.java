@@ -66,6 +66,7 @@ public class VistaIniciarProceso extends JInternalFrame implements
 	private JTextField txtAceptados;
 	private JLabel lblResultadoFinal;
 	private JTextField txtResultado;
+	private JLabel lblProcesando;
 
 	public VistaIniciarProceso() {
 		boolean indicador = true;
@@ -218,6 +219,10 @@ public class VistaIniciarProceso extends JInternalFrame implements
 		txtResultado.setColumns(10);
 		txtResultado.setBounds(292, 203, 235, 22);
 		getContentPane().add(txtResultado);
+		
+		lblProcesando = new JLabel("Procesando:");
+		lblProcesando.setBounds(24, 281, 140, 15);
+		getContentPane().add(lblProcesando);
 
 		// listener
 		btnCancelar.addActionListener(this);
@@ -326,6 +331,7 @@ public class VistaIniciarProceso extends JInternalFrame implements
 		}
 
 		if (e.getSource() == btnProcesar) {
+			txtLog.setText("");
 			int numPadrones = 0;
 			int idPlanillon = 0;
 			String partido = cmbPartido.getSelectedItem().toString();
@@ -352,7 +358,7 @@ public class VistaIniciarProceso extends JInternalFrame implements
 			// agregamos los observados en Observados>Proceso>Partido>Fase2
 			String proceso = cmbProceso.getSelectedItem().toString();
 			String txtfase = txtFase.getText();
-			String pathObsPartido = UsuarioLogeado.pathObservadosPlanilon + "/"
+			String pathObsPartido = UsuarioLogeado.pathObservadosPlanillon + "/"
 					+ proceso + "/" + partido;
 			File pPartido = new File(pathObsPartido + "/" + txtfase);
 			if (!pPartido.exists())
@@ -364,6 +370,8 @@ public class VistaIniciarProceso extends JInternalFrame implements
 				Cronometro crnPartido = new Cronometro();
 				crnPartido.start();
 				for (File padron : padronPaths) {
+					lblProcesando.setText(lblProcesando.getText()+ " " + (numPadrones +1) + " de " + cantPadrones +"...");
+					lblProcesando.update(lblProcesando.getGraphics());
 					txtLog.append("Padron: " + (numPadrones + 1) + "\n");
 					txtLog.update(txtLog.getGraphics());
 					// agregamos el planillon a la bd
@@ -436,10 +444,29 @@ public class VistaIniciarProceso extends JInternalFrame implements
 												+ "/huellas", adh.getrHuella());
 								imgHuellaOriginal = new Duplicator()
 										.run(huellaRnv);
+								if ((huella == null) || (huellaRnv == null)) {
+									pHuella = 0.6;
+									resultado = "Observado";
+									break;
+								}
 								double[][] original = Fingerprint
 										.imageGraph(huellaRnv);
-								double[][] sospechosa = Fingerprint
-										.imageGraph(huella);
+								adherente = adh;
+								double [][] sospechosa = {};
+								try{
+									sospechosa = Fingerprint
+											.imageGraph(huella);
+								}catch (NullPointerException ex){
+									pHuella = 0.6;
+									resultado = "Observado";
+									break;
+								}
+								
+								if ((original.length == 0) || (sospechosa.length == 0)) {
+									pHuella = 0.6;
+									resultado = "Observado";
+									break;
+								}
 								double porcentaje = Fingerprint.comparition(
 										original, sospechosa);
 								resultado = Fingerprint.resultado(porcentaje);
@@ -448,7 +475,6 @@ public class VistaIniciarProceso extends JInternalFrame implements
 								}
 								// ***
 								pHuella = porcentaje;
-								adherente = adh;
 								txtLog.append(" Resultado-> " + resultado
 										+ "\n");
 								txtLog.update(txtLog.getGraphics());

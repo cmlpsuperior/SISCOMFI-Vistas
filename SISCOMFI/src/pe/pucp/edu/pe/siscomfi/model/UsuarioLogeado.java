@@ -8,11 +8,11 @@ import javax.swing.JInternalFrame;
 public class UsuarioLogeado {
 	public static Usuario usuario = null;
 	public static String pathImagenesRnv = "";
-	public static String pathObservadosPlanilon = "";
+	public static String pathObservadosPlanillon = "";
 	private static JFileChooser jFileChooser;
 
 	public static boolean verificarPaths() {
-		if (pathImagenesRnv.isEmpty() || pathObservadosPlanilon.isEmpty()) {
+		if (pathImagenesRnv.isEmpty() || pathObservadosPlanillon.isEmpty()) {
 			return false;
 		}
 		return true;
@@ -56,7 +56,7 @@ public class UsuarioLogeado {
 				result = jFileChooser.showOpenDialog(ventana);
 			}
 		}
-		pathObservadosPlanilon = pathPadronProcesar;
+		pathObservadosPlanillon = pathPadronProcesar;
 		return pathPadronProcesar;
 	}
 }

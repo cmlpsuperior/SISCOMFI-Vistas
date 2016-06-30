@@ -175,7 +175,7 @@ public class HelperMethods {
 		yD = blancoAbajo(0, xD, yD + 1, planillon);
 		// hallamos el angulo
 		double angulo = new Line(1, 500, 18, 500).getAngle(xI, yI, xD, yD);
-		// System.out.println("angulo: " + angulo);
+		//System.out.println("angulo: " + angulo);
 		ImageProcessor imp = auxPlanillon.getProcessor();
 		imp.setBackgroundValue(255);
 		imp.rotate(angulo);

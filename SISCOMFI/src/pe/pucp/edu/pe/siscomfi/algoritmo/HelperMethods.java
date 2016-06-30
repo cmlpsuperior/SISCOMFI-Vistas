@@ -6,6 +6,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,20 @@ import pe.pucp.edu.pe.siscomfi.model.Point;
 
 public class HelperMethods {
 
+	//buscar imagen
+	public static ImagePlus buscarImagen(String pathBusqueda, String buscado){
+		File fileBusq = new File(pathBusqueda);
+		File [] files = fileBusq.listFiles();
+		ImagePlus imagen = null;
+		//buscamos
+		for(File file : files){
+			if (file.getName().startsWith(buscado)){
+				imagen = IJ.openImage(file.getAbsolutePath());
+				break;
+			}
+		}
+		return imagen;
+	}
 	// Para moverse con pixeles ->
 	private static int negroDerecha(int r, int x, int y, ImagePlus planillon) {
 		while (r != 0) {

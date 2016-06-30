@@ -251,6 +251,7 @@ public class Fingerprint {
 
 	// compares two graphs of fingerprints
 	public static double comparition(double[][] grafoS, double[][] grafoT) {
+		if (grafoS.length == 0 || grafoT.length == 0) return 0.0;
 		int match = 0;
 		for (int i = 0; i < grafoS.length; i++) {
 			double[] vecindadS = grafoS[i];

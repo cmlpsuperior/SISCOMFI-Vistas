@@ -81,11 +81,11 @@ public class VistaLogin implements ActionListener {
 		frmSiscomfi.getContentPane().setLayout(null);
 
 		JLabel lblUsuario = new JLabel("Correo:");
-		lblUsuario.setBounds(197, 51, 86, 14);
+		lblUsuario.setBounds(197, 51, 108, 14);
 		frmSiscomfi.getContentPane().add(lblUsuario);
 
 		JLabel lblContrasena = new JLabel("Contrase\u00F1a:");
-		lblContrasena.setBounds(197, 111, 86, 14);
+		lblContrasena.setBounds(197, 111, 108, 14);
 		frmSiscomfi.getContentPane().add(lblContrasena);
 
 		txtUsuario = new JTextField();
@@ -109,12 +109,12 @@ public class VistaLogin implements ActionListener {
 			public void mouseClicked(MouseEvent e) {
 				String rptaSecreta = JOptionPane.showInputDialog("Ingrese su respuesta secreta");
 				if (txtUsuario.getText().equals(""))
-					JOptionPane.showMessageDialog(null, "Por favor ingrese su dirección de correo");
+					JOptionPane.showMessageDialog(null, "Por favor ingrese su direcciï¿½n de correo");
 				else {
 					String password = siscomfiManager.queryByCorreo_RptaSecreta(txtUsuario.getText(), rptaSecreta);
 					System.out.println(txtUsuario.getText() + " " + rptaSecreta + " " + password);
 					if (password != "")
-						JOptionPane.showMessageDialog(null, "Su contraseña es: " + password);
+						JOptionPane.showMessageDialog(null, "Su contraseï¿½a es: " + password);
 					else
 						JOptionPane.showMessageDialog(null,
 								"No se encontraron coincidencias entre el correo y la respuesta ingresada");
@@ -123,7 +123,7 @@ public class VistaLogin implements ActionListener {
 				 * String correo = JOptionPane.showInputDialog(
 				 * "Ingrese su usuario"); String password =
 				 * siscomfiManager.queryRecuperarContrasenia(correo);
-				 * JOptionPane.showMessageDialog(null, "Su contraseña es: " +
+				 * JOptionPane.showMessageDialog(null, "Su contraseï¿½a es: " +
 				 * password);
 				 */
 			}
@@ -157,10 +157,10 @@ public class VistaLogin implements ActionListener {
 				vMenu = new VistaMenu();
 				vMenu.setVisible(true);
 			} else {
-				JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecto");
+				JOptionPane.showMessageDialog(null, "Usuario o contraseï¿½a incorrecto");
 			}
 		} else {
-			JOptionPane.showMessageDialog(null, "Ingrese un usuario o contraseña");
+			JOptionPane.showMessageDialog(null, "Ingrese un usuario o contraseï¿½a");
 		}
 	}
 

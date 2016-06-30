@@ -37,6 +37,9 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JProgressBar;
+
+import com.mysql.jdbc.SocketMetadata.Helper;
+
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
@@ -429,10 +432,8 @@ public class VistaIniciarProceso extends JInternalFrame implements
 								ImagePlus huella = HelperMethods
 										.quitarBorde(partes.get(3));
 								imgHuella = new Duplicator().run(huella);
-								ImagePlus huellaRnv = IJ
-										.openImage(UsuarioLogeado.pathImagenesRnv
-												+ "/huellas/"
-												+ adh.getrHuella() + ".jpg");
+								ImagePlus huellaRnv = HelperMethods.buscarImagen(UsuarioLogeado.pathImagenesRnv
+												+ "/huellas", adh.getrHuella());
 								imgHuellaOriginal = new Duplicator()
 										.run(huellaRnv);
 								double[][] original = Fingerprint
@@ -461,11 +462,8 @@ public class VistaIniciarProceso extends JInternalFrame implements
 								ImagePlus firma = HelperMethods
 										.quitarBorde(partes.get(2));
 								imgFirma = new Duplicator().run(firma);
-								ImagePlus firmaRnv = IJ
-										.openImage(UsuarioLogeado.pathImagenesRnv
-												+ "/firmas/"
-												+ adherente.getrFirma()
-												+ ".jpg");
+								ImagePlus firmaRnv = HelperMethods.buscarImagen(UsuarioLogeado.pathImagenesRnv
+										+ "/firmas", adherente.getrFirma());
 								imgFirmaOriginal = new Duplicator()
 										.run(firmaRnv);
 								firmaRnv = Signatures.formatoFirma(firmaRnv);

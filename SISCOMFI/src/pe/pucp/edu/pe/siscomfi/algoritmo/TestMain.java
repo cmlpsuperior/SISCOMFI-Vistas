@@ -1,5 +1,6 @@
 package pe.pucp.edu.pe.siscomfi.algoritmo;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,8 +27,32 @@ import pe.pucp.edu.pe.siscomfi.model.RegistroElector;
 public class TestMain {
 
 	public static void main(String[] args) throws IOException {
-		String path = "/home/osboxes/Desktop/ImagenesRNV/firma";
-		File imagenes = new File (path);
+		String path = "/home/osboxes/Desktop/ImagenesRNV2/huellas";
+		File pHuella = new File(path);
+		File [] imagenes = pHuella.listFiles();
+		String rHuella = "hhu070";
+		ImagePlus imgHuella = null;
+		//encontramos
+		for(File file : imagenes){
+			//System.out.println(file.getName());
+			if (file.getName().startsWith(rHuella)){
+				imgHuella = IJ.openImage(file.getAbsolutePath());
+				break;
+			}
+		}
+		imgHuella.show();
+		ImageProcessor imp_fing = imgHuella.getProcessor();
+		imp_fing.setBackgroundValue(0);
+		imp_fing = imp_fing.resize(600, 600);
+
+		ImagePlus newFing = new ImagePlus("small", imp_fing);
+		IJ.run(newFing, "Make Binary", "");
+		IJ.run(newFing, "Skeletonize", "");
+		IJ.run(newFing, "Make Binary", "");
+		newFing.show();
+		double[][] p = Fingerprint.imageGraph(imgHuella);
+		//System.out.println(p.length);
+		/*File imagenes = new File (path);
 		File [] lista = imagenes.listFiles();
 		for(File img: lista){
 			String name = img.getName();
@@ -36,7 +61,7 @@ public class TestMain {
 			String ss = name.substring(0, n);
 			String ssName = ss + ".jpg";
 			img.renameTo(new File(path+"/"+ssName));
-		}
+		}*/
 /*
 		try {
 

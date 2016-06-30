@@ -596,6 +596,8 @@ public class VistaObservados extends JInternalFrame implements ActionListener {
 			fillCmbPartido(idProceso);
 			tableModelAdherentes.setRowCount(0);
 			//limpiar
+			txtAceptados.setText("0");
+			txtCantObservados.setText("");
 			txtDni.setText("");
 			txtAdherente.setText("");
 			lblHuellaOriginal.setIcon(null);
